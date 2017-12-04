@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./app",
+    "sourceMap": true,
+    "emitDecoratorMetadata": false,
+    "removeComments": false,
+    "noImplicitAny": false
+  },
+  "exclude": [
+    "../node_modules",
+    "../client",
+    "typings/browser",
+    "typings/browser.d.ts"
+  ]
+}
