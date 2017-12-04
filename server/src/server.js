@@ -19,6 +19,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+//app.use(express.static(path.join(__dirname, '../../client/src')));
+//for prod use ng build for client then
 app.use(express.static(path.join(__dirname, '../../dist/client')));
 
 //app.use('/', heros);
@@ -27,7 +29,9 @@ app.use('/api/heros', heros);
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/index.html'));
+  //res.sendFile(path.join(__dirname, '../../client/src/index.html'));
+  // for prod use
+  res.sendFile(path.join(__dirname, '../../dist/client/index.html'));
 });
 
 // catch 404 and forward to error handler

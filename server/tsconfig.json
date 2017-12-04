@@ -3,7 +3,7 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./app",
+    "outDir": "../dist/server",
     "sourceMap": true,
     "emitDecoratorMetadata": false,
     "removeComments": false,
