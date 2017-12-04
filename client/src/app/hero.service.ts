@@ -17,7 +17,7 @@ const httpOptions = {
 @Injectable()
 export class HeroService {
 
-	private heroesUrl = 'api/items'; // 'api/heroes';  // URL to web api
+	private heroesUrl = 'api/heros'; // 'api/heroes';  // URL to web api
 	//console.log('can you see this?');
 	//used Angular Dependency Injection to inject it into a component
 	constructor(
