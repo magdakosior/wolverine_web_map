@@ -1,14 +1,4 @@
-'use strict';
 
-let gulp = require('gulp');
-let ts = require('gulp-typescript');
-let uglify = require('gulp-uglify');
-let sourcemaps = require('gulp-sourcemaps');
-let exec = require('child_process').exec;
-
-let clientTsProject = ts.createProject('client/tsconfig.json');
-let serverTsProject = ts.createProject('server/tsconfig.json');
-debugger;
 
 // These tasks will be run when you just type "gulp"
 gulp.task('default', [ 'clientBuild']);

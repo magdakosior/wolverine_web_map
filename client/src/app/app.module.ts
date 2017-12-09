@@ -14,10 +14,10 @@ import { MessagesComponent } from './messages/messages.component';
 import { MessageService } from './message.service';
 import { AppRoutingModule } from './/app-routing.module';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
-import { MapComponent } from './map/map.component';
+import { MapModule } from './map/map.module';
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
-import { MapService } from "./services/map.service";
+//import { MapService } from "./services/map.service";
 
 
 @NgModule({
@@ -27,17 +27,17 @@ import { MapService } from "./services/map.service";
     HeroDetailComponent,
     MessagesComponent,
     DashboardComponent,
-    HeroSearchComponent,
-    MapComponent
+    HeroSearchComponent
   ],
   imports: [
     BrowserModule,
   	FormsModule,
   	AppRoutingModule,
     HttpClientModule,
-    LeafletModule.forRoot()
+    MapModule//,
+    //LeafletModule.forRoot()
   ],
-  providers: [ HeroService, MessagesComponent, MessageService, MapService ], //provided the HeroService in the root AppModule so that it can be injected anywhere.
+  providers: [ HeroService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
   bootstrap: [AppComponent]
 })
 

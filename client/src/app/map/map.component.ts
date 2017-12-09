@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
+
 import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 @Component({
   selector: 'app-map',
@@ -9,7 +11,7 @@ import 'leaflet.markercluster';
 })
 export class MapComponent implements OnInit {
   
-  // Open Street Map Definition
+   // Open Street Map Definition
   LAYER_OSM = {
     id: 'openstreetmap',
     name: 'Open Street Map',
@@ -20,7 +22,7 @@ export class MapComponent implements OnInit {
     })
   };
 
-  // Values to bind to Leaflet Directive
+   // Values to bind to Leaflet Directive
   layersControlOptions = { position: 'bottomright' };
   baseLayers = {
     'Open Street Map': this.LAYER_OSM.layer
@@ -30,17 +32,14 @@ export class MapComponent implements OnInit {
     center: L.latLng([ 51.0810, -115.3451 ])
   };
 
-  // Marker cluster stuff
+   // Marker cluster stuff
   markerClusterGroup: L.MarkerClusterGroup;
   markerClusterData: any[] = [];
   markerClusterOptions: L.MarkerClusterGroupOptions;
 
-  // Generators for lat/lon values
+   // Generators for lat/lon values
   generateLat() { return Math.random() * 360 - 180; }
   generateLon() { return Math.random() * 180 - 90; }
-
-
-  constructor() { }
 
   ngOnInit() {
 
@@ -64,8 +63,8 @@ export class MapComponent implements OnInit {
     for (let i = 0; i < 10000; i++) {
 
       const icon = L.icon({
-        iconUrl: '2273e3d8ad9264b7daa5bdbf8e6b47f8.png',
-        shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
+        iconUrl: 'assets/images/marker-shadow.png', 
+        shadowUrl: 'assets/images/marker-icon.png' 
       });
 
       data.push(L.marker([ this.generateLon(), this.generateLat() ], { icon }));
