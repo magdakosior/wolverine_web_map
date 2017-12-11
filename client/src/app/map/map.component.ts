@@ -46,16 +46,16 @@ export class MapComponent implements OnInit {
   markerClusterOptions: L.MarkerClusterGroupOptions;
 
   map: L.Map;
-  //coords: string;
-
+  //not sure how to initialize this!!
   map_info = {
       zoom: 12,
       extents: {
-        "east":-115.13946533203126,
-        "west":-115.55042266845705,
-        "north":51.12421275782688,
-        "south":51.037939894299356
-      }
+        east:-115.13946533203126,
+        west:-115.55042266845705,
+        north:51.12421275782688,
+        south:51.037939894299356
+      },
+      markers:[]
   };
 
    // Generators for lat/lon values
@@ -63,7 +63,9 @@ export class MapComponent implements OnInit {
   generateLon() { return Math.random() * 180 - 90; }
 
   ngOnInit() {
-    //this.getItems();  
+    console.log('ngOnInit');
+    this.getItems();  
+    //console.log(this.map_info);
   }
 
   markerClusterReady(group: L.MarkerClusterGroup) {
@@ -71,40 +73,52 @@ export class MapComponent implements OnInit {
   }
 
   onMapReady(map: L.Map) {
+    console.log('onMapReady');
     map.on('moveend', () => {
       // Do stuff with changed bounds
-      var bounds = map.getBounds();
-      console.log(bounds);
-      this.map_info = {
-        zoom: 12,
-        extents: {
-          east: map.getBounds().getEast(), 
-          west: map.getBounds().getWest(),
-          north: map.getBounds().getNorth(),
-          south: map.getBounds().getSouth()
-        }
-      };
-      console.log('east: '+ JSON.stringify(this.map_info));
+      this.map_info.extents.east = map.getBounds().getEast();
+      this.map_info.extents.west = map.getBounds().getWest();
+      this.map_info.extents.north = map.getBounds().getNorth();
+      this.map_info.extents.south = map.getBounds().getSouth();
+      
+      console.log('moved extents: '+ JSON.stringify(this.map_info));
+      this.getItems(); 
     });
-    this.getItems(); 
+    //this.getItems(); 
   }
 
   //gave the HeroService get data method an asynchronous signature.
   getItems(): void {
+    console.log('getItems');
     //console.log(JSON.stringify(this.map_info));
     var coords = '?east=' + String(this.map_info.extents.east) + '&west=' + String(this.map_info.extents.west) + '&north=' + String(this.map_info.extents.north) + '&south=' + String(this.map_info.extents.south);
     //var coords = '?extend='+ this.map_info;
     
     this.heroService.getHeroesWithinBounds(coords) 
       .subscribe(
-        (data: any) => {
-            this.map_info = data;
-            console.log(this.map_info);
+        (markers: any) => {
+            //this.map_info.markers = markers;
+            //console.log('in get Heros within Bounds function');
+            //console.log(markers);
+
+            const map_markers: any[] = [];
+            
+            for (let i = 0; i < Object.keys(markers).length; i++) {
+
+              const icon = L.icon({
+                iconUrl: 'assets/images/marker-icon.png',
+                shadowUrl: 'assets/images/marker-shadow.png'
+              });
+              console.log(i);
+              console.log(markers[i].geom.coordinates[0][0] + ', ' + markers[i].geom.coordinates[0][1]);
+              map_markers.push(L.marker([ markers[i].geom.coordinates[0][1], markers[i].geom.coordinates[0][0] ], { icon }));
+            }
+
+            this.markerClusterData = map_markers;
         },
         err => console.log(err), // error
-        () => console.log('getExtents Complete') // complete
+        () => console.log('getItems Complete') // complete
       );
-      
   }
 
   getMapBounds(): void {
