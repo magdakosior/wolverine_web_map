@@ -18,7 +18,6 @@ const httpOptions = {
 export class HeroService {
 
 	private heroesUrl = 'api/heros'; // 'api/heroes';  // URL to web api
-	//console.log('can you see this?');
 	//used Angular Dependency Injection to inject it into a component
 	constructor(
 	  private http: HttpClient,
@@ -36,11 +35,11 @@ export class HeroService {
 	}
 
 	/** GET heroes from the server */
-	getHeroesWithinBounds (bounds: JSON): Observable<Hero[]> {
+	getHeroesWithinBounds (bounds: string): Observable<Hero[]> {
 	  
-		//return this.http.get(this.heroesUrl)
-		return this.http.get<Hero[]>(this.heroesUrl).pipe(
-	      tap(heroes => this.log(`fetched heroes`)),
+		//return this.http.get(this.heroesUrl + bounds)
+		return this.http.get<Hero[]>(this.heroesUrl + bounds).pipe(
+	      tap(heroes => this.log(`fetched heroes` + this.heroesUrl + bounds)),
 	      catchError(this.handleError('getHeroes', []))
 	    );
 	}

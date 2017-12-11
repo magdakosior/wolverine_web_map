@@ -49,3 +49,6 @@ WHERE  coordinates
         or WHERE  ST_MakeEnvelope (...)
     ~ -- contains, gets same fewer rows 
     coordinates
+
+
+    nodemon inspect server.js  //insert debugger; statements   https://nodejs.org/api/debugger.html

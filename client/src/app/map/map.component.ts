@@ -7,6 +7,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
 
+//@Component is a decorator function that specifies the Angular metadata for the component.
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -45,11 +46,16 @@ export class MapComponent implements OnInit {
   markerClusterOptions: L.MarkerClusterGroupOptions;
 
   map: L.Map;
+  //coords: string;
 
   map_info = {
-      //bounds: 'Point',
-      //maxZoom: 12,
-      //markers: this.markerClusterData
+      zoom: 12,
+      extents: {
+        "east":-115.13946533203126,
+        "west":-115.55042266845705,
+        "north":51.12421275782688,
+        "south":51.037939894299356
+      }
   };
 
    // Generators for lat/lon values
@@ -78,40 +84,27 @@ export class MapComponent implements OnInit {
           south: map.getBounds().getSouth()
         }
       };
-      //var east = map.getBounds().getEast();//
-      //ar west = map.getBounds().getWest();
-      //var north = map.getBounds().getNorth();
-      //var south = map.getBounds().getSouth();
-
       console.log('east: '+ JSON.stringify(this.map_info));
-      
     });
     this.getItems(); 
   }
 
   //gave the HeroService get data method an asynchronous signature.
   getItems(): void {
-
-    this.heroService.getHeroes() //returns an Observable<Hero[]> so that we can return an asynchronous list of heroes
-        .subscribe((heroes: Hero[]) => {
-
-            // do stuff with our data here.
-            const data: any[] = [];
-            const icon = L.icon({
-              iconUrl: 'assets/images/marker-shadow.png', 
-              shadowUrl: 'assets/images/marker-icon.png' 
-            });
-            //console.log(heroes);
-            heroes.map(hero => {
-              console.log(hero)
-              data.push(L.marker([ this.generateLon(), this.generateLat() ], { icon }));
-              //console.log(this.generateLon());
-            });
-            // asign data to our class property in the end
-            // so it will be available to our template
-            //this.heroes = heroes//.heroes
-            this.markerClusterData = data;
-        })
+    console.log(JSON.stringify(this.map_info));
+    var coords = '?east=' + String(this.map_info.extents.east) + '&west=' + String(this.map_info.extents.west) + '&north=' + String(this.map_info.extents.north) + '&south=' + String(this.map_info.extents.south);
+    //var coords = '?extend='+ this.map_info;
+    console.log(coords);
+    this.heroService.getHeroesWithinBounds(coords) 
+      //.map((data: any) => data.json())
+      .subscribe(
+        (data: any) => {
+            this.map_info = data;
+        },
+        err => console.log(err), // error
+        () => console.log('getExtents Complete') // complete
+      );
+      
   }
 
   getMapBounds(): void {

@@ -15,8 +15,21 @@ const awaitErorrHandlerFactory = middleware => {
 
 /* GET heros listing. */
 router.get('/', function (req, res, next) {
-    model.heros.findAll({})
+    console.log('i am in router.get ');
+    console.log(req.query.east);
+
+    /*model.sequelize.query('SELECT * FROM heros WHERE heros.id = 3 ')
+        .then(heros => res.json(heros))
+
         
+        .catch(error => res.json({
+            error: true,
+            data: [],
+            error: error
+        }));
+        */
+    //model.heros.findAll({ where: {id: 3}, limit: 1 })
+    model.heros.findAll({})        
         .then(heros => res.json(heros))
         /*.then(heros => res.json({
             error: false,
@@ -30,6 +43,21 @@ router.get('/', function (req, res, next) {
         }));
 });
 
+/* GET heros listing within map bounds. 
+router.get('/', function (req, res, next) {
+    console.log('i am in router.get with extents ');
+    console.log(req.params);
+    model.heros.findAll({})
+        
+        .then(heros => res.json(heros))
+        
+        .catch(error => res.json({
+            error: true,
+            data: [],
+            error: error
+        }));
+});
+*/
 
 /* POST hero. */
 router.post('/', function (req, res, next) {

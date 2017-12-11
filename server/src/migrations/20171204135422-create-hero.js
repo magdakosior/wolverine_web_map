@@ -1,4 +1,7 @@
 'use strict';
+
+//node_modules/.bin/sequelize db:migrate
+//node_modules/.bin/sequelize db:migrate:undo
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('heros', {
