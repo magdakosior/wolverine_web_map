@@ -91,15 +91,15 @@ export class MapComponent implements OnInit {
 
   //gave the HeroService get data method an asynchronous signature.
   getItems(): void {
-    console.log(JSON.stringify(this.map_info));
+    //console.log(JSON.stringify(this.map_info));
     var coords = '?east=' + String(this.map_info.extents.east) + '&west=' + String(this.map_info.extents.west) + '&north=' + String(this.map_info.extents.north) + '&south=' + String(this.map_info.extents.south);
     //var coords = '?extend='+ this.map_info;
-    console.log(coords);
+    
     this.heroService.getHeroesWithinBounds(coords) 
-      //.map((data: any) => data.json())
       .subscribe(
         (data: any) => {
             this.map_info = data;
+            console.log(this.map_info);
         },
         err => console.log(err), // error
         () => console.log('getExtents Complete') // complete

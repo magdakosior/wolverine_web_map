@@ -1,7 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/index');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
+const operatorsAliases = {
+    $eq: Op.eq,
+    $or: Op.or,
+}
 //middleware to hanlde errors 
 const awaitErorrHandlerFactory = middleware => {
   return async (req, res, next) => {
@@ -15,27 +21,20 @@ const awaitErorrHandlerFactory = middleware => {
 
 /* GET heros listing. */
 router.get('/', function (req, res, next) {
-    console.log('i am in router.get ');
-    console.log(req.query.east);
+    //console.log(req.query.east);
 
-    /*model.sequelize.query('SELECT * FROM heros WHERE heros.id = 3 ')
-        .then(heros => res.json(heros))
+    var envelope = model.Sequelize.fn('ST_MakeEnvelope', req.query.west, req.query.south, req.query.east, req.query.north, 4326);
+    var intersects = model.Sequelize.fn('ST_Intersects', model.Sequelize.col('geom'), envelope);
 
-        
-        .catch(error => res.json({
-            error: true,
-            data: [],
-            error: error
-        }));
-        */
-    //model.heros.findAll({ where: {id: 3}, limit: 1 })
-    model.heros.findAll({})        
-        .then(heros => res.json(heros))
+    model.geo_items.findAll({
+        where: intersects
+    })        
         /*.then(heros => res.json({
             error: false,
             data: heros
         }
         ))*/
+        .then(items => res.json(items))
         .catch(error => res.json({
             error: true,
             data: [],
