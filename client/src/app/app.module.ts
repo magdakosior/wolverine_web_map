@@ -16,7 +16,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 import { MapModule } from './map/map.module';
 
-import { LeafletModule } from '@asymmetrik/angular2-leaflet';
+//import { LeafletModule } from '@asymmetrik/angular2-leaflet';
 //import { MapService } from "./services/map.service";
 
 

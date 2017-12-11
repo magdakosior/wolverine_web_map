@@ -1,5 +1,7 @@
 
 
+ http://localhost:3000/map
+ http://localhost:4200/heroes
  
 
  package.json scripts
@@ -32,3 +34,18 @@ mb-util -h to verify it worked.
 Convert the tiles using the following command: 
 mb-util --image_format=png DavidsMap.mbtiles DavidsMap
 It will generate a folder, in my case DavidsMap, which will contain all of your map tiles in PNG format.
+
+
+SELECT *
+FROM   my_table
+WHERE  coordinates 
+    && -- intersects,  gets more rows  -- CHOOSE ONLY THE
+    @ -- contained by, gets fewer rows -- ONE YOU NEED!
+    ST_MakeEnvelope (
+        xmin, ymin, -- bounding 
+        xmax, ymax, -- box limits
+        my_srid)
+
+        or WHERE  ST_MakeEnvelope (...)
+    ~ -- contains, gets same fewer rows 
+    coordinates

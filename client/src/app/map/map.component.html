@@ -21,6 +21,7 @@
 					 [leafletOptions]="options"
 					 [leafletBaseLayers]="baseLayers"
 					 [leafletLayersControlOptions]="layersControlOptions"
+					 (leafletMapReady)="onMapReady($event)"
 
 					 [leafletMarkerCluster]="markerClusterData"
 					 [leafletMarkerClusterOptions]="markerClusterOptions"

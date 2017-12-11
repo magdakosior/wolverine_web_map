@@ -7,7 +7,7 @@ module.exports = {
       Return a promise to correctly handle asynchronicity.
 
       Example:*/
-      return queryInterface.bulkInsert('Heros', [{
+      return queryInterface.bulkInsert('heros', [{
         name: 'Sara',
         createdAt: new Date(2017, 12, 4),
         updatedAt: new Date(2017, 12, 4) //'2017-12-4 13:50:07.452-07'

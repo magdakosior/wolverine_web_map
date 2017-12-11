@@ -1,24 +1,24 @@
 {
   "development": {
-    "username": "Magda",
+    "username": "postgres",
     "password": null,
-    "database": "angular_tests",
+    "database": "wolverine",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
   },
   "test": {
-    "username": "Magda",
+    "username": "postgres",
     "password": null,
-    "database": "angular_tests",
+    "database": "wolverine",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
   },
   "production": {
-    "username": "Magda",
+    "username": "postgres",
     "password": null,
-    "database": "angular_tests",
+    "database": "wolverine",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false

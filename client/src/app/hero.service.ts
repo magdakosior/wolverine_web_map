@@ -35,6 +35,16 @@ export class HeroService {
 	    );
 	}
 
+	/** GET heroes from the server */
+	getHeroesWithinBounds (bounds: JSON): Observable<Hero[]> {
+	  
+		//return this.http.get(this.heroesUrl)
+		return this.http.get<Hero[]>(this.heroesUrl).pipe(
+	      tap(heroes => this.log(`fetched heroes`)),
+	      catchError(this.handleError('getHeroes', []))
+	    );
+	}
+
 	/** GET hero by id. Will 404 if id not found */
 	getHero(id: number): Observable<Hero> {
 	  const url = `${this.heroesUrl}/${id}`;

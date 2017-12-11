@@ -15,7 +15,7 @@ const awaitErorrHandlerFactory = middleware => {
 
 /* GET heros listing. */
 router.get('/', function (req, res, next) {
-    model.Heros.findAll({})
+    model.heros.findAll({})
         
         .then(heros => res.json(heros))
         /*.then(heros => res.json({
