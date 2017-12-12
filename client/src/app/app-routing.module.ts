@@ -10,8 +10,8 @@ const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'detail/:id', component: HeroDetailComponent },
-  { path: 'heroes', component: HeroesComponent },
-  { path: 'map', component: MapComponent }
+  { path: 'heroes', component: HeroesComponent }//,
+  //{ path: 'map', component: MapComponent }
 ];
 
 /*

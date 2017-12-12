@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import * as L from 'leaflet';
 
 import 'leaflet.markercluster';
@@ -19,13 +19,17 @@ export class MapComponent implements OnInit {
   //used Angular Dependency Injection to inject it into a component
   constructor(private heroService: HeroService) { }
   
+  @Output() markerClick = new EventEmitter();
+  message: string = "Hola Mundo!"
+
   // Open Street Map Definition
   LAYER_OSM = {
     id: 'openstreetmap',
     name: 'Open Street Map',
     enabled: false,
     layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 12,
+      maxZoom: 20,
+      minZoom: 3,
       attribution: 'Open Street Map'
     })
   };
@@ -40,32 +44,34 @@ export class MapComponent implements OnInit {
     center: L.latLng([ 51.0810, -115.3451 ])
   };
 
+  //markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+
   // Marker cluster stuff
   markerClusterGroup: L.MarkerClusterGroup;
   markerClusterData: any[] = [];
   markerClusterOptions: L.MarkerClusterGroupOptions;
 
+  //https://github.com/DefinitelyTyped/DefinitelyTyped/blob/617fc60898e7671653ddb269561f41260b2d80a7/types/leaflet.markercluster.layersupport/leaflet.markercluster.layersupport-tests.ts
+
+  //this.markerClusterGroup = { spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false }
+
   map: L.Map;
   //not sure how to initialize this!!
   map_info = {
-      zoom: 12,
-      extents: {
-        east:-115.13946533203126,
-        west:-115.55042266845705,
-        north:51.12421275782688,
-        south:51.037939894299356
-      },
-      markers:[]
+    zoom: 16,
+    extents: {
+      east:-115.13946533203126,
+      west:-115.55042266845705,
+      north:51.12421275782688,
+      south:51.037939894299356
+    },
+    curr_marker: {
+      id: 1
+    }
   };
 
-   // Generators for lat/lon values
-  generateLat() { return Math.random() * 360 - 180; }
-  generateLon() { return Math.random() * 180 - 90; }
-
   ngOnInit() {
-    console.log('ngOnInit');
     this.getItems();  
-    //console.log(this.map_info);
   }
 
   markerClusterReady(group: L.MarkerClusterGroup) {
@@ -73,55 +79,77 @@ export class MapComponent implements OnInit {
   }
 
   onMapReady(map: L.Map) {
-    console.log('onMapReady');
     map.on('moveend', () => {
-      // Do stuff with changed bounds
+      this.map_info.zoom = map.getZoom();
       this.map_info.extents.east = map.getBounds().getEast();
       this.map_info.extents.west = map.getBounds().getWest();
       this.map_info.extents.north = map.getBounds().getNorth();
       this.map_info.extents.south = map.getBounds().getSouth();
-      
-      console.log('moved extents: '+ JSON.stringify(this.map_info));
+      //console.log('moved extents: '+ JSON.stringify(this.map_info));
       this.getItems(); 
+      //console.log(this.map_info.zoom);
     });
-    //this.getItems(); 
   }
 
   //gave the HeroService get data method an asynchronous signature.
   getItems(): void {
-    console.log('getItems');
-    //console.log(JSON.stringify(this.map_info));
     var coords = '?east=' + String(this.map_info.extents.east) + '&west=' + String(this.map_info.extents.west) + '&north=' + String(this.map_info.extents.north) + '&south=' + String(this.map_info.extents.south);
-    //var coords = '?extend='+ this.map_info;
-    
+    //console.log(this.map_info.curr_marker);
     this.heroService.getHeroesWithinBounds(coords) 
       .subscribe(
         (markers: any) => {
-            //this.map_info.markers = markers;
-            //console.log('in get Heros within Bounds function');
-            //console.log(markers);
-
-            const map_markers: any[] = [];
+            console.log(markers);
+            //console.log(this.map_info.curr_marker);
+            var map_markers: any[] = [];
             
             for (let i = 0; i < Object.keys(markers).length; i++) {
-
               const icon = L.icon({
                 iconUrl: 'assets/images/marker-icon.png',
                 shadowUrl: 'assets/images/marker-shadow.png'
               });
-              console.log(i);
-              console.log(markers[i].geom.coordinates[0][0] + ', ' + markers[i].geom.coordinates[0][1]);
-              map_markers.push(L.marker([ markers[i].geom.coordinates[0][1], markers[i].geom.coordinates[0][0] ], { icon }));
-            }
+              //console.log(i);
+              //console.log(markers[i].geom.coordinates[0][0] + ', ' + markers[i].geom.coordinates[0][1]);
+              var addmarker = L.marker([ markers[i].geom.coordinates[0][1], markers[i].geom.coordinates[0][0] ], { icon })
+                .on({
+                    'click': event => this.markerClick.emit(markers[i].id)//markers[i].id
+                });
+                /*
+                .on('click', function(e: MouseEvent){
+                    //figure out how to make marker red?! and send details or id to another component
+                    //map_info.curr_marker = markers[i].id;
+                    //var clickedMarker = event.name;
+                    const redicon = L.icon({
+                      iconUrl: 'assets/images/red-map-marker.png',
+                      shadowUrl: 'assets/images/marker-shadow.png'
+                    });
+                    console.log(markers[i].id);
+                    //e.target.setIcon(redicon);
+                    this.click.emit(event)
+                    //console.log(this.map_info);;
+                    
+                  });*/
 
+              map_markers.push(addmarker);
+            }
             this.markerClusterData = map_markers;
+
+            //var visibleOne = this.markerClusterGroup.getVisibleParent(myMarker);
+            //console.log(visibleOne.getLatLng());
         },
         err => console.log(err), // error
         () => console.log('getItems Complete') // complete
       );
   }
 
+  getHandlerForFeature(feat) {  
+      return function(ev) {   // ...that returns a function...
+          console.log(feat);  // ...that has a closure over the value.
+      }
+  } 
+
   getMapBounds(): void {
+
+  }
     /*
     map.on('dragend', function onDragEnd(){
       var width = map.getBounds().getEast() - map.getBounds().getWest();
@@ -180,7 +208,7 @@ export class MapComponent implements OnInit {
         console.log(error)
       }
     });*/
-  }
+  
   
 }
 
