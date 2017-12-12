@@ -111,7 +111,7 @@ export class MapComponent implements OnInit {
               //console.log(markers[i].geom.coordinates[0][0] + ', ' + markers[i].geom.coordinates[0][1]);
               var addmarker = L.marker([ markers[i].geom.coordinates[0][1], markers[i].geom.coordinates[0][0] ], { icon })
                 .on({
-                    'click': event => this.markerClick.emit(markers[i].id)//markers[i].id
+                    'click': event => this.markerClick.emit(parseInt(markers[i].id))//markers[i].id
                 });
                 /*
                 .on('click', function(e: MouseEvent){

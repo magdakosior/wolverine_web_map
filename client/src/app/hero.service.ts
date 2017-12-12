@@ -38,7 +38,7 @@ export class HeroService {
 	getHeroesWithinBounds (bounds: string): Observable<Hero[]> {
 	  
 		//return this.http.get(this.heroesUrl + bounds)
-		return this.http.get<Hero[]>(this.heroesUrl + bounds).pipe(
+		return this.http.get<Hero[]>(this.heroesUrl + 'all' + bounds).pipe(
 	      tap(heroes => this.log(`fetched heroes ` + this.heroesUrl + bounds)),
 	      catchError(this.handleError('getHeroes', []))
 	    );

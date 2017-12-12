@@ -29,7 +29,8 @@ app.use(express.static(path.join(__dirname, '../../dist/client')));
 
 //app.use('/', heros);
 app.use('/api', heros);
-app.use('/api/heros', heros);
+//app.use('/api/herosall', heros);
+//app.use('/api/heros/:id', heros);
 
 
 /**/
