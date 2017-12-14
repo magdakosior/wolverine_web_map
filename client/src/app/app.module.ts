@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { HeroesComponent } from './heroes/heroes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+import { ItemPhotoComponent } from './item-photo/item-photo.component';
 import { HeroDetailComponent } from './hero-detail/hero-detail.component';
 import { HeroService } from './hero.service';
 import { MessagesComponent } from './messages/messages.component';
@@ -24,6 +25,7 @@ import { MapModule } from './map/map.module';
   declarations: [
     AppComponent,
     HeroesComponent,
+    ItemPhotoComponent,
     HeroDetailComponent,
     MessagesComponent,
     DashboardComponent,

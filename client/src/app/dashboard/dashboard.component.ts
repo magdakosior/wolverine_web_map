@@ -10,7 +10,7 @@ import { MapComponent } from "../map/map.component";
   styleUrls: [ './dashboard.component.css' ]
 })
 export class DashboardComponent implements OnInit {
-  hero: Hero;
+  item: Hero;
   currentItem: Hero;
   currentItemId: number;
   
@@ -32,12 +32,12 @@ export class DashboardComponent implements OnInit {
     //console.log('dashboard getItem()');
     ///console.log(currentMarker);
     this.heroService.getHero(this.currentItemId)
-      .subscribe((hero: Hero) => {
+      .subscribe((item: Hero) => {
             // do stuff with our data here.
             //console.log(heroes);
             // asign data to our class property in the end
             // so it will be available to our template
-        this.hero = hero //= heroes.slice(1, 5)
+        this.item = item //= heroes.slice(1, 5)
         //console.log('in dashboard hero subscription -just set hero');
         //console.log(JSON.stringify(this.hero));
       })

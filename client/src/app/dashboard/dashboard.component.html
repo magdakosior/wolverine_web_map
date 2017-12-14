@@ -1,5 +1,7 @@
 <h3>Dashboard Component header</h3>
-<app-map (markerClick)="markerClick($event)"></app-map>
-<app-hero-search></app-hero-search>
-<app-hero-detail [hero]="hero" *ngIf="hero"></app-hero-detail>
-
+<section>
+	<app-map (markerClick)="markerClick($event)"></app-map>
+	<app-item-photo [item]="item" ></app-item-photo>
+	<app-hero-search></app-hero-search>
+	<app-hero-detail [item]="item" *ngIf="item"></app-hero-detail>
+</section>

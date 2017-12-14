@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   var Item = sequelize.define('geo_items', {
     name: DataTypes.STRING,
-    geom: DataTypes.GEOMETRY('MULTIPOINT')
+    geom: DataTypes.GEOMETRY('MULTIPOINT'),
+    photoPath: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {

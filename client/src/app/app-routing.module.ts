@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MapComponent }      from './map/map.component';
 import { HeroesComponent }      from './heroes/heroes.component';
 import { DashboardComponent }   from './dashboard/dashboard.component';
+import { ItemPhotoComponent }  from './item-photo/item-photo.component';
 import { HeroDetailComponent }  from './hero-detail/hero-detail.component';
 
 const routes: Routes = [

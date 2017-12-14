@@ -1,4 +1,4 @@
-<div class="container-fluid" style="margin-bottom: 30px;">
+<div id="mapbox" style="margin-bottom: 30px;">
 	<div class="row">
 		<div class="col-md-10">
 			<!-- Control Form -->
@@ -13,7 +13,7 @@
 			<!-- Map -->
 			<div class="col-md-12" style="margin-top:16px;">
 
-				<div leaflet style="height: 400px;"
+				<div leaflet id="leafletbox"
 					 [leafletOptions]="options"
 					 [leafletBaseLayers]="baseLayers"
 					 [leafletLayersControlOptions]="layersControlOptions"
