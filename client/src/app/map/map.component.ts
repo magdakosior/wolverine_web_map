@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnChanges } from '@angular/core';
 import * as L from 'leaflet';
 
 import 'leaflet.markercluster';
@@ -13,15 +13,14 @@ import { HeroService } from '../hero.service';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnChanges {
   
   heroes: Hero[]; //heroes service to expose these heroes for binding
   //used Angular Dependency Injection to inject it into a component
   constructor(private heroService: HeroService) { }
   
   @Output() markerClick = new EventEmitter();
-  message: string = "Hola Mundo!"
-
+  
   // Open Street Map Definition
   LAYER_OSM = {
     id: 'openstreetmap',
@@ -44,18 +43,11 @@ export class MapComponent implements OnInit {
     center: L.latLng([ 51.0810, -115.3451 ])
   };
 
-  //markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
-
   // Marker cluster stuff
   markerClusterGroup: L.MarkerClusterGroup;
   markerClusterData: any[] = [];
   markerClusterOptions: L.MarkerClusterGroupOptions;
 
-  //https://github.com/DefinitelyTyped/DefinitelyTyped/blob/617fc60898e7671653ddb269561f41260b2d80a7/types/leaflet.markercluster.layersupport/leaflet.markercluster.layersupport-tests.ts
-
-  //this.markerClusterGroup = { spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false }
-
-  map: L.Map;
   //not sure how to initialize this!!
   map_info = {
     zoom: 16,
@@ -64,19 +56,23 @@ export class MapComponent implements OnInit {
       west:-115.55042266845705,
       north:51.12421275782688,
       south:51.037939894299356
-    },
-    curr_marker: {
-      id: 1
     }
   };
 
+  customMarker = L.Marker.extend({
+    options: { 
+      id: 0
+   }
+  });
+  selectedMarker = new this.customMarker();
+  
   ngOnInit() {
     this.getItems();  
   }
 
   markerClusterReady(group: L.MarkerClusterGroup) {
     this.markerClusterGroup = group;
-  }
+  } 
 
   onMapReady(map: L.Map) {
     map.on('moveend', () => {
@@ -85,70 +81,79 @@ export class MapComponent implements OnInit {
       this.map_info.extents.west = map.getBounds().getWest();
       this.map_info.extents.north = map.getBounds().getNorth();
       this.map_info.extents.south = map.getBounds().getSouth();
-      //console.log('moved extents: '+ JSON.stringify(this.map_info));
       this.getItems(); 
-      //console.log(this.map_info.zoom);
     });
   }
 
   //gave the HeroService get data method an asynchronous signature.
   getItems(): void {
+    const redIcon = L.icon({
+      iconUrl: 'assets/images/red-map-marker.png',
+      shadowUrl: 'assets/images/marker-shadow.png'
+    });
+    const blueIcon = L.icon({
+      iconUrl: 'assets/images/marker-icon.png',
+      shadowUrl: 'assets/images/marker-shadow.png'
+    });
+
     var coords = '?east=' + String(this.map_info.extents.east) + '&west=' + String(this.map_info.extents.west) + '&north=' + String(this.map_info.extents.north) + '&south=' + String(this.map_info.extents.south);
-    //console.log(this.map_info.curr_marker);
+    
     this.heroService.getHeroesWithinBounds(coords) 
       .subscribe(
-        (markers: any) => {
-            console.log(markers);
-            //console.log(this.map_info.curr_marker);
-            var map_markers: any[] = [];
-            
-            for (let i = 0; i < Object.keys(markers).length; i++) {
-              const icon = L.icon({
-                iconUrl: 'assets/images/marker-icon.png',
-                shadowUrl: 'assets/images/marker-shadow.png'
-              });
-              //console.log(i);
-              //console.log(markers[i].geom.coordinates[0][0] + ', ' + markers[i].geom.coordinates[0][1]);
-              var addmarker = L.marker([ markers[i].geom.coordinates[0][1], markers[i].geom.coordinates[0][0] ], { icon })
+        (items: any) => {
+            var map_items: any[] = [];
+
+            for (let i = 0; i < Object.keys(items).length; i++) {
+              //console.log(items[i]);
+              var lat = items[i].geom.coordinates[0][1];
+              var lon = items[i].geom.coordinates[0][0];
+              var id = items[i].id;
+
+              var addmarker = new this.customMarker([ lat, lon ], { icon: blueIcon, id: id})
                 .on({
-                    'click': event => this.markerClick.emit(parseInt(markers[i].id))//markers[i].id
+                    'click': event => {
+                      this.markerClick.emit(parseInt(items[i].id));
+
+                      if(this.selectedMarker.options.id != 0) {  //if marker is set
+                        if(this.selectedMarker != event.target) {
+                            //console.log('clean old selection');
+                            //console.log(this.selectedMarker);
+                            this.selectedMarker.setIcon(blueIcon);
+                            //console.log(this.selectedMarker);
+                            
+                            //console.log('change selection');
+                            this.selectedMarker = event.target;
+                            this.selectedMarker.setIcon(redIcon);
+                        }
+                      }
+                      else { //marker has not been set
+                        //console.log('new selected marker ' + parseInt(items[i].id));
+                        this.selectedMarker = event.target;
+                        this.selectedMarker.setIcon(redIcon); //set highlight icon
+                        //console.log(this.selectedMarker);
+                      }
+                    }
                 });
-                /*
-                .on('click', function(e: MouseEvent){
-                    //figure out how to make marker red?! and send details or id to another component
-                    //map_info.curr_marker = markers[i].id;
-                    //var clickedMarker = event.name;
-                    const redicon = L.icon({
-                      iconUrl: 'assets/images/red-map-marker.png',
-                      shadowUrl: 'assets/images/marker-shadow.png'
-                    });
-                    console.log(markers[i].id);
-                    //e.target.setIcon(redicon);
-                    this.click.emit(event)
-                    //console.log(this.map_info);;
-                    
-                  });*/
-
-              map_markers.push(addmarker);
+                
+              if (this.selectedMarker.options.id == addmarker.options.id) {
+                //console.log(String (this.selectedMarker.options.id) + ' found a match with ' + String(addmarker.options.id));
+                addmarker.setIcon(redIcon);
+                this.selectedMarker = addmarker;
+                //console.log(this.selectedMarker);  //lost map info here
+              }
+              map_items.push(addmarker);
             }
-            this.markerClusterData = map_markers;
-
-            //var visibleOne = this.markerClusterGroup.getVisibleParent(myMarker);
-            //console.log(visibleOne.getLatLng());
+            this.markerClusterData = map_items;
         },
         err => console.log(err), // error
         () => console.log('getItems Complete') // complete
       );
   }
 
-  getHandlerForFeature(feat) {  
-      return function(ev) {   // ...that returns a function...
-          console.log(feat);  // ...that has a closure over the value.
-      }
-  } 
+  ngOnChanges(changes: any) { //changes: {[itemId: number]: SimpleChanges}){
+  }
 
   getMapBounds(): void {
-
   }
     /*
     map.on('dragend', function onDragEnd(){

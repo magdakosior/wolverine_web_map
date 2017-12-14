@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
     //console.log(currentItemId);
     this.currentItemId = currentItemId;
     this.getItem();
-    console.log('in dashboard hero subscription -just set hero id in markerClick()');
+    //console.log('in dashboard hero subscription -just set hero id in markerClick()');
   }
 
   getItem() {
@@ -38,8 +38,8 @@ export class DashboardComponent implements OnInit {
             // asign data to our class property in the end
             // so it will be available to our template
         this.hero = hero //= heroes.slice(1, 5)
-        console.log('in dashboard hero subscription -just set hero');
-        console.log(JSON.stringify(this.hero));
+        //console.log('in dashboard hero subscription -just set hero');
+        //console.log(JSON.stringify(this.hero));
       })
   }
   /*
