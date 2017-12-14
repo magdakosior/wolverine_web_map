@@ -1,7 +1,17 @@
 <h3>Dashboard Component header</h3>
-<section>
-	<app-map (markerClick)="markerClick($event)"></app-map>
-	<app-item-photo [item]="item" ></app-item-photo>
-	<app-hero-search></app-hero-search>
+<div class="container main">
+	<div class="row top_spacer">
+		<app-hero-search></app-hero-search>
+		<div class="col-md-7">
+			<app-map (markerClick)="markerClick($event)"></app-map>
+		</div>
+		<div class="col-md-5 featurette-image">
+			<app-item-photo [item]="item" ></app-item-photo>
+		</div>
+		
+		
+	</div>
+</div>
+<div class="jumbotron gray-light">
 	<app-hero-detail [item]="item" *ngIf="item"></app-hero-detail>
-</section>
+</div>
