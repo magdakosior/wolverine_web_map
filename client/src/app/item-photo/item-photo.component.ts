@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnChanges} from '@angular/core';
-import { Hero } from '../hero';
+import { Item } from '../item';
 
 //import { ActivatedRoute } from '@angular/router';
 //import { Location } from '@angular/common';
 
-import { HeroService }  from '../hero.service';
+import { ItemService }  from '../item.service';
 
 @Component({
   selector: 'app-item-photo',
@@ -13,12 +13,12 @@ import { HeroService }  from '../hero.service';
 })
 export class ItemPhotoComponent implements OnInit, OnChanges {
 
-  @Input() item: Hero;
+  @Input() item: Item;
   @Input('passItemId') itemId: number;
 
   constructor(
     //private route: ActivatedRoute,
-    private heroService: HeroService
+    private heroService: ItemService
 
     //private location: Location  
   ) {}

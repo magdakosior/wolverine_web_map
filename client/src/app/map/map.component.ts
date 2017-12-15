@@ -5,7 +5,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 //import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
+import { ItemService } from '../item.service';
 
 //@Component is a decorator function that specifies the Angular metadata for the component.
 @Component({
@@ -17,7 +17,7 @@ export class MapComponent implements OnInit, OnChanges {
   
   //heroes: Hero[]; //heroes service to expose these heroes for binding
   //used Angular Dependency Injection to inject it into a component
-  constructor(private heroService: HeroService) { }//
+  constructor(private itemService: ItemService) { }//
   
   @Output() markerClick = new EventEmitter();
   
@@ -98,7 +98,7 @@ export class MapComponent implements OnInit, OnChanges {
 
     var coords = '?east=' + String(this.map_info.extents.east) + '&west=' + String(this.map_info.extents.west) + '&north=' + String(this.map_info.extents.north) + '&south=' + String(this.map_info.extents.south);
     
-    this.heroService.getHeroesWithinBounds(coords) 
+    this.itemService.getItemsWithinBounds(coords) 
       .subscribe(
         (items: any) => {
             var map_items: any[] = [];

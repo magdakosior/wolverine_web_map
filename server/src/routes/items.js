@@ -17,7 +17,7 @@ const awaitErorrHandlerFactory = middleware => {
 
 /* GET heros listing. */
 //http://localhost:3000/api/herosall?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
-router.get('/herosall', function (req, res, next) {
+router.get('/itemsall', function (req, res, next) {
     //console.log(req.query.east);
 
     var envelope = model.Sequelize.fn('ST_MakeEnvelope', req.query.west, req.query.south, req.query.east, req.query.north, 4326);
@@ -40,16 +40,16 @@ router.get('/herosall', function (req, res, next) {
 });
 
 /* get hero by id http://localhost:3000/api/heros/1 */
-router.get('/heros/:id', function (req, res, next) {
+router.get('/items/:id', function (req, res, next) {
 
-    const hero_id = req.params.id;
-    console.log('api - in hero get by id');
-    console.log(hero_id);
+    const item_id = req.params.id;
+    console.log('api - in item get by id');
+    console.log(item_id);
     const { name } = req.body;
     
     model.geo_items.findAll({
             where: {
-                id: hero_id
+                id: item_id
             }
         })
         .then(items => res.json(items))
@@ -60,13 +60,13 @@ router.get('/heros/:id', function (req, res, next) {
         
 });
 
-/* GET heros listing within map bounds. 
+/* GET items listing within map bounds. 
 router.get('/', function (req, res, next) {
     console.log('i am in router.get with extents ');
     console.log(req.params);
-    model.heros.findAll({})
+    model.items.findAll({})
         
-        .then(heros => res.json(heros))
+        .then(items => res.json(items))
         
         .catch(error => res.json({
             error: true,
@@ -76,18 +76,18 @@ router.get('/', function (req, res, next) {
 });
 */
 
-/* POST hero. */
+/* POST item. */
 router.post('/', function (req, res, next) {
     const {
         name
     } = req.body;
-    model.Heros.create({
+    model.Items.create({
             name: name
         })
-        .then(hero => res.status(201).json({
+        .then(item => res.status(201).json({
             error: false,
-            data: hero,
-            message: 'New hero has been created.'
+            data: item,
+            message: 'New item has been created.'
         }))
         .catch(error => res.json({
             error: true,
@@ -97,23 +97,23 @@ router.post('/', function (req, res, next) {
 });
 
 
-/* update hero. */
+/* update item. */
 router.put('/:id', function (req, res, next) {
 
-    const hero_id = req.params.id;
-    console.log(hero_id);
+    const item_id = req.params.id;
+    console.log(item_id);
     const { name } = req.body;
 
-    model.Heros.update({
+    model.Items.update({
             name: name
         }, {
             where: {
-                id: hero_id
+                id: item_id
             }
         })
-        .then(hero => res.status(201).json({
+        .then(item => res.status(201).json({
             error: false,
-            message: 'hero has been updated.'
+            message: 'item has been updated.'
         }))
         .catch(error => res.json({
             error: true,
@@ -121,11 +121,11 @@ router.put('/:id', function (req, res, next) {
         }));
 });
 
-/* Delete hero. */
+/* Delete item. */
 router.delete('/:id', function (req, res, next) {
-    const hero_id = req.params.id;
+    const item_id = req.params.id;
 
-    model.Heros.destroy({ where: {
+    model.Items.destroy({ where: {
         id: hero_id
     }})
         .then(status => res.status(201).json({

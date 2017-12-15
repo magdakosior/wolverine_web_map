@@ -5,16 +5,16 @@ import { HttpClientModule } from '@angular/common/http';
 //import { leaflet } from 'leaflet';
 
 import { AppComponent } from './app.component';
-import { HeroesComponent } from './heroes/heroes.component';
+import { ItemComponent } from './item/item.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { ItemPhotoComponent } from './item-photo/item-photo.component';
-import { HeroDetailComponent } from './hero-detail/hero-detail.component';
-import { HeroService } from './hero.service';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { ItemService } from './item.service';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageService } from './message.service';
 import { AppRoutingModule } from './/app-routing.module';
-import { HeroSearchComponent } from './hero-search/hero-search.component';
+import { ItemSearchComponent } from './item-search/item-search.component';
 import { MapModule } from './map/map.module';
 
 //import { LeafletModule } from '@asymmetrik/angular2-leaflet';
@@ -24,12 +24,12 @@ import { MapModule } from './map/map.module';
 @NgModule({
   declarations: [
     AppComponent,
-    HeroesComponent,
+    ItemComponent,
     ItemPhotoComponent,
-    HeroDetailComponent,
+    ItemDetailComponent,
     MessagesComponent,
     DashboardComponent,
-    HeroSearchComponent
+    ItemSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +39,7 @@ import { MapModule } from './map/map.module';
     MapModule//,
     //LeafletModule.forRoot()
   ],
-  providers: [ HeroService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
+  providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
   bootstrap: [AppComponent]
 })
 

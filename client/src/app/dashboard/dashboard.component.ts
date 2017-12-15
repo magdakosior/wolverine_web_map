@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
+import { Item } from '../item';
+import { ItemService } from '../item.service';
 import { MapComponent } from "../map/map.component";
 
 @Component({
@@ -10,11 +10,11 @@ import { MapComponent } from "../map/map.component";
   styleUrls: [ './dashboard.component.css' ]
 })
 export class DashboardComponent implements OnInit {
-  item: Hero;
-  currentItem: Hero;
+  item: Item;
+  currentItem: Item;
   currentItemId: number;
   
-  constructor(private heroService: HeroService) { }
+  constructor(private itemService: ItemService) { }
 
   ngOnInit() {
     //this.getHeroes();
@@ -31,8 +31,8 @@ export class DashboardComponent implements OnInit {
   getItem() {
     //console.log('dashboard getItem()');
     ///console.log(currentMarker);
-    this.heroService.getHero(this.currentItemId)
-      .subscribe((item: Hero) => {
+    this.itemService.getItem(this.currentItemId)
+      .subscribe((item: Item) => {
             // do stuff with our data here.
             //console.log(heroes);
             // asign data to our class property in the end

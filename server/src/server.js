@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var heros = require('./routes/heros');
+var items = require('./routes/items');
 
 var app = express();
 
@@ -27,10 +27,10 @@ app.use(cookieParser());
 //for prod use ng build for client then
 app.use(express.static(path.join(__dirname, '../../dist/client')));
 
-//app.use('/', heros);
-app.use('/api', heros);
-//app.use('/api/herosall', heros);
-//app.use('/api/heros/:id', heros);
+//app.use('/', items);
+app.use('/api', items);
+//app.use('/api/itemsall', items);
+//app.use('/api/items/:id', items);
 
 
 /**/

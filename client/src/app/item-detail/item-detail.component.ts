@@ -1,24 +1,24 @@
 import { Component, OnInit, Input, OnChanges} from '@angular/core';
-import { Hero } from '../hero';
+import { Item } from '../item';
 
 //import { ActivatedRoute } from '@angular/router';
 //import { Location } from '@angular/common';
 
-import { HeroService }  from '../hero.service';
+import { ItemService }  from '../item.service';
 
 @Component({
-  selector: 'app-hero-detail',
-  templateUrl: './hero-detail.component.html',
-  styleUrls: ['./hero-detail.component.css']
+  selector: 'app-item-detail',
+  templateUrl: './item-detail.component.html',
+  styleUrls: ['./item-detail.component.css']
 })
-export class HeroDetailComponent implements OnInit, OnChanges {
+export class ItemDetailComponent implements OnInit, OnChanges {
 
-  @Input() item: Hero;
+  @Input() item: Item;
   @Input('passItemId') itemId: number;
 
   constructor(
     //private route: ActivatedRoute,
-    private itemService: HeroService//,
+    private itemService: ItemService//,
     //private location: Location
   ) {}
 
@@ -51,7 +51,7 @@ export class HeroDetailComponent implements OnInit, OnChanges {
   }
 
   save(): void {
-     this.itemService.updateHero(this.item)
+     this.itemService.updateItem(this.item)
        .subscribe(() => this.previous());
    }
 }
