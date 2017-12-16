@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map'
 import { MessageService } from './message.service';
 import { catchError, map, tap } from 'rxjs/operators';
 
-//The heroes web API expects a special header in HTTP save requests. That header is in the httpOption constant defined in the HeroService.
+//The items web API expects a special header in HTTP save requests. That header is in the httpOption constant defined in the HeroService.
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -17,29 +17,29 @@ const httpOptions = {
 @Injectable()
 export class ItemService {
 
-	private itemsUrl = 'api/items'; // 'api/heroes';  // URL to web api
+	private itemsUrl = 'api/items'; // 'api/items';  // URL to web api
 	//used Angular Dependency Injection to inject it into a component
 	constructor(
 	  private http: HttpClient,
 	  private messageService: MessageService) { }
 
 	
-	/** GET heroes from the server */
+	/** GET items from the server */
 	getItems (): Observable<Item[]> {
 	  
-		//return this.http.get(this.heroesUrl)
+		//return this.http.get(this.itemsUrl)
 		return this.http.get<Item[]>(this.itemsUrl).pipe(
 	      tap(items => this.log(`fetched items`)),
 	      catchError(this.handleError('getItems', []))
 	    );
 	}
 
-	/** GET heroes from the server */
+	/** GET items from the server */
 	getItemsWithinBounds (bounds: string): Observable<Item[]> {
 	  
-		//return this.http.get(this.heroesUrl + bounds)
-		return this.http.get<Item[]>(this.itemsUrl + 'all' + bounds).pipe(
-	      tap(heroes => this.log(`fetched items ` + this.itemsUrl + bounds)),
+		//return this.http.get(this.itemsUrl + bounds)
+		return this.http.get<Item[]>(this.itemsUrl + 'MapBounds' + bounds).pipe(
+	      tap(items => this.log(`fetched items ` + this.itemsUrl + bounds)),
 	      catchError(this.handleError('getItems', []))
 	    );
 	}
@@ -87,7 +87,7 @@ export class ItemService {
 	    return of([]);
 	  }
 	  return this.http.get<Item[]>(`api/items/?name=${term}`).pipe(
-	    tap(_ => this.log(`found heroes matching "${term}"`)),
+	    tap(_ => this.log(`found items matching "${term}"`)),
 	    catchError(this.handleError<Item[]>('searchItems', []))
 	  );
 	}

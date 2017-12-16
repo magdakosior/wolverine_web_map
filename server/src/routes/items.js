@@ -17,7 +17,7 @@ const awaitErorrHandlerFactory = middleware => {
 
 /* GET heros listing. */
 //http://localhost:3000/api/herosall?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
-router.get('/itemsall', function (req, res, next) {
+router.get('/itemsMapBounds', function (req, res, next) {
     //console.log(req.query.east);
 
     var envelope = model.Sequelize.fn('ST_MakeEnvelope', req.query.west, req.query.south, req.query.east, req.query.north, 4326);
@@ -43,8 +43,7 @@ router.get('/itemsall', function (req, res, next) {
 router.get('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
-    console.log('api - in item get by id');
-    console.log(item_id);
+    console.log('api - in item get by id: ' + String(item_id));
     const { name } = req.body;
     
     model.geo_items.findAll({
@@ -60,11 +59,11 @@ router.get('/items/:id', function (req, res, next) {
         
 });
 
-/* GET items listing within map bounds. 
-router.get('/', function (req, res, next) {
+// GET all items *this is not used much!?
+router.get('/items', function (req, res, next) {
     console.log('i am in router.get with extents ');
     console.log(req.params);
-    model.items.findAll({})
+    model.geo_items.findAll({})
         
         .then(items => res.json(items))
         
@@ -74,7 +73,7 @@ router.get('/', function (req, res, next) {
             error: error
         }));
 });
-*/
+
 
 /* POST item. */
 router.post('/', function (req, res, next) {

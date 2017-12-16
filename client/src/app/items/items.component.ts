@@ -5,11 +5,11 @@ import { ItemService } from '../item.service';
 
 @Component({
   selector: 'app-items',
-  templateUrl: './item.component.html',
-  styleUrls: ['./item.component.css']
+  templateUrl: './items.component.html',
+  styleUrls: ['./items.component.css']
 })
 
-export class ItemComponent implements OnInit {
+export class ItemsComponent implements OnInit {
 
   items: Item[]; //heroes service to expose these heroes for binding
 

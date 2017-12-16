@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 //import { leaflet } from 'leaflet';
 
 import { AppComponent } from './app.component';
-import { ItemComponent } from './item/item.component';
+import { ItemsComponent } from './items/items.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { ItemPhotoComponent } from './item-photo/item-photo.component';
@@ -24,7 +24,7 @@ import { MapModule } from './map/map.module';
 @NgModule({
   declarations: [
     AppComponent,
-    ItemComponent,
+    ItemsComponent,
     ItemPhotoComponent,
     ItemDetailComponent,
     MessagesComponent,

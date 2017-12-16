@@ -46,7 +46,10 @@ export class ItemDetailComponent implements OnInit, OnChanges {
       .subscribe(hero => this.hero = hero);
   }
 */
-  previous(): void {
+  goPrev(): void {
+    //this.location.back();
+  }
+  goNext(): void {
     //this.location.back();
   }
 
