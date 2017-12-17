@@ -32,14 +32,14 @@ export class ItemPhotoComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: any) { //changes: {[itemId: number]: SimpleChanges}){
-    //console.log('in hero-detail component: ngOnChanges()');
+    console.log('in item-photo component: ngOnChanges()');
     //console.log(changes.prop);
     //make request and get the matching data and bind to 
     //this.searchedResults =  //data coming from the service resul()
     //this.getHero();
     if(this.item) {
-      this.item = this.item[0];
-      //console.log(this.item);
+      this.item = this.item;//[0];
+      console.log(this.item);
     }
   }
   

@@ -161,7 +161,7 @@ export class MapComponent implements OnInit, OnChanges {
 
   //gave the HeroService get data method an asynchronous signature.
   setMarkers(): void {  
-    console.log(this.items); 
+    //console.log(this.items); 
     if (this.items) {
       var map_markers: any[] = [];
       for (let i = 0; i < Object.keys(this.items).length; i++) {

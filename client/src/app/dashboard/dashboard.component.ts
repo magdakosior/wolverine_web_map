@@ -64,8 +64,8 @@ export class DashboardComponent implements OnInit {
     
     this.itemService.getItem(itemId)
       .subscribe((item: Item) => {
-        //console.log('dashboard setting item ');
-        //console.log(item);
+        console.log('dashboard setting item ');
+        console.log(item[0]);
         this.item = item[0];
       })
   }
