@@ -1,26 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Item = sequelize.define('geo_items', {
+  var ItemStatus = sequelize.define('item_status', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false
     },
-    name: DataTypes.STRING,
-    geom: DataTypes.GEOMETRY('MULTIPOINT'),
-    photoPath: DataTypes.STRING,
-    itemStatus: {
+    status: {
       type: DataTypes.STRING,
       values: ['loaded', 'verified', 'deleted']
 
-    },
-    imgStatus: {
-      type: DataTypes.STRING,
-      values: ['tummy', 'good', 'bad']
-
-    },
-    createdAt:  DataTypes.DATE,
-    updatedAt: DataTypes.DATE
+    }
   }, {
     classMethods: {
       associate: function(models) {
@@ -29,5 +19,5 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-  return Item;
+  return ItemStatus;
 };

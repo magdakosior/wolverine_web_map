@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map'
-import { Subject }    from 'rxjs/Subject';
 
 import { MessageService } from './message.service';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -19,23 +18,12 @@ const httpOptions = {
 export class ItemService {
 
   private itemsUrl = 'api/items'; // 'api/items';  // URL to web api
-  // Observable string sources
-  //private prevItemSource = new Subject<number>();
-  //private nextItemSource = new Subject<number>();
-  //private notify = new Subject<number>();
   private selectedId: number;
-  // Observable number stream
-  //selectedItemId$ = this.notify.asObservable();
-
+  
   //used Angular Dependency Injection to inject it into a component
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
-
-  // send/receive between map, dash 
-  /*selectItem(itemId: number) {
-    this.selectedId = itemId;
-  }*/
 
   //message sent from details->goPrev() -> dashboard
   setSelectedItem(id: number): void {
@@ -50,19 +38,18 @@ export class ItemService {
       );
   }
 
-  /** GET items from the server */
+  /** GET items from the server 
+  /api/itemsMapBounds?east=-115.2125930786133&west=-115.45291900634767&north=51.11279084899698&south=51.026496667384635 */
   getItemsWithinBounds (bounds: string): Observable<Item[]> {
-    
     //return this.http.get(this.itemsUrl + bounds)
     return this.http.get<Item[]>(this.itemsUrl + 'MapBounds' + bounds).pipe(
-        tap(items => this.log(`fetched items ` + this.itemsUrl + bounds)),
+        tap(items => this.log(`fetched items ` )),//+ this.itemsUrl + bounds
         catchError(this.handleError('getItems', []))
       );
   }
 
   /** GET item by id. Will 404 if id not found */
   getItem(id: number): Observable<Item> {
-    //console.log('in service getting item ' + String(id));
     this.selectedId = id;
 
     //only get item if one has been set
@@ -70,7 +57,7 @@ export class ItemService {
       const url = `${this.itemsUrl}/${id}`;
       return this.http.get<Item>(url).pipe(
         tap(_ => this.log(`fetched item id=${id}`)),
-        catchError(this.handleError<Item>(`getHero id=${id}`))
+        catchError(this.handleError<Item>(`getItem id=${id}`))
       );
     }
   }
@@ -95,7 +82,9 @@ export class ItemService {
 
   /** PUT: update the item on the server */
   updateItem (item: Item): Observable<any> {
-    return this.http.put(this.itemsUrl, item, httpOptions).pipe(
+    const url = `${this.itemsUrl}/${item.id}`;
+
+    return this.http.put(url, item, httpOptions).pipe(
       tap(_ => this.log(`updated item id=${item.id}`)),
       catchError(this.handleError<any>('updateItem'))
     );

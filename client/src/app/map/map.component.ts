@@ -107,22 +107,31 @@ export class MapComponent implements OnInit, OnChanges {
     }
   }
 
+  getMapCoords(map: L.Map) {
+    this.map_info.zoom = map.getZoom();
+    this.map_info.extents.east = map.getBounds().getEast();
+    this.map_info.extents.west = map.getBounds().getWest();
+    this.map_info.extents.north = map.getBounds().getNorth();
+    this.map_info.extents.south = map.getBounds().getSouth();
+
+    this.mapEvent.emit(this.map_info);
+    //set map coords for dashboard to see
+    this.setMarkers(); 
+  }
+
   markerClusterReady(group: L.MarkerClusterGroup) {
     this.markerClusterGroup = group;
   } 
 
   onMapReady(map: L.Map) {
     this.map = map;
-    map.on('moveend', () => {
-      this.map_info.zoom = map.getZoom();
-      this.map_info.extents.east = map.getBounds().getEast();
-      this.map_info.extents.west = map.getBounds().getWest();
-      this.map_info.extents.north = map.getBounds().getNorth();
-      this.map_info.extents.south = map.getBounds().getSouth();
 
-      this.mapEvent.emit(this.map_info);
-      //set map coords for dashboard to see
-      this.setMarkers(); 
+    map.on('load', () => {
+      this.getMapCoords(map);
+    })
+
+    map.on('moveend', () => {
+      this.getMapCoords(map);
     });
   }
 
@@ -151,7 +160,8 @@ export class MapComponent implements OnInit, OnChanges {
   }
 
   //gave the HeroService get data method an asynchronous signature.
-  setMarkers(): void {    
+  setMarkers(): void {  
+    console.log(this.items); 
     var map_markers: any[] = [];
     for (let i = 0; i < Object.keys(this.items).length; i++) {
     

@@ -59,7 +59,6 @@ const connection = new Sequelize(config.database, config.username, config.passwo
   host: '127.0.0.1',
   dialect: 'postgres',
   operatorsAliases: operatorsAliases, // use Sequelize.Op
-  freezeTableName: true,
   pool: {
     max: 5,
     min: 0,

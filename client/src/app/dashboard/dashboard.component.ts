@@ -4,6 +4,8 @@ import { Item } from '../item';
 import { ItemService } from '../item.service';
 import { MapComponent } from "../map/map.component";
 
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -28,16 +30,25 @@ export class DashboardComponent implements OnInit {
     nextID: null
   };*/
 
-  constructor(private itemService: ItemService) { }
+  constructor(
+    private itemService: ItemService,
+    private route: ActivatedRoute
+    ) { }
 
   ngOnInit() {
+    //if we get a value called from the item-search.componend
+    const searchId = +this.route.snapshot.paramMap.get('id');//The JavaScript (+) operator converts the string to a number, which is what a hero id should be.
+    
+    if (searchId)
+      this.searchItem(searchId);
   }
 
   mapEvent(map_info: JSON) {
     //map marker was clicked
-    //console.log('in dashboard  - noticed map.Emit event()');
+    console.log('in dashboard  - noticed map.Emit event()');
     this.map_info = map_info;
-
+    console.log(this.map_info);
+    
     //set selected id in item service
     if (this.map_info.selectedId) {
       //set selected item for details component
@@ -103,6 +114,13 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  searchItem(searchId: number) {
+    //console.log('in search item - got routed here');
+    console.log('search for ' + String(searchId));
+    this.setCurrentSelectedItem(searchId);
+    this.getItem(searchId);
+  }
+/*
   findElement(arr, propName, propValue) {
     for (var i=0; i < arr.length; i++)
       if (arr[i][propName] == propValue)
@@ -110,5 +128,5 @@ export class DashboardComponent implements OnInit {
     // will return null if not found; 
     return null;
   }
-
+*/
 }

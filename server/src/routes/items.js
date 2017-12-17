@@ -24,12 +24,7 @@ router.get('/itemsMapBounds', function (req, res, next) {
 
     model.geo_items.findAll({
         where: intersects
-    })        
-        /*.then(heros => res.json({
-            error: false,
-            data: heros
-        }
-        ))*/
+    })  
         .then(items => res.json(items))
         .catch(error => res.json({
             error: true,
@@ -43,7 +38,6 @@ router.get('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
     console.log('api - in item get by id: ' + String(item_id));
-    //const { name } = req.body;
     
     model.geo_items.findAll({
             where: {
@@ -98,11 +92,19 @@ router.get('/items/next/:id', function (req, res, next) {
             error: error
         }));
 });
-// GET all items 
+// GET all items and search for items 
 router.get('/items', function (req, res, next) {
-    console.log('i am in router.get with extents ');
-    console.log(req.params);
-    model.geo_items.findAll({})
+    const filter = req.query.name;
+    console.log(JSON.stringify(req.params));
+    model.geo_items.findAll({
+
+        where: { 
+            name: { $like: '%'+filter+'%' } 
+        }
+        //{
+                //name: filter
+            //}
+    })
         
         .then(items => res.json(items))
         
@@ -113,9 +115,7 @@ router.get('/items', function (req, res, next) {
         }));
 });
 
-
-
-/* POST item. */
+/* POST/add new item. */
 router.post('/', function (req, res, next) {
     const {
         name
@@ -135,15 +135,15 @@ router.post('/', function (req, res, next) {
         }));
 });
 
-
-/* update item. */
-router.put('/:id', function (req, res, next) {
+/* PUT/update item. */
+router.put('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
-    console.log(item_id);
+    console.log('saving ' + String(item_id));
     const { name } = req.body;
-
-    model.Items.update({
+    console.log('NAME ' + JSON.stringify(req.body));
+    
+    model.geo_items.update({
             name: name
         }, {
             where: {
@@ -173,6 +173,20 @@ router.delete('/:id', function (req, res, next) {
         }))
         .catch(error => res.json({
             error: true,
+            error: error
+        }));
+});
+
+// GET all items 
+router.get('/item_status', function (req, res, next) {
+    console.log(req.params);
+    model.item_status.findAll({})
+        
+        .then(items => res.json(items))
+        
+        .catch(error => res.json({
+            error: true,
+            data: [],
             error: error
         }));
 });

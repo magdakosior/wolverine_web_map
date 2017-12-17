@@ -48,7 +48,10 @@ export class ItemDetailComponent implements OnInit, OnChanges {
   }
 
   save(): void {
-     //this.itemService.selectedItem(this.selected)
-       //.subscribe(() => this.goNext());
+     this.itemService.updateItem(this.item)
+       .subscribe((item: Item) => {
+        //this.item = item 
+        //console.log(JSON.stringify(this.item));
+      })
    }
 }

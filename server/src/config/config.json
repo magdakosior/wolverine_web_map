@@ -11,15 +11,13 @@
     "password": null,
     "database": "wolverine",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": true
+    "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": null,
     "database": "wolverine",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": true
+    "dialect": "postgres"
   }
 }
