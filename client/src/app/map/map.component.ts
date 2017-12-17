@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 
 import 'leaflet.markercluster';
@@ -19,7 +19,7 @@ export class MapComponent implements OnInit, OnChanges {
       id: 0
    }
   });
-  //heroes: Hero[]; //heroes service to expose these heroes for binding
+  
   //used Angular Dependency Injection to inject it into a component
   constructor(private itemService: ItemService) { }
   
@@ -78,6 +78,7 @@ export class MapComponent implements OnInit, OnChanges {
   markerClusterGroup: L.MarkerClusterGroup;
   markerClusterData: any[] = [];
   markerClusterOptions: L.MarkerClusterGroupOptions;
+  map: L.Map;
 
   ngOnInit() {
     //console.log('in map oninit, sending initial map data');
@@ -86,19 +87,19 @@ export class MapComponent implements OnInit, OnChanges {
       this.setMarkers(); 
   }
 
-  ngOnChanges(changes: any) { 
+  ngOnChanges(changes: SimpleChanges) { 
     if (this.item) {
-      console.log('change in item ');
-      var marker = this.createCustomMarker(this.item.geom.coordinates[0][1], this.item.geom.coordinates[0][0], this.blueIcon, this.item.id);
-      this.selectedMarker = marker;
-      console.log(this.selectedMarker);
-      this.map_info.selectedId = this.item.id;
-      //center on newly set marker
-      //this.map.panTo(new L.LatLng(marker.options.lat, marker.options.lon));
-      //var newCenter = new L.LatLng(this.item.geom.coordinates[0][1], this.item.geom.coordinates[0][0]);
-      //var newCenter = new L.LatLng(51.0810, -115.3451);
-      //this.options.center = newCenter;
-      //this.map.setView(this.options.center, this.options.zoom);
+      if (this.item.id != this.selectedMarker.options.id) {
+        //console.log('change in item ');
+        var newLat = this.item.geom.coordinates[0][1];
+        var newLon = this.item.geom.coordinates[0][0]
+        var marker = this.createCustomMarker(newLat, newLon, this.blueIcon, this.item.id);
+        this.selectedMarker = marker;
+        //console.log(this.selectedMarker);
+        this.map_info.selectedId = this.item.id;
+        //center on newly set marker
+        this.map.panTo(new L.LatLng(newLat, newLon));
+      }
     }
     if (this.items) {
       console.log('change in item(s) ');
@@ -111,6 +112,7 @@ export class MapComponent implements OnInit, OnChanges {
   } 
 
   onMapReady(map: L.Map) {
+    this.map = map;
     map.on('moveend', () => {
       this.map_info.zoom = map.getZoom();
       this.map_info.extents.east = map.getBounds().getEast();
@@ -160,10 +162,12 @@ export class MapComponent implements OnInit, OnChanges {
       var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
         
       if (this.selectedMarker) {
-        console.log(this.selectedMarker);
+        //console.log(this.selectedMarker);
         if (this.selectedMarker.options.id == addmarker.options.id) {
           addmarker.setIcon(this.redIcon);
           this.selectedMarker = addmarker;
+          var coords = L.latLng([ 51.0810, -115.3451 ])
+          //this.map.setView(coords, this.options.zoom);
         }
       }
       map_markers.push(addmarker);

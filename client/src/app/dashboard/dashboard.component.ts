@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit {
 
   getItem(itemId: number) {
     //console.log('calling next from dash getItem ' + String(itemId));
-    console.log(this.map_info);
+    //console.log(this.map_info);
     
     this.itemService.getItem(itemId)
       .subscribe((item: Item) => {
@@ -74,8 +74,8 @@ export class DashboardComponent implements OnInit {
           if(item) {
             this.setCurrentSelectedItem(item.id);
             
-            console.log('in dashboard onPrev(), ' + String(item.id));
-            console.log(item);
+            //console.log('in dashboard onPrev(), ' + String(item.id));
+            //console.log(item);
             this.item = item; 
             
             this.getItems();
@@ -86,11 +86,11 @@ export class DashboardComponent implements OnInit {
     this.itemService.getNextItem() 
       .subscribe((item: Item) => {
           if(item) {
-            console.log('in dashboard onNext(), ' + String(item.id));
+            //console.log('in dashboard onNext(), ' + String(item.id));
             this.item = item; 
             this.setCurrentSelectedItem(this.item.id);
             
-            console.log(this.item);
+            //console.log(this.item);
             this.getItems();
           }
         })
