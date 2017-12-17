@@ -90,7 +90,7 @@ export class MapComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) { 
     if (this.item) {
       if (this.item.id != this.selectedMarker.options.id) {
-        //console.log('change in item ');
+        console.log('change in item ');
         var newLat = this.item.geom.coordinates[0][1];
         var newLon = this.item.geom.coordinates[0][0]
         var marker = this.createCustomMarker(newLat, newLon, this.blueIcon, this.item.id);
@@ -162,27 +162,29 @@ export class MapComponent implements OnInit, OnChanges {
   //gave the HeroService get data method an asynchronous signature.
   setMarkers(): void {  
     console.log(this.items); 
-    var map_markers: any[] = [];
-    for (let i = 0; i < Object.keys(this.items).length; i++) {
-    
-      var lat = this.items[i].geom.coordinates[0][1];
-      var lon = this.items[i].geom.coordinates[0][0];
-      var id = this.items[i].id;
-    
-      var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
-        
-      if (this.selectedMarker) {
-        //console.log(this.selectedMarker);
-        if (this.selectedMarker.options.id == addmarker.options.id) {
-          addmarker.setIcon(this.redIcon);
-          this.selectedMarker = addmarker;
-          var coords = L.latLng([ 51.0810, -115.3451 ])
-          //this.map.setView(coords, this.options.zoom);
+    if (this.items) {
+      var map_markers: any[] = [];
+      for (let i = 0; i < Object.keys(this.items).length; i++) {
+      
+        var lat = this.items[i].geom.coordinates[0][1];
+        var lon = this.items[i].geom.coordinates[0][0];
+        var id = this.items[i].id;
+      
+        var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
+          
+        if (this.selectedMarker) {
+          //console.log(this.selectedMarker);
+          if (this.selectedMarker.options.id == addmarker.options.id) {
+            addmarker.setIcon(this.redIcon);
+            this.selectedMarker = addmarker;
+            var coords = L.latLng([ 51.0810, -115.3451 ])
+            //this.map.setView(coords, this.options.zoom);
+          }
         }
+        map_markers.push(addmarker);
       }
-      map_markers.push(addmarker);
+      this.markerClusterData = map_markers;
     }
-    this.markerClusterData = map_markers;
   }
 
   getMapBounds(): void {
