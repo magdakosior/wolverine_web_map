@@ -39,7 +39,7 @@ export class ItemPhotoComponent implements OnInit, OnChanges {
     //this.getHero();
     if(this.item) {
       this.item = this.item[0];
-      console.log(this.item);
+      //console.log(this.item);
     }
   }
   

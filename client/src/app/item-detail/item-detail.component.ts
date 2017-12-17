@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, OnChanges} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 import { Item } from '../item';
 
 //import { ActivatedRoute } from '@angular/router';
 //import { Location } from '@angular/common';
 
 import { ItemService }  from '../item.service';
+//import { Subscription }   from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-item-detail',
@@ -13,48 +14,41 @@ import { ItemService }  from '../item.service';
 })
 export class ItemDetailComponent implements OnInit, OnChanges {
 
+  @Input() selectedItemId: number;
   @Input() item: Item;
-  @Input('passItemId') itemId: number;
+  @Output() onNext = new EventEmitter<boolean>();
+  @Output() onPrev = new EventEmitter<boolean>();
 
-  constructor(
-    //private route: ActivatedRoute,
-    private itemService: ItemService//,
-    //private location: Location
-  ) {}
+  constructor(private itemService: ItemService) {
+  }
 
   ngOnInit(): void {
     //console.log('in hero-detail component: ngOnInit()');
-    //this.getHero();
-    //console.log(JSON.stringify(this.hero));
-    //this.hero = this.hero[0];
   }
 
-  ngOnChanges(changes: any) { //changes: {[itemId: number]: SimpleChanges}){
-    //console.log('in hero-detail component: ngOnChanges()');
-    //console.log(changes.prop);
-    //make request and get the matching data and bind to 
-    //this.searchedResults =  //data coming from the service resul()
-    //this.getHero();
-    this.item = this.item[0];
+  ngOnChanges(changes: any) { 
     console.log(this.item);
+    //this.item = this.item[0];
   }
-  /*
-  getHero(): void {
-    //console.log('in hero-detail component: getHero()');
-    //const id = +this.route.snapshot.paramMap.get('id');//The JavaScript (+) operator converts the string to a number, which is what a hero id should be.
-    this.heroService.getHero(this.itemId)
-      .subscribe(hero => this.hero = hero);
+
+  getItem() {
+    this.itemService.getItem(this.selectedItemId)
+      .subscribe((item: Item) => {
+        this.item = item 
+        //console.log(JSON.stringify(this.item));
+      })
   }
-*/
+
   goPrev(): void {
-    //this.location.back();
+    this.onPrev.emit(true);
   }
+
   goNext(): void {
-    //this.location.back();
+    this.onNext.emit(true);
   }
 
   save(): void {
-     this.itemService.updateItem(this.item)
-       .subscribe(() => this.previous());
+     //this.itemService.selectedItem(this.selected)
+       //.subscribe(() => this.goNext());
    }
 }

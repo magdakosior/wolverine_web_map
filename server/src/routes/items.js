@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var model = require('../models/index');
 const Sequelize = require('sequelize');
-//const Op = Sequelize.Op;
 
 //middleware to hanlde errors 
 const awaitErorrHandlerFactory = middleware => {
@@ -16,7 +15,7 @@ const awaitErorrHandlerFactory = middleware => {
 };
 
 /* GET heros listing. */
-//http://localhost:3000/api/herosall?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
+//http://localhost:3000/api/itemsMapBounds?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
 router.get('/itemsMapBounds', function (req, res, next) {
     //console.log(req.query.east);
 
@@ -39,12 +38,12 @@ router.get('/itemsMapBounds', function (req, res, next) {
         }));
 });
 
-/* get hero by id http://localhost:3000/api/heros/1 */
+/* get item by id http://localhost:3000/api/heros/1 */
 router.get('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
     console.log('api - in item get by id: ' + String(item_id));
-    const { name } = req.body;
+    //const { name } = req.body;
     
     model.geo_items.findAll({
             where: {
@@ -56,10 +55,50 @@ router.get('/items/:id', function (req, res, next) {
             error: true,
             error: error
         }));
-        
 });
 
-// GET all items *this is not used much!?
+// get prev item http://localhost:3000/api/items/prev/5
+router.get('/items/prev/:id', function (req, res, next) {
+
+    const item_id = req.params.id;
+    console.log('api - in prev item get by id: ' + String(item_id));
+    
+    model.geo_items.findOne({
+            where: {
+                id: {
+                  $lt: item_id
+                }
+            },
+            order: [['id', 'DESC']]
+        })
+        .then(items => res.json(items))
+        .catch(error => res.json({
+            error: true,
+            error: error
+        }));
+});
+
+// get prev item http://localhost:3000/api/items/prev/5
+router.get('/items/next/:id', function (req, res, next) {
+
+    const item_id = req.params.id;
+    console.log('api - in next item get by id: ' + String(item_id));
+    
+    model.geo_items.findOne({
+            where: {
+                id: {
+                  $gt: item_id
+                }
+            },
+            order: [['id', 'ASC']]
+        })
+        .then(items => res.json(items))
+        .catch(error => res.json({
+            error: true,
+            error: error
+        }));
+});
+// GET all items 
 router.get('/items', function (req, res, next) {
     console.log('i am in router.get with extents ');
     console.log(req.params);
@@ -73,6 +112,7 @@ router.get('/items', function (req, res, next) {
             error: error
         }));
 });
+
 
 
 /* POST item. */

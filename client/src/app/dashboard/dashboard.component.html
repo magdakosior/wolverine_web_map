@@ -4,7 +4,7 @@
 		<app-item-search></app-item-search>
 
 		<div class="col-md-7">
-			<app-map (markerClick)="markerClick($event)"></app-map>
+			<app-map (mapEvent)="mapEvent($event)" [items]="items" [item]="item"></app-map>
 		</div>
 		
 		<div class="col-md-5 featurette-image">
@@ -14,5 +14,6 @@
 		
 	</div>
 </div>
-
-<app-item-detail [item]="item" *ngIf="item"></app-item-detail>
+<div class="jumbotron gray-light">
+	<app-item-detail (onPrev)="onPrev($event)" [item]="item" *ngIf="item" (onNext)="onNext($event)"></app-item-detail>
+</div>

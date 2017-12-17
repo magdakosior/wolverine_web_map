@@ -4,8 +4,7 @@
     "password": null,
     "database": "wolverine",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": false
+    "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
@@ -13,7 +12,7 @@
     "database": "wolverine",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "operatorsAliases": false
+    "operatorsAliases": true
   },
   "production": {
     "username": "postgres",
@@ -21,6 +20,6 @@
     "database": "wolverine",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "operatorsAliases": false
+    "operatorsAliases": true
   }
 }
