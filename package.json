@@ -51,7 +51,6 @@
     "mysql2": "^1.5.1",
     "ng2-opd-popup": "^1.1.21",
     "ngx-bootstrap": "^2.0.0-rc.0",
-    "ngx-modialog": "^5.0.0",
     "pg": "^7.4.0",
     "pg-hstore": "^2.3.2",
     "popper.js": "^1.12.9",

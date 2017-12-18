@@ -9,8 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 //modal
 //import { BrowserModule } from '@angular/platform-browser';
 //import { ModalDirective,ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
-//import { Modal } from 'angular2-modal/plugins/bootstrap';
-//import { overlayConfigFactory } from 'angular2-modal';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { overlayConfigFactory } from 'angular2-modal';
 import {ItemFilterModal} from '../item-filter/item-filter.component';
 
 @Component({
@@ -41,8 +41,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private itemService: ItemService,
     private route: ActivatedRoute,
-    vcRef: ViewContainerRef//, 
-    //public modal: Modal
+    vcRef: ViewContainerRef, 
+    public modal: Modal
     ) {
       //overlay..defaultViewContainer = vcRef
     }
@@ -132,4 +132,23 @@ export class DashboardComponent implements OnInit {
     this.setCurrentSelectedItem(searchId);
     this.getItem(searchId);
   }
+
+  onFilter() {
+    //console.log('in search item - got routed here');
+    console.log(' in filter' );
+    this.modal.open(ItemFilterModal, overlayConfigFactory({
+      dialogClass: 'modal-centered', isBlocking: false,
+    }));
+    //this.setCurrentSelectedItem(searchId);
+    //this.getItem(searchId);
+  }
+/*
+  findElement(arr, propName, propValue) {
+    for (var i=0; i < arr.length; i++)
+      if (arr[i][propName] == propValue)
+        return arr[i];
+    // will return null if not found; 
+    return null;
+  }
+*/
 }

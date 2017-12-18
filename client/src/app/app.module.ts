@@ -19,10 +19,9 @@ import { MapModule } from './map/map.module';
 
 import { ItemFilterModal } from './item-filter/item-filter.component';
 
-//import { ModalModule } from 'angular2-modal';
-//import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
-import { ModalModule } from 'ngx-modialog';
-import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+
 //import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 //import { ModalService } from 'ngx-bootstrap/modal';
@@ -53,7 +52,6 @@ import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
     BrowserModule, 
     ModalModule.forRoot(),
     BootstrapModalModule
-    //BootstrapModalModule
     //ModalService.forRoot()
     //LeafletModule.forRoot()
   ],

@@ -1,33 +1,107 @@
-import { Component, ViewContainerRef } from '@angular/core';
-import { Overlay } from 'ngx-modialog';
-import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import { Component } from '@angular/core';
+
+import { DialogRef, ModalComponent } from 'angular2-modal';
+import { BSModalContext } from 'angular2-modal/plugins/bootstrap';
+
+export class ItemFilterModalData extends BSModalContext {
+  constructor(public num1: number, public num2: number) {
+    super();
+  }
+}
 
 @Component({
   selector: 'item-filter-modal',
-  template: `<button (click)="onClick()">Filter</button>`
+  styles: [`
+        .custom_modal_content {
+            padding: 15px;
+            top: 30px;
+          left: 200px;
+          right: 200px;
+        }
+        .modal-overlay {
+          top: 30px;
+          left: 200px;
+          right: 200px;
+        }
+
+        .custom-modal-header {
+            background-color: #219161;
+            color: #fff;
+            -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+            box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+            margin-top: -15px;
+            margin-bottom: 40px;
+        }
+    `],template: `
+        <div class="container-fluid custom_modal_content">
+            <div class="row custom-modal-header">
+                <div class="col-sm-12">
+                    <h1>Filter Options</h1>
+                </div>
+            </div>
+            <div class="row" [ngClass]="{'myclass' : shouldUseMyClass}">
+                <div class="col-xs-12">
+                    
+                    <h1>Do the math to quit:</h1>
+                    <p class="lead">I received an injection of the number <strong>{{context.num1}}</strong> and the number <strong>{{context.num2}}</strong></p>
+                    
+                    <button class="btn btn-primary" (click)="onFilter()">Apply Filter</button>  <button class="btn btn-primary" (click)="onCancel()">Cancel</button>
+                    
+                </div>
+            </div>
+        </div>`
 })
-export class ItemFilterModal {
-  constructor(public modal: Modal) { }
+export class ItemFilterModal implements ModalComponent<ItemFilterModalData> {
+  context: ItemFilterModalData;
 
-  onClick() {
-    const dialogRef = this.modal.alert()
-        .size('lg')
-        .showClose(true)
-        .title('A simple Alert style modal window')
-        .body(`
-            <h4>Alert is a classic (title/body/footer) 1 button modal window that 
-            does not block.</h4>
-            <b>Configuration:</b>
-            <ul>
-                <li>Non blocking (click anywhere outside to dismiss)</li>
-                <li>Size large</li>
-                <li>Dismissed with default keyboard key (ESC)</li>
-                <li>Close wth button click</li>
-                <li>HTML content</li>
-            </ul>`)
-        .open();
+  public wrongAnswer: boolean;
 
-    dialogRef.result
-        .then( result => alert(`The result is: ${result}`) );
+  constructor(public dialog: DialogRef<ItemFilterModalData>) {
+    this.context = dialog.context;
+    this.wrongAnswer = true;
+  }
+
+  onKeyUp(value) {
+    this.wrongAnswer = value != 5;
+    this.dialog.close();
+  }
+  onCancel(value) {
+    this.dialog.close();
+  }
+
+  beforeDismiss(): boolean {
+    return true;
+  }
+
+  beforeClose(): boolean {
+    return this.wrongAnswer;
   }
 }
+/*import { Component, OnInit, Input, Output, OnChanges, EventEmitter } from '@angular/core';
+
+import { BSModalContext } from 'angular2-modal/plugins/bootstrap'
+import { DialogRef } from 'angular2-modal';
+
+@Component({
+  selector: 'item-filter-modal',
+  templateUrl: './item-filter.component.html',
+  styleUrls: ['./item-filter.component.css']
+})
+
+export class ItemFilterModal  {
+  //@Input() closable = true;
+  //@Input() visible: boolean;
+  //@Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  constructor(public dialog: DialogRef<BSModalContext>) {
+    this.dialog.context.dialogClass = 'modal-centered';
+  }
+
+  FilterFunction() {
+    console.log('in modal filter()');
+    //this.visible = false;
+    //this.visibleChange.emit(this.visible);
+  }
+}
+*/
