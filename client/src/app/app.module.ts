@@ -13,10 +13,20 @@ import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { ItemService } from './item.service';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageService } from './message.service';
-import { AppRoutingModule } from './/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { ItemSearchComponent } from './item-search/item-search.component';
 import { MapModule } from './map/map.module';
 
+import { ItemFilterModal } from './item-filter/item-filter.component';
+
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+
+//import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+//import { ModalService } from 'ngx-bootstrap/modal';
+
+//import { ModalDirective } from 'ngx-bootstrap/modal';
 //import { LeafletModule } from '@asymmetrik/angular2-leaflet';
 //import { MapService } from "./services/map.service";
 
@@ -29,18 +39,25 @@ import { MapModule } from './map/map.module';
     ItemDetailComponent,
     MessagesComponent,
     DashboardComponent,
-    ItemSearchComponent
+    ItemSearchComponent,
+    ItemFilterModal,
+
   ],
   imports: [
     BrowserModule,
   	FormsModule,
   	AppRoutingModule,
     HttpClientModule,
-    MapModule//,
+    MapModule,
+    BrowserModule, 
+    ModalModule.forRoot(),
+    BootstrapModalModule
+    //ModalService.forRoot()
     //LeafletModule.forRoot()
   ],
   providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ ItemFilterModal ]
 })
 
 export class AppModule { }

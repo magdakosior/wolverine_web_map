@@ -1,10 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewEncapsulation} from '@angular/core';
 
 import { Item } from '../item';
 import { ItemService } from '../item.service';
 import { MapComponent } from "../map/map.component";
 
 import { ActivatedRoute } from '@angular/router';
+
+//modal
+//import { BrowserModule } from '@angular/platform-browser';
+//import { ModalDirective,ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { Modal } from 'angular2-modal/plugins/bootstrap';
+import { overlayConfigFactory } from 'angular2-modal';
+import {ItemFilterModal} from '../item-filter/item-filter.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +24,7 @@ export class DashboardComponent implements OnInit {
   item: Item;
   items: Item[];
   map_info: any = {};
+  showFilterDialog = false;
   /*map_info = {
     zoom: 16,
     extents: {
@@ -32,8 +40,12 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private itemService: ItemService,
-    private route: ActivatedRoute
-    ) { }
+    private route: ActivatedRoute,
+    vcRef: ViewContainerRef, 
+    public modal: Modal
+    ) {
+      //overlay..defaultViewContainer = vcRef
+    }
 
   ngOnInit() {
     //if we get a value called from the item-search.componend
@@ -119,6 +131,16 @@ export class DashboardComponent implements OnInit {
     console.log('search for ' + String(searchId));
     this.setCurrentSelectedItem(searchId);
     this.getItem(searchId);
+  }
+
+  onFilter() {
+    //console.log('in search item - got routed here');
+    console.log(' in filter' );
+    this.modal.open(ItemFilterModal, overlayConfigFactory({
+      dialogClass: 'modal-centered', isBlocking: false,
+    }));
+    //this.setCurrentSelectedItem(searchId);
+    //this.getItem(searchId);
   }
 /*
   findElement(arr, propName, propValue) {
