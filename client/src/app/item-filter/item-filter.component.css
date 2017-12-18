@@ -1,0 +1,16 @@
+.modal-centered {
+  display: table;
+  height: 50%;
+  width: 50%;
+  pointer-events: none;
+}
+
+.modal-centered>.modal-content {
+  display: table-cell !important;
+  vertical-align: middle;
+  background: transparent;
+}
+
+.modal-centered>.modal-content>* {
+  pointer-events: auto;
+}

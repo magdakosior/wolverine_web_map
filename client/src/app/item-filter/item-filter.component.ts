@@ -15,15 +15,22 @@ export class ItemFilterModalData extends BSModalContext {
         .custom_modal_content {
             padding: 15px;
             top: 30px;
-          left: 200px;
-          right: 200px;
+            left: 200px;
+            right: 200px;
         }
-        .modal-overlay {
-          top: 30px;
-          left: 200px;
-          right: 200px;
-        }
+        .modal-open {
+          top: 0;
+          left: 0;
+          width: 50%;
+          height: 50%;
 
+        }
+        .bs-modal-container {
+          top: 30px;
+          left: 0;
+          height: 50%;
+          width: 50%;
+      }
         .custom-modal-header {
             background-color: #219161;
             color: #fff;
@@ -78,30 +85,3 @@ export class ItemFilterModal implements ModalComponent<ItemFilterModalData> {
     return this.wrongAnswer;
   }
 }
-/*import { Component, OnInit, Input, Output, OnChanges, EventEmitter } from '@angular/core';
-
-import { BSModalContext } from 'angular2-modal/plugins/bootstrap'
-import { DialogRef } from 'angular2-modal';
-
-@Component({
-  selector: 'item-filter-modal',
-  templateUrl: './item-filter.component.html',
-  styleUrls: ['./item-filter.component.css']
-})
-
-export class ItemFilterModal  {
-  //@Input() closable = true;
-  //@Input() visible: boolean;
-  //@Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  constructor(public dialog: DialogRef<BSModalContext>) {
-    this.dialog.context.dialogClass = 'modal-centered';
-  }
-
-  FilterFunction() {
-    console.log('in modal filter()');
-    //this.visible = false;
-    //this.visibleChange.emit(this.visible);
-  }
-}
-*/

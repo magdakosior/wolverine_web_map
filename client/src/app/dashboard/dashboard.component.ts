@@ -6,7 +6,6 @@ import { MapComponent } from "../map/map.component";
 
 import { ActivatedRoute } from '@angular/router';
 
-//modal
 //import { BrowserModule } from '@angular/platform-browser';
 //import { ModalDirective,ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
@@ -44,7 +43,6 @@ export class DashboardComponent implements OnInit {
     vcRef: ViewContainerRef, 
     public modal: Modal
     ) {
-      //overlay..defaultViewContainer = vcRef
     }
 
   ngOnInit() {
@@ -139,16 +137,5 @@ export class DashboardComponent implements OnInit {
     this.modal.open(ItemFilterModal, overlayConfigFactory({
       dialogClass: 'modal-centered', isBlocking: false,
     }));
-    //this.setCurrentSelectedItem(searchId);
-    //this.getItem(searchId);
   }
-/*
-  findElement(arr, propName, propValue) {
-    for (var i=0; i < arr.length; i++)
-      if (arr[i][propName] == propValue)
-        return arr[i];
-    // will return null if not found; 
-    return null;
-  }
-*/
 }
