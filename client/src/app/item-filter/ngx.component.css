@@ -1,0 +1,9 @@
+.dropdowns  label {
+	display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.dropdowns select {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}

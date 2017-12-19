@@ -18,12 +18,19 @@ const httpOptions = {
 export class ItemService {
 
   private itemsUrl = 'api/items'; // 'api/items';  // URL to web api
+  private filtersUrl = 'api/filters'; // 'api/items';  // URL to web api
   private selectedId: number;
-  
+  private filterOptions: any;
+
   //used Angular Dependency Injection to inject it into a component
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
+
+  //message sent from filter modal (on dashboard)
+  setFilterOptions(opts: any): void {
+    this.filterOptions = opts;
+  }
 
   //message sent from details->goPrev() -> dashboard
   setSelectedItem(id: number): void {
@@ -118,6 +125,17 @@ export class ItemService {
     return this.http.get<Item[]>(`api/items/?name=${term}`).pipe(
       tap(_ => this.log(`found items matching "${term}"`)),
       catchError(this.handleError<Item[]>('searchItems', []))
+    );
+  }
+
+  //message sent from filter modal (on dashboard)
+  getFilterOptions(term: string): Observable<String[]> {
+    //console.log('getting item status filter opts');
+    const url = `${this.filtersUrl}/${term}`;
+
+    return this.http.get<String[]>(url).pipe(
+      tap(_ => this.log(`found filters for "${term}"`)),
+      catchError(this.handleError<String[]>('filterItems', []))
     );
   }
 

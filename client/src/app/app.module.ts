@@ -17,18 +17,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { ItemSearchComponent } from './item-search/item-search.component';
 import { MapModule } from './map/map.module';
 
-import { ItemFilterModal } from './item-filter/item-filter.component';
+//import { ItemFilterModal } from './item-filter/item-filter.component';
 
-import { ModalModule } from 'angular2-modal';
-import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
-
-//import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-//import { ModalService } from 'ngx-bootstrap/modal';
-
-//import { ModalDirective } from 'ngx-bootstrap/modal';
-//import { LeafletModule } from '@asymmetrik/angular2-leaflet';
-//import { MapService } from "./services/map.service";
+import { ngxModal } from './item-filter/ngx.component';
+import { ModalModule } from 'ngx-bootstrap';
+//import {SelectModule} from 'ng2-select';
 
 
 @NgModule({
@@ -40,8 +33,8 @@ import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
     MessagesComponent,
     DashboardComponent,
     ItemSearchComponent,
-    ItemFilterModal,
-
+    ngxModal
+    //ItemFilterModal
   ],
   imports: [
     BrowserModule,
@@ -49,15 +42,13 @@ import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
   	AppRoutingModule,
     HttpClientModule,
     MapModule,
-    BrowserModule, 
-    ModalModule.forRoot(),
-    BootstrapModalModule
-    //ModalService.forRoot()
-    //LeafletModule.forRoot()
+    BrowserModule,
+    ModalModule.forRoot()//,
+    //SelectModule
   ],
   providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
   bootstrap: [AppComponent],
-  entryComponents: [ ItemFilterModal ]
+  entryComponents: [ ngxModal ]
 })
 
 export class AppModule { }

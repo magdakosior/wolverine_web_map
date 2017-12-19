@@ -1,5 +1,4 @@
 <h3>Dashboard Component header</h3>
-<button (click)="onFilter()">Filter</button>
 <div class="container main">
 	<div class="col-md-7">
 		<app-map (mapEvent)="mapEvent($event)" [items]="items" [item]="item"></app-map>
@@ -8,11 +7,32 @@
 	<div class="col-md-5 featurette-image">
 		<app-item-photo [item]="item" ></app-item-photo>
 	</div>
-	<app-item-search></app-item-search>
 
-	
+	<div class="col-md-12 ">
+		<div class="col-md-1 ">
+			<ngx></ngx>
+			<!--button (click)="showDialog = !showDialog" class="btn btn-primary">Filter</button-->
+			
+		</div>
+		<div class="col-md-6 ">
+			<app-item-search></app-item-search>
+		</div>
+	</div>
 
 </div>
 <div class="jumbotron gray-light">
 	<app-item-detail (onPrev)="onPrev($event)" [item]="item" *ngIf="item" (onNext)="onNext($event)"></app-item-detail>
 </div>
+
+<!--item-filter-dialog [(visible)]="showDialog">
+  	<h1>Filter Options</h1>
+
+		
+	<span>Are you sure you want to Filter ?</span>
+	{{modaltext}}
+	<div class="text-center">
+		<button (click)="showDialog = !showDialog"  class="btn btn-primary">Cancel</button>
+		<button (click)="showDialog = !showDialog" class="btn btn-danger" (click)="applyFilter()">Apply Filter</button>
+	</div>
+		
+</item-filter-dialog-->

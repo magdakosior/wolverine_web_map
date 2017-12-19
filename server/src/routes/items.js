@@ -191,4 +191,23 @@ router.get('/item_status', function (req, res, next) {
         }));
 });
 
+// GET distinct values in column for filtering
+router.get('/filters/:col', function (req, res, next) {
+    console.log(req.params); //SELECT DISTINCT "itemStatus" FROM geo_items
+    const columnName = req.params.col;
+    var distinct = model.Sequelize.fn('DISTINCT', model.sequelize.col(columnName));
+    
+    model.geo_items.findAll({
+        attributes: [[model.sequelize.fn('DISTINCT', model.sequelize.col(columnName)), 'filter']]
+    })
+        
+        .then(items => res.json(items))
+        
+        .catch(error => res.json({
+            error: true,
+            data: [],
+            error: error
+        }));
+});
+
 module.exports = router;

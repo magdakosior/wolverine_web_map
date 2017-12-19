@@ -3,14 +3,9 @@ import { Component, OnInit, ViewContainerRef, ViewEncapsulation} from '@angular/
 import { Item } from '../item';
 import { ItemService } from '../item.service';
 import { MapComponent } from "../map/map.component";
-
 import { ActivatedRoute } from '@angular/router';
 
-//import { BrowserModule } from '@angular/platform-browser';
-//import { ModalDirective,ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { Modal } from 'angular2-modal/plugins/bootstrap';
-import { overlayConfigFactory } from 'angular2-modal';
-import {ItemFilterModal} from '../item-filter/item-filter.component';
+import { ngxModal } from '../item-filter/ngx.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +19,8 @@ export class DashboardComponent implements OnInit {
   items: Item[];
   map_info: any = {};
   showFilterDialog = false;
+
+  //modaltext = 'bohhoooh';
   /*map_info = {
     zoom: 16,
     extents: {
@@ -39,18 +36,21 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private itemService: ItemService,
-    private route: ActivatedRoute,
-    vcRef: ViewContainerRef, 
-    public modal: Modal
-    ) {
-    }
+    private route: ActivatedRoute
+    ) { }
 
   ngOnInit() {
+    //this.modaltext = 'bohhoooh1';
     //if we get a value called from the item-search.componend
     const searchId = +this.route.snapshot.paramMap.get('id');//The JavaScript (+) operator converts the string to a number, which is what a hero id should be.
     
     if (searchId)
       this.searchItem(searchId);
+  }
+
+  ngOnChanges(changes: any) { 
+    console.log('in dashboard -detecting changes from filter modal');
+    //this.item = this.item[0];
   }
 
   mapEvent(map_info: JSON) {
@@ -129,13 +129,5 @@ export class DashboardComponent implements OnInit {
     console.log('search for ' + String(searchId));
     this.setCurrentSelectedItem(searchId);
     this.getItem(searchId);
-  }
-
-  onFilter() {
-    //console.log('in search item - got routed here');
-    console.log(' in filter' );
-    this.modal.open(ItemFilterModal, overlayConfigFactory({
-      dialogClass: 'modal-centered', isBlocking: false,
-    }));
   }
 }

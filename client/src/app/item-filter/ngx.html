@@ -1,0 +1,35 @@
+<button type="button" class="btn btn-primary" (click)="openModalWithClass(template)">Filter</button>
+
+<ng-template #template>
+	<div class="modal-header">
+	    <h4 class="modal-title pull-left">Filter Options</h4>
+	    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+			<span aria-hidden="true">&times;</span>
+	    </button>
+	</div>
+
+	<div Style="display: inline-block;vertical-align: middle !important;margin-bottom: 10px !important;margin-top: 30px !important">
+		<div class="col-md-12">
+			<div class="col-md-2">
+				Item Status: 
+			</div>
+			<div class="col-md-3">
+				<div *ngIf="itemStatusOptions" class="dropdowns">
+				    <div class="form-group">
+				      <select class="form-control" name="game" [(ngModel)]="itemStatusChosen">
+				        <option *ngFor="let option of itemStatusOptions" [ngValue]="option.filter" > {{option.filter}} </option>
+				      </select>
+				    </div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="margin-bottom: 10px !important;margin-top: 30px !important;">
+		    <div class="col-sm-12 text-center">
+		        <button (click)="modalRef.hide()" class="btn btn-primary btn-md center-block" Style="width: 100px;" >Cancel</button>
+		         <button (click)="applyFilter()" class="btn btn-danger btn-md center-block" Style="width: 100px;" >Apply Filter</button>
+		     </div>
+		</div>
+	</div>
+
+</ng-template>
