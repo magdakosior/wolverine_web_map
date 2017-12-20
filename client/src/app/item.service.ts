@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs/Subject';
 
 import { Item } from './item';
+import { MapDetails } from './mapDetails';
+
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -17,25 +20,73 @@ const httpOptions = {
 @Injectable()
 export class ItemService {
 
+  // Observable  sources
+  private allItemsSource = new Subject<Item[]>();
+  private selectedItemSource = new Subject<Item>();
+  private mapDetailsSource = new Subject<MapDetails>();
+
   private itemsUrl = 'api/items'; // 'api/items';  // URL to web api
-  private filtersUrl = 'api/filters'; // 'api/items';  // URL to web api
   private selectedId: number;
+  private filtersUrl = 'api/filters'; // 'api/items';  // URL to web api
   private filterOptions: any;
 
-  //used Angular Dependency Injection to inject it into a component
-  constructor(
-    private http: HttpClient,
-    private messageService: MessageService) { }
+  // Observable string streams
+  allItems$ = this.allItemsSource.asObservable();
+  selectedItem$ = this.selectedItemSource.asObservable();
+  mapDetails$ = this.mapDetailsSource.asObservable();
+
+  // Service message commands
+  setMapDetails(data: MapDetails) {
+    console.log('in service got some map details');
+    console.log(data);
+    this.mapDetailsSource.next(data);
+
+    var coords = '?east=' + String(data.ext_east) + '&west=' + String(data.ext_west) + '&north=' + String(data.ext_north) + '&south=' + String(data.ext_south);
+    this.getItemsWithinBounds(coords) 
+      .subscribe((items: Item[]) => {
+          this.allItemsSource.next(items); 
+        })
+  }
+
+  // Service message commands
+  setSelectedItem(id: number) {
+    //look through our items and find corresponding id to assign to selectedItemSource
+    this.getItem(id)
+      .subscribe((item: Item) => {
+        //console.log('service setting item ');
+        this.selectedItemSource.next(item[0]);
+        this.selectedId = item[0].id;
+      })
+  }
 
   //message sent from filter modal (on dashboard)
   setFilterOptions(opts: any): void {
     this.filterOptions = opts;
   }
 
-  //message sent from details->goPrev() -> dashboard
-  setSelectedItem(id: number): void {
-    this.selectedId = id;
+  setNext() {
+    this.getNextItem()
+      .subscribe((item: Item) => {
+        if (item != null) {
+          this.selectedItemSource.next(item);
+          this.selectedId = item.id;
+        }
+      })
   }
+
+  setPrev() {
+    this.getPrevItem()
+      .subscribe((item: Item) => {
+        if (item != null) {
+          this.selectedItemSource.next(item);
+          this.selectedId = item.id;
+        }
+      })
+  }
+  //used Angular Dependency Injection to inject it into a component
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService) { }
 
   /** GET items from the server */
   getItems (): Observable<Item[]> {
@@ -74,7 +125,7 @@ export class ItemService {
     const url = `${this.itemsUrl}/prev/${this.selectedId}`;
     return this.http.get<Item>(url).pipe(
       tap(_ => this.log(`fetched prev item id=${this.selectedId}`)),
-      catchError(this.handleError<Item>(`getHero id=${this.selectedId}`))
+      catchError(this.handleError<Item>(`getPrevItem id=${this.selectedId}`))
     );
   }
 
@@ -83,14 +134,13 @@ export class ItemService {
     const url = `${this.itemsUrl}/next/${this.selectedId}`;
     return this.http.get<Item>(url).pipe(
       tap(_ => this.log(`fetched next item id=${this.selectedId}`)),
-      catchError(this.handleError<Item>(`getHero id=${this.selectedId}`))
+      catchError(this.handleError<Item>(`getNextItem id=${this.selectedId}`))
     );
   }
 
   /** PUT: update the item on the server */
   updateItem (item: Item): Observable<any> {
     const url = `${this.itemsUrl}/${item.id}`;
-
     return this.http.put(url, item, httpOptions).pipe(
       tap(_ => this.log(`updated item id=${item.id}`)),
       catchError(this.handleError<any>('updateItem'))

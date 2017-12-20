@@ -3,7 +3,7 @@
 <ng-template #template>
 	<div class="modal-header">
 	    <h4 class="modal-title pull-left">Filter Options</h4>
-	    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+	    <button type="button" class="close pull-right" aria-label="Close" (click)="closeFilter()">
 			<span aria-hidden="true">&times;</span>
 	    </button>
 	</div>
@@ -26,7 +26,7 @@
 
 		<div class="row" style="margin-bottom: 10px !important;margin-top: 30px !important;">
 		    <div class="col-sm-12 text-center">
-		        <button (click)="modalRef.hide()" class="btn btn-primary btn-md center-block" Style="width: 100px;" >Cancel</button>
+		        <button (click)="closeFilter()" class="btn btn-primary btn-md center-block" Style="width: 100px;" >Cancel</button>
 		         <button (click)="applyFilter()" class="btn btn-danger btn-md center-block" Style="width: 100px;" >Apply Filter</button>
 		     </div>
 		</div>

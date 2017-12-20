@@ -3,9 +3,7 @@
 		<div >
 			<!-- Photo -->
 			<div>
-
-				<div *ngIf="item" id="image" class="square" style="height: 400px;"
-					 (photoReady)="onPhotoReady($event)">
+				<div *ngIf="item" id="image" class="square" style="height: 400px;">
 					 <img src={{item.photoPath}} />
 				</div>
 			</div>

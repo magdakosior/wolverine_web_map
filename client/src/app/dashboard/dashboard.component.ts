@@ -2,6 +2,7 @@ import { Component, OnInit, ViewContainerRef, ViewEncapsulation} from '@angular/
 
 import { Item } from '../item';
 import { ItemService } from '../item.service';
+
 import { MapComponent } from "../map/map.component";
 import { ActivatedRoute } from '@angular/router';
 
@@ -40,14 +41,15 @@ export class DashboardComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    console.log('in ngOnInit dashboard');
     //this.modaltext = 'bohhoooh1';
     //if we get a value called from the item-search.componend
     const searchId = +this.route.snapshot.paramMap.get('id');//The JavaScript (+) operator converts the string to a number, which is what a hero id should be.
     
-    if (searchId)
-      this.searchItem(searchId);
+    //if (searchId)
+      //this.searchItem(searchId);
   }
-
+/*
   ngOnChanges(changes: any) { 
     console.log('in dashboard -detecting changes from filter modal');
     //this.item = this.item[0];
@@ -129,5 +131,5 @@ export class DashboardComponent implements OnInit {
     console.log('search for ' + String(searchId));
     this.setCurrentSelectedItem(searchId);
     this.getItem(searchId);
-  }
+  }*/
 }

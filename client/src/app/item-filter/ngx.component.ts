@@ -1,7 +1,6 @@
 import { Component, TemplateRef, HostListener} from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-//import {SelectModule} from 'ng2-select';
 
 import { ItemService } from '../item.service';
 
@@ -20,6 +19,7 @@ export class ngxModal {
     ignoreBackdropClick: false
   };
 
+  modalOpen: boolean;
   filterOptions: any;
   //for enter button press
   keyCode: number;
@@ -33,23 +33,25 @@ export class ngxModal {
   	private itemService: ItemService //to get filer options from db
 
     ) {
-  	console.log('modal opening0');
-    
+    this.modalOpen = false;
+  	console.log('filter modal constructor');
   }
  
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
-    if (event == null) {
-      this.event = 'undefined!';
-    } else {
-      this.event = 'defined';
+    if (this.modalOpen) {
+      if (event == null) {
+        this.event = 'undefined!';
+      } else {
+        this.event = 'defined';
+      }
+      
+      event.preventDefault();
+      event.stopPropagation();
+      
+      this.keyCode = event.keyCode;
+      this.applyFilter();
     }
-    
-    event.preventDefault();
-    event.stopPropagation();
-    
-    this.keyCode = event.keyCode;
-    this.applyFilter();
   }
 
   openModal(template: TemplateRef<any>) {
@@ -58,6 +60,8 @@ export class ngxModal {
   }
  
   openModalWithClass(template: TemplateRef<any>) {
+    console.log('modal openModalWithClass');
+    this.modalOpen = true;
   	this.itemService.getFilterOptions('itemStatus')
       .subscribe((filters: String[]) => {
       	this.itemStatusOptions = filters;
@@ -79,15 +83,17 @@ export class ngxModal {
         this.itemStatusChosen = this.itemStatusOptions[i];
       }
     }
-}
-
-  
+  }
 
   applyFilter() {
   	console.log('modal getting filter ' + this.itemStatusChosen);
-        
-    
     this.itemService.setFilterOptions(this.filterOptions);
     this.modalRef.hide();
+    this.modalOpen = true;
+  }
+  closeFilter() {
+    this.modalRef.hide();
+    this.modalOpen = false;
+
   }
 }

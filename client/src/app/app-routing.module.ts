@@ -3,17 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MapComponent }      from './map/map.component';
 import { ItemsComponent }      from './items/items.component';
-import { DashboardComponent }   from './dashboard/dashboard.component';
+//import { DashboardComponent }   from './dashboard/dashboard.component';
 import { ItemPhotoComponent }  from './item-photo/item-photo.component';
 import { ItemDetailComponent }  from './item-detail/item-detail.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'dashboard/:id', component: DashboardComponent },
-  { path: 'items', component: ItemsComponent },
-  { path: 'detail/:id', component: ItemDetailComponent }
-  //{ path: 'map', component: MapComponent }
+  { path: '', redirectTo: '/map', pathMatch: 'full' },
+  //{ path: 'dashboard', component: DashboardComponent },
+  //{ path: 'dashboard/:id', component: DashboardComponent },
+  //{ path: 'items', component: ItemsComponent },
+  { path: 'detail/:id', component: ItemDetailComponent },
+  { path: 'map', component: MapComponent }
 ];
 
 /*

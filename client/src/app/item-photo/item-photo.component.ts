@@ -1,34 +1,28 @@
-import { Component, OnInit, Input, OnChanges} from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Item } from '../item';
 
 import { ItemService }  from '../item.service';
+import { Subscription }   from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-item-photo',
   templateUrl: './item-photo.component.html',
   styleUrls: ['./item-photo.component.css']
 })
-export class ItemPhotoComponent implements OnInit, OnChanges {
+export class ItemPhotoComponent implements OnDestroy  {
 
   @Input() item: Item;
-  
-  constructor(
-    private heroService: ItemService
+  subscription: Subscription;
 
-    //private location: Location  
-  ) {}
-
-  ngOnInit(): void {
+  constructor(private itemService: ItemService) {
+    this.subscription = itemService.selectedItem$.subscribe(
+      item => {
+        this.item = item;
+    });
   }
 
-  ngOnChanges(changes: any) { //changes: {[itemId: number]: SimpleChanges}){
-    console.log('in item-photo component: ngOnChanges()');
-    if(this.item) {
-      this.item = this.item;//[0];
-      console.log(this.item);
-    }
-  }
-  
-  getPhoto(): void {
+  ngOnDestroy() {
+    // prevent memory leak when component destroyed
+    this.subscription.unsubscribe();
   }
 }

@@ -1,24 +1,41 @@
-<div id="mapbox" style="margin-bottom: 30px;">
-	<div class="row">
-		<div >
-			<!-- Map -->
+<h3>Map Component Title</h3>
+<div class="container main">
+
+	<!-- Map -->
+	<div id="mapbox" class="col-md-7" style="margin-bottom: 30px;">
+		<div class="row">
 			<div >
+				<div >
+					<div leaflet id="leafletbox"
+						 [leafletOptions]="options"
+						 [leafletBaseLayers]="baseLayers"
+						 [leafletLayersControlOptions]="layersControlOptions"
+						 (leafletMapReady)="onMapReady($event)"
 
-				<div leaflet id="leafletbox"
-					 [leafletOptions]="options"
-					 [leafletBaseLayers]="baseLayers"
-					 [leafletLayersControlOptions]="layersControlOptions"
-					 (leafletMapReady)="onMapReady($event)"
-
-					 [leafletMarkerCluster]="markerClusterData"
-					 [leafletMarkerClusterOptions]="markerClusterOptions"
-					 (leafletMarkerClusterReady)="markerClusterReady($event)">
+						 [leafletMarkerCluster]="markerClusterData"
+						 [leafletMarkerClusterOptions]="markerClusterOptions"
+						 (leafletMarkerClusterReady)="markerClusterReady($event)">
+					</div>
 				</div>
-
 			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-5 featurette-image">
+		<app-item-photo></app-item-photo>
+	</div>
 
-
+	<div class="col-md-12 ">
+		<div class="col-md-1 ">
+			<ngx></ngx>			
+		</div>
+		<div class="col-md-6 ">
+			<app-item-search></app-item-search>
 		</div>
 	</div>
 
 </div>
+<div class="jumbotron gray-light">
+	<app-item-detail></app-item-detail>
+</div>
+
