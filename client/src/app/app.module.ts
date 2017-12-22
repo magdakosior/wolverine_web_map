@@ -25,6 +25,7 @@ import { ItemsComponent } from './items/items.component';
 
 import { ngxModal } from './item-filter/ngx.component';
 import { ModalModule } from 'ngx-bootstrap';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 @NgModule({
   declarations: [
@@ -46,11 +47,12 @@ import { ModalModule } from 'ngx-bootstrap';
     HttpClientModule,
     LeafletModule,
     LeafletMarkerClusterModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    AngularMultiSelectModule
   ],
   providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
-  bootstrap: [AppComponent]//,
-  //entryComponents: [ ngxModal ]
+  bootstrap: [AppComponent],
+  entryComponents: [ ngxModal ]
 })
 
 export class AppModule { }

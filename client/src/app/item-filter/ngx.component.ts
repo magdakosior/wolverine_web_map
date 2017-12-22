@@ -1,6 +1,8 @@
-import { Component, TemplateRef, HostListener} from '@angular/core';
+import { Component, TemplateRef, HostListener, OnInit} from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+
+import { Filter } from '../filter';
 
 import { ItemService } from '../item.service';
 
@@ -10,7 +12,7 @@ import { ItemService } from '../item.service';
   styleUrls: ['./ngx.component.css'],
   host: {'(window:keydown)': 'hotkeys($event)'},
 })
-export class ngxModal {
+export class ngxModal implements OnInit{
 	modalRef: BsModalRef;
   config = {
     animated: true,
@@ -20,23 +22,32 @@ export class ngxModal {
   };
 
   modalOpen: boolean;
-  filterOptions: any;
   //for enter button press
   keyCode: number;
   event: string;
   //for itemsStatus filter
-  itemStatusOptions: String[];
-  itemStatusChosen: String;
+  itemStatusOptions: {};
+  
 
+  //item status
+  dropdownList = [];
+  selectedItems = [];
+  dropdownSettings = {};
+  
   constructor(
   	private modalService: BsModalService,
   	private itemService: ItemService //to get filer options from db
-
     ) {
     this.modalOpen = false;
   	console.log('filter modal constructor');
   }
- 
+
+  //https://www.npmjs.com/package/angular2-multiselect-dropdown
+  ngOnInit() {
+  }
+
+  
+ /*
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
     if (this.modalOpen) {
@@ -52,48 +63,93 @@ export class ngxModal {
       this.keyCode = event.keyCode;
       this.applyFilter();
     }
-  }
+  }*/
 
-  openModal(template: TemplateRef<any>) {
-  	console.log('modal opening');
-    this.modalRef = this.modalService.show(template, this.config);
-  }
- 
   openModalWithClass(template: TemplateRef<any>) {
-    console.log('modal openModalWithClass');
     this.modalOpen = true;
+
+    //this.selectedItems = [];
+    this.dropdownSettings = { 
+      singleSelection: false, 
+      text:"Status Filter(s)",
+      selectAllText:'Select All',
+      unSelectAllText:'UnSelect All',
+      enableSearchFilter: false,
+      classes:"myclass custom-class"
+    };   
+
   	this.itemService.getFilterOptions('itemStatus')
-      .subscribe((filters: String[]) => {
-      	this.itemStatusOptions = filters;
-      	this.itemStatusOptions.forEach(f => console.log(f));
-        //console.log(filter);
-        
+      .subscribe((filters: any[]) => {
+
+        var i = 1;
+        filters.forEach(f => {
+          var selection = {
+            'id': i,
+            'itemName': f.filter
+          }
+          //console.log({"id":i,"itemName": f.filter});
+          this.dropdownList.push(selection);
+          
+          i++;
+        });
+        //console.log(this.dropdownList);
       }) 
+    
+    //this makes modal show
     this.modalRef = this.modalService.show(
       template,
       Object.assign({}, this.config, { class: 'gray modal-lg' })
     );
   }
 
-  onSelect(productId) { 
-    this.itemStatusChosen = null;
-    for (var i = 0; i < this.itemStatusOptions.length; i++)
-    {
-      if (this.itemStatusOptions[i] == productId) {
-        this.itemStatusChosen = this.itemStatusOptions[i];
-      }
+  applyFilter() {
+  	console.log('modal getting filter ');
+    console.log(JSON.stringify(this.selectedItems));
+    /* result looks like
+    [
+    {"id":1,"itemName":"deleted"},
+    {"id":2,"itemName":"loaded"}
+    ]
+    */
+    var itemStatusFilters = [];
+    this.selectedItems.forEach(sel =>{
+      itemStatusFilters.push(sel);
+    })
+    this.itemStatusOptions = {
+      itemStatus: itemStatusFilters
     }
+    console.log(this.itemStatusOptions);
+    /* result looks like
+    itemStatus: [
+    0: {"id":1,"itemName":"deleted"},
+    1: {"id":2,"itemName":"loaded"}
+    ]
+    */
+    //let itemStatusResult: JSON = this.itemStatusChosen;//this.filterOptions.itemStatus.or = this.itemStatusChosen;
+    this.itemService.setServicefilterOptions(this.itemStatusOptions);
+    this.modalRef.hide();
+    this.modalOpen = false;
+    this.dropdownList = [];
   }
 
-  applyFilter() {
-  	console.log('modal getting filter ' + this.itemStatusChosen);
-    this.itemService.setFilterOptions(this.filterOptions);
-    this.modalRef.hide();
-    this.modalOpen = true;
-  }
   closeFilter() {
     this.modalRef.hide();
     this.modalOpen = false;
+    this.dropdownList = [];
+  }
 
+  onItemSelect(item:any){
+      //console.log(item);
+      //console.log(this.selectedItems);
+  }
+  OnItemDeSelect(item:any){
+      //console.log(item);
+      //console.log(this.selectedItems);
+  }
+  onSelectAll(items: any){
+      //console.log(items);
+  }
+  onDeSelectAll(items: any){
+      //console.log(items);
   }
 }

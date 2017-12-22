@@ -15,6 +15,15 @@ export class ItemDetailComponent implements OnDestroy {
   subscription: Subscription;
 
   constructor(private itemService: ItemService) {
+    /*this.item = {
+      id: 1,
+      name: 'test',
+      photoPath: 'assets/photos/IMG_1121.JPG',
+      itemStatus: 'good',
+      imgStatus: 'great',
+      geom: null
+    };*/
+
     this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;

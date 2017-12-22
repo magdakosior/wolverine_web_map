@@ -39,8 +39,11 @@ export class MapComponent { //implements OnInit, OnChanges {
     itemService.selectedItem$.subscribe(
       selectedItem => {
         console.log(selectedItem);
-        if (selectedItem.id != this.selectedMarker.options.id) {
+
+        if (selectedItem) {
+          if (selectedItem.id != this.selectedMarker.options.id) {
           console.log('change in item selected');
+          console.log(selectedItem);
           var newLat = selectedItem.geom.coordinates[0][1];
           var newLon = selectedItem.geom.coordinates[0][0]
           var marker = this.createCustomMarker(newLat, newLon, this.blueIcon, selectedItem.id);
@@ -50,6 +53,11 @@ export class MapComponent { //implements OnInit, OnChanges {
           //this.map_info.selectedId = this.item.id;
           //center on newly set marker
           this.map.panTo(new L.LatLng(newLat, newLon));
+          }
+        }
+        else {
+          console.log('setting selected marker to null!!')
+          this.selectedMarker = null;
         }
       });
 
@@ -69,9 +77,9 @@ export class MapComponent { //implements OnInit, OnChanges {
       this.mapData.ext_west = map.getBounds().getWest();
       this.mapData.ext_north = map.getBounds().getNorth();
       this.mapData.ext_south = map.getBounds().getSouth();
-      this.mapData.selectedId = null;
-      this.mapData.prevId = null;
-      this.mapData.nextId = null;
+      //this.mapData.selectedId = null;
+      //this.mapData.prevId = null;
+      //this.mapData.nextId = null;
     }
     this.itemService.setMapDetails(this.mapData);
   }
@@ -129,7 +137,7 @@ export class MapComponent { //implements OnInit, OnChanges {
               //set the selected, next and prev marker info to pass back to dashboard
               this.itemService.setSelectedItem(id);
               
-              if(this.selectedMarker.options.id != 0) {  //if marker is set
+              if((this.selectedMarker) && (this.selectedMarker.options.id != 0)) {  //if marker is set
                 if(this.selectedMarker != event.target) {
                     this.selectedMarker.setIcon(this.blueIcon);
                     this.selectedMarker = event.target;

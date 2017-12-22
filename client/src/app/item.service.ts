@@ -23,53 +23,121 @@ export class ItemService {
   // Observable  sources
   private allItemsSource = new Subject<Item[]>();
   private selectedItemSource = new Subject<Item>();
-  private mapDetailsSource = new Subject<MapDetails>();
+  //private mapDetailsSource = new Subject<MapDetails>();
 
   private itemsUrl = 'api/items'; // 'api/items';  // URL to web api
-  private selectedId: number;
   private filtersUrl = 'api/filters'; // 'api/items';  // URL to web api
-  private filterOptions: any;
+
+  private servicefilterOptions: any;
+  private filterString: String;
+  private serviceMapDetails: any;
+  private serviceSelectedItemId: number;
 
   // Observable string streams
   allItems$ = this.allItemsSource.asObservable();
   selectedItem$ = this.selectedItemSource.asObservable();
-  mapDetails$ = this.mapDetailsSource.asObservable();
+  //mapDetails$ = this.mapDetailsSource.asObservable();
 
   // Service message commands
   setMapDetails(data: MapDetails) {
     console.log('in service got some map details');
-    console.log(data);
-    this.mapDetailsSource.next(data);
+    //set the map details for the service to remember
+    this.serviceMapDetails = data;
+    
+    //set map details for listeners ?? do we need this?
+    //this.mapDetailsSource.next(data);
+    console.log(this.serviceMapDetails);
+    this.redrawMap();
+    
+  }
 
-    var coords = '?east=' + String(data.ext_east) + '&west=' + String(data.ext_west) + '&north=' + String(data.ext_north) + '&south=' + String(data.ext_south);
-    this.getItemsWithinBounds(coords) 
+  redrawMap() {
+    var filterquery = '';
+    console.log(this.filterString);
+    if (!this.filterString)
+      filterquery = '';
+    else filterquery = String(this.filterString);
+
+    var query = '?east=' + String(this.serviceMapDetails.ext_east) + 
+    '&west=' + String(this.serviceMapDetails.ext_west) + 
+    '&north=' + String(this.serviceMapDetails.ext_north) +  
+    '&south=' + String(this.serviceMapDetails.ext_south) +  
+    filterquery;
+
+    console.log(query);
+    this.getItemsWithinBounds(query) 
       .subscribe((items: Item[]) => {
           this.allItemsSource.next(items); 
         })
   }
-
   // Service message commands
   setSelectedItem(id: number) {
     //look through our items and find corresponding id to assign to selectedItemSource
-    this.getItem(id)
-      .subscribe((item: Item) => {
-        //console.log('service setting item ');
-        this.selectedItemSource.next(item[0]);
-        this.selectedId = item[0].id;
-      })
+    if (!id) {
+      this.serviceSelectedItemId = null;
+      this.selectedItemSource.next(null);
+    }
+    else {
+      this.getItem(id) 
+        .subscribe((item: Item) => {
+          console.log(item[0]);
+          this.selectedItemSource.next(item[0]);
+          this.serviceSelectedItemId = item[0].id;
+          console.log('iSERVICE SETTING ITEM');
+          console.log(this.serviceSelectedItemId);
+        })
+    }
   }
 
   //message sent from filter modal (on dashboard)
-  setFilterOptions(opts: any): void {
-    this.filterOptions = opts;
+  setServicefilterOptions(opts: any): void {
+    var result = '';
+    for (var filterCol in opts) {
+      if (!opts.hasOwnProperty(filterCol)) {
+          continue;
+      }
+      console.log(filterCol);
+
+      var filterWords = "";
+      for (var num in opts[filterCol]) {          
+          filterWords = filterWords + "'" + opts[filterCol][num].itemName + "'";
+          //console.log(filterWords);
+        }
+      filterWords = filterWords.replace(/\'\'/g, "','"); 
+      result = 'col=' + filterCol + '&values=' + filterWords;
+    }
+    //console.log(filterWords.replace("''"), "','");
+     
+    console.log(result);
+
+
+
+    //var filterJsonArray = opts;
+
+    //this.servicefilterOptions = opts;
+    //console.log('service - setting filter options');
+    //console.log(JSON.stringify(this.servicefilterOptions));
+
+    
+
+    this.filterString = '&' +result; //"filter1col=itemStatus&filter1values='deleted','verified','another'";
+    //re-draw map and items
+    console.log(this.filterString);
+    this.setSelectedItem(null);
+    this.redrawMap();
   }
 
   setNext() {
+    console.log('in set next');
+    console.log(this.serviceSelectedItemId);
     this.getNextItem()
       .subscribe((item: Item) => {
-        if (item != null) {
-          this.selectedItemSource.next(item);
-          this.selectedId = item.id;
+        if (item[0] != null) {
+          this.selectedItemSource.next(item[0]);
+          this.serviceSelectedItemId = item[0].id;
+          console.log('iSERVICE SETTING ITEM');
+          console.log(this.serviceSelectedItemId);
+    
         }
       })
   }
@@ -77,9 +145,9 @@ export class ItemService {
   setPrev() {
     this.getPrevItem()
       .subscribe((item: Item) => {
-        if (item != null) {
-          this.selectedItemSource.next(item);
-          this.selectedId = item.id;
+        if (item[0] != null) {
+          this.selectedItemSource.next(item[0]);
+          this.serviceSelectedItemId = item[0].id;
         }
       })
   }
@@ -98,9 +166,14 @@ export class ItemService {
 
   /** GET items from the server 
   /api/itemsMapBounds?east=-115.2125930786133&west=-115.45291900634767&north=51.11279084899698&south=51.026496667384635 */
-  getItemsWithinBounds (bounds: string): Observable<Item[]> {
-    //return this.http.get(this.itemsUrl + bounds)
-    return this.http.get<Item[]>(this.itemsUrl + 'MapBounds' + bounds).pipe(
+  getItemsWithinBounds (query: string): Observable<Item[]> {
+    //apply filters if any WHERE "geo_items"."itemStatus" in ('deleted', 'loaded') 
+    /*var filters = '&east=' + String(this.servicefilterOptions) + 
+      '&west=' + String(this.serviceMapDetails.ext_west) + 
+      '&north=' + String(this.serviceMapDetails.ext_north) + 
+      '&south=' + String(this.serviceMapDetails.ext_south);
+    */
+    return this.http.get<Item[]>(this.itemsUrl + 'MapBounds' + query).pipe(
         tap(items => this.log(`fetched items ` )),//+ this.itemsUrl + bounds
         catchError(this.handleError('getItems', []))
       );
@@ -108,11 +181,13 @@ export class ItemService {
 
   /** GET item by id. Will 404 if id not found */
   getItem(id: number): Observable<Item> {
-    this.selectedId = id;
-
+    this.serviceSelectedItemId = id;
+    console.log('iSERVICE SETTING ITEM');
+    console.log(this.serviceSelectedItemId);
+    
     //only get item if one has been set
     if (id) {
-      const url = `${this.itemsUrl}/${id}`;
+      const url = `${this.itemsUrl}/?id=`+id;
       return this.http.get<Item>(url).pipe(
         tap(_ => this.log(`fetched item id=${id}`)),
         catchError(this.handleError<Item>(`getItem id=${id}`))
@@ -122,19 +197,39 @@ export class ItemService {
 
   //message sent from details->goPrev() -> dashboard
   getPrevItem(): Observable<Item> {
-    const url = `${this.itemsUrl}/prev/${this.selectedId}`;
+    var query = '';
+    console.log('in get prevItem');
+    console.log(this.filterString);
+    if (typeof this.filterString != 'undefined') 
+      query = String(this.serviceSelectedItemId) + this.filterString;
+    else
+      query = String(this.serviceSelectedItemId);
+
+    console.log('in getPrevItem() ' + query);
+    const url = `${this.itemsUrl}/prev/?id=`+ query;
     return this.http.get<Item>(url).pipe(
-      tap(_ => this.log(`fetched prev item id=${this.selectedId}`)),
-      catchError(this.handleError<Item>(`getPrevItem id=${this.selectedId}`))
+      tap(_ => this.log(`fetched prev item id=${this.serviceSelectedItemId}`)),
+      catchError(this.handleError<Item>(`getPrevItem id=${this.serviceSelectedItemId}`))
     );
   }
 
   //message sent from details->goNext() -> dashboard
   getNextItem(): Observable<Item> {
-    const url = `${this.itemsUrl}/next/${this.selectedId}`;
+    var query = '';
+    if (typeof this.filterString != 'undefined') {
+      query = String(this.serviceSelectedItemId) + this.filterString;
+      console.log(typeof this.filterString);
+    }
+    else {
+      query = String(this.serviceSelectedItemId);
+      console.log(String(this.serviceSelectedItemId));
+    }
+
+    console.log('in getNextItem() ' + query);
+    const url = `${this.itemsUrl}/next/?id=`+ query;
     return this.http.get<Item>(url).pipe(
-      tap(_ => this.log(`fetched next item id=${this.selectedId}`)),
-      catchError(this.handleError<Item>(`getNextItem id=${this.selectedId}`))
+      tap(_ => this.log(`fetched next item id=${this.serviceSelectedItemId}`)),
+      catchError(this.handleError<Item>(`getNextItem id=${this.serviceSelectedItemId}`))
     );
   }
 
@@ -179,7 +274,7 @@ export class ItemService {
   }
 
   //message sent from filter modal (on dashboard)
-  getFilterOptions(term: string): Observable<String[]> {
+  getFilterOptions(term: string): Observable<any[]> {
     //console.log('getting item status filter opts');
     const url = `${this.filtersUrl}/${term}`;
 

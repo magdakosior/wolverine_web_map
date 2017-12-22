@@ -17,26 +17,56 @@ const awaitErorrHandlerFactory = middleware => {
 /* GET heros listing. */
 //http://localhost:3000/api/itemsMapBounds?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
 router.get('/itemsMapBounds', function (req, res, next) {
-    //console.log(req.query.east);
-
-    var envelope = model.Sequelize.fn('ST_MakeEnvelope', req.query.west, req.query.south, req.query.east, req.query.north, 4326);
-    var intersects = model.Sequelize.fn('ST_Intersects', model.Sequelize.col('geom'), envelope);
-
-    model.geo_items.findAll({
-        where: intersects
-    })  
-        .then(items => res.json(items))
-        .catch(error => res.json({
-            error: true,
-            data: [],
-            error: error
-        }));
+    console.log(req.query);
+    var filterString = parseFilterQuery(req.query);
+      
+    
+    const query = '\
+          SELECT * \
+          FROM "geo_items" \
+          WHERE  ' + filterString + ' ST_Intersects("geom", ST_MakeEnvelope(' + req.query.west + ', \
+          ' + req.query.south + ', \
+          ' + req.query.east + ', \
+          ' + req.query.north + ', 4326))';
+    
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.geo_items
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
 });
 
 /* get item by id http://localhost:3000/api/heros/1 */
-router.get('/items/:id', function (req, res, next) {
+router.get('/items', function (req, res, next) {
+    console.log(req.query);
+    const item_id = req.query.id;
+    console.log(item_id);
+    //var filterString = parseFilterQuery(req.query)? ' AND ' + parseFilterQuery(req.query):'';
+    //console.log('api - in selected item get by id: ' + filterString);
+    
+    
+    const query = '\
+          SELECT * \
+          FROM "geo_items" \
+          WHERE "geo_items"."id" = ' + String(item_id);
+    
+    console.log('api - in selected item get by id: ' + query);
+    //http://localhost:3000/api/items/prev?id=7
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.geo_items
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
 
-    const item_id = req.params.id;
+
+      /*console.log(req.query);
+    const item_id = req.query.id;
     console.log('api - in item get by id: ' + String(item_id));
     
     model.geo_items.findAll({
@@ -48,13 +78,39 @@ router.get('/items/:id', function (req, res, next) {
         .catch(error => res.json({
             error: true,
             error: error
-        }));
+        }));*/
 });
 
 // get prev item http://localhost:3000/api/items/prev/5
-router.get('/items/prev/:id', function (req, res, next) {
+router.get('/items/prev', function (req, res, next) {
+    console.log(req.query);
+    const item_id = req.query.id;
+    console.log(item_id);
+    var filterString = parseFilterQuery(req.query)? parseFilterQuery(req.query):'';
+    console.log('api - in prev item get by id: ' + filterString);
+    
+    
+    const query = '\
+          SELECT * \
+          FROM "geo_items" \
+          WHERE ' + filterString 
+          + '"geo_items"."id" < ' + String(item_id) + 
+          ' ORDER BY "geo_items"."id" DESC LIMIT 1';
+    
+    console.log('api - in prev item get by id: ' + query);
+    //http://localhost:3000/api/items/prev?id=7
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.geo_items
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
 
-    const item_id = req.params.id;
+
+      /*
+    const item_id = req.query.id;
     console.log('api - in prev item get by id: ' + String(item_id));
     
     model.geo_items.findOne({
@@ -69,16 +125,63 @@ router.get('/items/prev/:id', function (req, res, next) {
         .catch(error => res.json({
             error: true,
             error: error
-        }));
+        }));*/
 });
 
 // get prev item http://localhost:3000/api/items/prev/5
-router.get('/items/next/:id', function (req, res, next) {
-
-    const item_id = req.params.id;
-    console.log('api - in next item get by id: ' + String(item_id));
+router.get('/items/next', function (req, res, next) {
+    console.log(req.query);
+    const item_id = req.query.id;
+    console.log(item_id);
+    var filterString = parseFilterQuery(req.query)? parseFilterQuery(req.query):'';
+    console.log('api - in next item get by id: ' + filterString);
     
-    model.geo_items.findOne({
+    
+    const query = '\
+          SELECT * \
+          FROM "geo_items" \
+          WHERE ' + filterString 
+          + '"geo_items"."id" > ' + String(item_id) + 
+          ' ORDER BY "geo_items"."id" ASC LIMIT 1';
+    
+    console.log('api - in next item get by id: ' + query);
+    //http://localhost:3000/api/items/prev?id=7
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.geo_items
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
+
+/*
+      console.log(req.query);
+    const item_id = req.query.id;
+    console.log('api - in next item get by id: ' + String(item_id));
+    var filterString = parseFilterQuery(req.query);
+    console.log(filterString);
+    
+    if (req.query.values) {
+        model.geo_items.findOne({
+            where: {
+                id: {
+                  $gt: item_id
+                },
+                itemStatus: {
+                    $in: req.query.values
+                }
+            },
+            order: [['id', 'ASC']]
+        })
+        .then(items => res.json(items))
+        .catch(error => res.json({
+            error: true,
+            error: error
+        }));
+    }
+    else {
+        model.geo_items.findOne({
             where: {
                 id: {
                   $gt: item_id
@@ -91,6 +194,7 @@ router.get('/items/next/:id', function (req, res, next) {
             error: true,
             error: error
         }));
+    }*/
 });
 // GET all items and search for items 
 router.get('/items', function (req, res, next) {
@@ -101,9 +205,6 @@ router.get('/items', function (req, res, next) {
         where: { 
             name: { $like: '%'+filter+'%' } 
         }
-        //{
-                //name: filter
-            //}
     })
         
         .then(items => res.json(items))
@@ -209,5 +310,36 @@ router.get('/filters/:col', function (req, res, next) {
             error: error
         }));
 });
+
+function parseFilterQuery(params) {
+    var filterString = '';
+    var column = '';
+    var values = '';
+
+    for (var filterCol in params) {//looking for col or value
+        if (!params.hasOwnProperty(filterCol)) {
+            continue;
+        }
+        if (filterCol == 'col') {
+            console.log('column is ' +params[filterCol]);
+
+                //var filterWords = "";
+                //console.log(params[filterCol]);
+                //for (var num in params[filterCol]) {          
+            column = '"geo_items".' + '"' +params[filterCol] + '"';
+        }
+
+        if (filterCol == 'values') {
+            //if (params[filterCol]) {
+                //for (var i in )
+            console.log('value is ' +params[filterCol]);
+            values = ' IN ('+ params[filterCol] + ')';
+            filterString = column + values + ' AND ';
+        }
+    }//end for
+
+    console.log(filterString); 
+    return filterString; 
+}
 
 module.exports = router;
