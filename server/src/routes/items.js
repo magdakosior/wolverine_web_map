@@ -14,21 +14,22 @@ const awaitErorrHandlerFactory = middleware => {
   };
 };
 
-/* GET heros listing. */
+/* GET heros listing. Called from item.service.ts getItemsWithinBounds()*/
 //http://localhost:3000/api/itemsMapBounds?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
 router.get('/itemsMapBounds', function (req, res, next) {
+    console.log('itemsMapBounds');
     console.log(req.query);
     var filterString = parseFilterQuery(req.query);
-      
-    
+
     const query = '\
           SELECT * \
           FROM "geo_items" \
-          WHERE  ' + filterString + ' ST_Intersects("geom", ST_MakeEnvelope(' + req.query.west + ', \
+          WHERE ST_Intersects("geom", ST_MakeEnvelope(' + req.query.west + ', \
           ' + req.query.south + ', \
           ' + req.query.east + ', \
-          ' + req.query.north + ', 4326))';
+          ' + req.query.north + ', 4326))' + filterString;
     
+    console.log(query);
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
         model: model.geo_items
@@ -41,12 +42,12 @@ router.get('/itemsMapBounds', function (req, res, next) {
 
 /* get item by id http://localhost:3000/api/heros/1 */
 router.get('/items', function (req, res, next) {
+    console.log('items');
     console.log(req.query);
     const item_id = req.query.id;
-    console.log(item_id);
+    //console.log(item_id);
     //var filterString = parseFilterQuery(req.query)? ' AND ' + parseFilterQuery(req.query):'';
     //console.log('api - in selected item get by id: ' + filterString);
-    
     
     const query = '\
           SELECT * \
@@ -198,6 +199,7 @@ router.get('/items/next', function (req, res, next) {
 });
 // GET all items and search for items 
 router.get('/items', function (req, res, next) {
+    console.log('items');
     const filter = req.query.name;
     console.log(JSON.stringify(req.params));
     model.geo_items.findAll({
@@ -312,34 +314,30 @@ router.get('/filters/:col', function (req, res, next) {
 });
 
 function parseFilterQuery(params) {
+    /*
+    { east: '-115.22495269775392',
+      west: '-115.4652786254883',
+      north: '51.12421275782688',
+      south: '51.037939894299356',
+      filtercol: [ 'itemStatus', 'imgStatus' ],
+      values: [ '"\'deleted\',\'loaded\',\'verified\'', '"\'bad\',\'good\'' ] 
+    }
+*/
     var filterString = '';
-    var column = '';
-    var values = '';
-
-    for (var filterCol in params) {//looking for col or value
-        if (!params.hasOwnProperty(filterCol)) {
-            continue;
-        }
-        if (filterCol == 'col') {
-            console.log('column is ' +params[filterCol]);
-
-                //var filterWords = "";
-                //console.log(params[filterCol]);
-                //for (var num in params[filterCol]) {          
-            column = '"geo_items".' + '"' +params[filterCol] + '"';
+    console.log(params);
+    if (params.filtercol) {
+        //console.log('in filter query prep');
+        
+        for (var i = 0; i < params.filtercol.length; i++) {
+          var column = '"geo_items".' + '"' +params.filtercol[i] + '"';
+          var curvals = params.values[i];
+          var values = ' IN ('+ curvals + ')';
+          filterString = filterString + column + values + ' AND ';
         }
 
-        if (filterCol == 'values') {
-            //if (params[filterCol]) {
-                //for (var i in )
-            console.log('value is ' +params[filterCol]);
-            values = ' IN ('+ params[filterCol] + ')';
-            filterString = column + values + ' AND ';
-        }
-    }//end for
-
-    console.log(filterString); 
-    return filterString; 
+        filterString = " AND " + filterString.slice(0,-4);
+    }
+    return filterString; //remove the ast AND 
 }
 
 module.exports = router;

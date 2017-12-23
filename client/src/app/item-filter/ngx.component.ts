@@ -27,19 +27,25 @@ export class ngxModal implements OnInit{
   event: string;
   //for itemsStatus filter
   itemStatusOptions: {};
+  imgStatusOptions: {};
   
 
   //item status
-  dropdownList = [];
-  selectedItems = [];
+  itemStatusDropdownList = [];
+  itemStatusSelectedItems = [];
   dropdownSettings = {};
   
-  constructor(
+  //item status
+  imgStatusDropdownList = [];
+  imgStatusSelectedItems = [];
+  //dropdownSettings = {};
+  
+   constructor(
   	private modalService: BsModalService,
   	private itemService: ItemService //to get filer options from db
     ) {
     this.modalOpen = false;
-  	console.log('filter modal constructor');
+  	//console.log('filter modal constructor');
   }
 
   //https://www.npmjs.com/package/angular2-multiselect-dropdown
@@ -68,7 +74,7 @@ export class ngxModal implements OnInit{
   openModalWithClass(template: TemplateRef<any>) {
     this.modalOpen = true;
 
-    //this.selectedItems = [];
+    //this.itemStatusSelectedItems = [];
     this.dropdownSettings = { 
       singleSelection: false, 
       text:"Status Filter(s)",
@@ -88,11 +94,28 @@ export class ngxModal implements OnInit{
             'itemName': f.filter
           }
           //console.log({"id":i,"itemName": f.filter});
-          this.dropdownList.push(selection);
+          this.itemStatusDropdownList.push(selection);
           
           i++;
         });
-        //console.log(this.dropdownList);
+        //console.log(this.itemStatusDropdownList);
+      }) 
+
+    this.itemService.getFilterOptions('imgStatus')
+      .subscribe((filters: any[]) => {
+
+        var i = 1;
+        filters.forEach(f => {
+          var selection = {
+            'id': i,
+            'itemName': f.filter
+          }
+          //console.log({"id":i,"itemName": f.filter});
+          this.imgStatusDropdownList.push(selection);
+          
+          i++;
+        });
+        //console.log(this.itemStatusDropdownList);
       }) 
     
     //this makes modal show
@@ -103,53 +126,47 @@ export class ngxModal implements OnInit{
   }
 
   applyFilter() {
-  	console.log('modal getting filter ');
-    console.log(JSON.stringify(this.selectedItems));
-    /* result looks like
-    [
-    {"id":1,"itemName":"deleted"},
-    {"id":2,"itemName":"loaded"}
-    ]
-    */
-    var itemStatusFilters = [];
-    this.selectedItems.forEach(sel =>{
-      itemStatusFilters.push(sel);
-    })
-    this.itemStatusOptions = {
-      itemStatus: itemStatusFilters
+    var filters = {};
+
+    var filterwords = [];
+    var concatstr1 = '';
+    var concatstr2 = '';
+    
+    this.itemStatusSelectedItems.forEach(sel => filterwords.push("'" + sel.itemName+"'"));
+    concatstr1 = filterwords.join(",");
+    filterwords = [];
+    this.imgStatusSelectedItems.forEach(sel => filterwords.push("'" + sel.itemName+"'"));
+    concatstr2 = filterwords.join(",");
+    //console.log(concatstr2);
+    
+    //put the two filter sources together
+    filters = {
+      "filters": [
+        {"itemStatus": concatstr1},
+        {"imgStatus": concatstr2}
+      ]
     }
-    console.log(this.itemStatusOptions);
-    /* result looks like
-    itemStatus: [
-    0: {"id":1,"itemName":"deleted"},
-    1: {"id":2,"itemName":"loaded"}
-    ]
-    */
-    //let itemStatusResult: JSON = this.itemStatusChosen;//this.filterOptions.itemStatus.or = this.itemStatusChosen;
-    this.itemService.setServicefilterOptions(this.itemStatusOptions);
+    console.log(JSON.stringify(filters));
+
+    //send to item service to send to server
+    this.itemService.setServicefilterOptions(filters);
+    //close down modal and unset dropdown lists
     this.modalRef.hide();
     this.modalOpen = false;
-    this.dropdownList = [];
+    this.itemStatusDropdownList = [];
+    this.imgStatusDropdownList = [];
   }
 
   closeFilter() {
     this.modalRef.hide();
     this.modalOpen = false;
-    this.dropdownList = [];
+    this.itemStatusDropdownList = [];
+
+    this.imgStatusDropdownList = [];
   }
 
-  onItemSelect(item:any){
-      //console.log(item);
-      //console.log(this.selectedItems);
-  }
-  OnItemDeSelect(item:any){
-      //console.log(item);
-      //console.log(this.selectedItems);
-  }
-  onSelectAll(items: any){
-      //console.log(items);
-  }
-  onDeSelectAll(items: any){
-      //console.log(items);
-  }
+  onItemSelect(item:any){}
+  OnItemDeSelect(item:any){}
+  onSelectAll(items: any){}
+  onDeSelectAll(items: any){}
 }

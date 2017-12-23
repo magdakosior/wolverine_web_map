@@ -1,4 +1,70 @@
-<div *ngIf="item">
+<div *ngIf="item" id="wrapper" class="container">
+  
+    <h1>{{ item.name }}</h1>
+
+    <form id="form-work" class="" name="form-work" action="#">
+      
+      <fieldset>
+      
+        <div class="form-group">
+          <div class="col-md-2">
+            <label class="control-label" for="nome">Id</label>
+            <span class="input-group-addon">{{item.id}}</span>
+            </div>
+          </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+              <label class="control-label">Name</label>
+              <input name="name" class="form-control" [(ngModel)]="item.name" type="text">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-3">
+              <label class="control-label" for="tel">Status</label>
+              <div class="input-group">
+                <input name="tel" class="form-control" [(ngModel)]="item.itemStatus" type="text">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-3">
+              <label class="control-label" for="mobile">Photo Status</label>
+              <div class="input-group">
+                <input name="mobile" class="form-control" [(ngModel)]="item.imgStatus" type="text">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-3">
+              <label class="control-label" for="email">Date Imported</label>
+              <input name="email" class="form-control" [(ngModel)]="item.createdAt" type="text">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-3">
+              <label class="control-label" for="district">Other</label>
+              <input name="district" class="form-control" placeholder="Botafogo" type="text">
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <div class="col-md-4">
+                <button  class="btn btn-primary" (click)="goPrev()">Previous</button>
+                <button (click)="save()">Save</button>
+                <button  class="goNext" (click)="goNext()">Next</button>
+            </div>
+          </div>     
+      </fieldset> 
+    </form>
+</div>
+
+
+<!--div *ngIf="item">
     
         <div id="detailsbox" >
             <h2>{{ item.name }}</h2>
@@ -33,4 +99,4 @@
         <button (click)="save()">Save</button>
         <button  class="goNext" (click)="goNext()">Next</button>
    
-</div>
+</div-->

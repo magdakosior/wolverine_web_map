@@ -53,11 +53,11 @@ export class ItemService {
 
   redrawMap() {
     var filterquery = '';
-    console.log(this.filterString);
     if (!this.filterString)
       filterquery = '';
     else filterquery = String(this.filterString);
-
+    console.log(this.filterString);
+    
     var query = '?east=' + String(this.serviceMapDetails.ext_east) + 
     '&west=' + String(this.serviceMapDetails.ext_west) + 
     '&north=' + String(this.serviceMapDetails.ext_north) +  
@@ -91,24 +91,25 @@ export class ItemService {
 
   //message sent from filter modal (on dashboard)
   setServicefilterOptions(opts: any): void {
+    //{"filters":[{"itemStatus":"'deleted','loaded','verified'"},{"imgStatus":"'bad','good'"}]}
     var result = '';
-    for (var filterCol in opts) {
-      if (!opts.hasOwnProperty(filterCol)) {
-          continue;
-      }
-      console.log(filterCol);
+    console.log(opts);
 
-      var filterWords = "";
-      for (var num in opts[filterCol]) {          
-          filterWords = filterWords + "'" + opts[filterCol][num].itemName + "'";
-          //console.log(filterWords);
+    var result = '';
+    for (var filterline in opts.filters) {
+        if (!opts.filters.hasOwnProperty(filterline)) {
+            continue;
         }
-      filterWords = filterWords.replace(/\'\'/g, "','"); 
-      result = 'col=' + filterCol + '&values=' + filterWords;
-    }
-    //console.log(filterWords.replace("''"), "','");
-     
-    console.log(result);
+      //console.log(opts.filters[filterline]);
+      for (var key in opts.filters[filterline]) {
+        //console.log(key);
+        //console.log(opts.filters[filterline][key]);
+        result = result + '&filtercol=' + 
+          key + '&values=' + 
+          opts.filters[filterline][key]; 
+      }
+      //console.log(result); 
+    }  
 
 
 
@@ -120,9 +121,9 @@ export class ItemService {
 
     
 
-    this.filterString = '&' +result; //"filter1col=itemStatus&filter1values='deleted','verified','another'";
+    this.filterString = result; //"filter1col=itemStatus&filter1values='deleted','verified','another'";
     //re-draw map and items
-    console.log(this.filterString);
+    //console.log(this.filterString);
     this.setSelectedItem(null);
     this.redrawMap();
   }
