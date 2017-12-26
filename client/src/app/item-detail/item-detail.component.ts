@@ -14,6 +14,10 @@ export class ItemDetailComponent implements OnDestroy {
   @Input() item: Item;
   subscription: Subscription;
 
+  itemStatusOptionsDropdown = [];
+  imgStatusOptionsDropdown = [];
+  //itemStatusSelectedOption = '';
+  
   constructor(private itemService: ItemService) {
     /*this.item = {
       id: 1,
@@ -27,7 +31,22 @@ export class ItemDetailComponent implements OnDestroy {
     this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;
+
+        this.itemService.getFilterOptions('itemStatus')
+        .subscribe((options: any[]) => {
+          options.forEach(f => {
+            this.itemStatusOptionsDropdown.push(f.filter);
+          });
+        }) 
+        this.itemService.getFilterOptions('imgStatus')
+        .subscribe((options: any[]) => {
+          options.forEach(f => {
+            this.imgStatusOptionsDropdown.push(f.filter);
+          });
+        }) 
     });
+
+    
   }
 
   goPrev(): void {
@@ -42,7 +61,7 @@ export class ItemDetailComponent implements OnDestroy {
      this.itemService.updateItem(this.item)
        .subscribe((item: Item) => {
         //this.item = item 
-        //console.log(JSON.stringify(this.item));
+        console.log(JSON.stringify(this.item));
       })
    }
 

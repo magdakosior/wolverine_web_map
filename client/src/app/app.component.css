@@ -1,7 +1,22 @@
 /* AppComponent's private CSS styles */
+.appTitle h3 {
+  margin-top: 20px;
+  text-align: center;
+  color: #092834; /*dark blue*/
+  font-weight: 800!important;
+}
+.appTitle a {
+  color: white;
+  background-color: #66B032 /*dark green*/
+}
+.appTitle btn {
+  background-color: #347B98;
+  color: white;
+}
+
 h1 {
   font-size: 0.8em;
-  color: #999;
+  color: #66B032;
   margin-bottom: 0;
 }
 h2 {
@@ -14,11 +29,10 @@ nav a {
   text-decoration: none;
   margin-top: 10px;
   display: inline-block;
-  background-color: #eee;
   border-radius: 4px;
 }
 nav a:visited, a:link {
-  color: #607D8B;
+  color: #125169;
 }
 nav a:hover {
   color: #039be5;
@@ -27,3 +41,5 @@ nav a:hover {
 nav a.active {
   color: #039be5;
 }
+
+

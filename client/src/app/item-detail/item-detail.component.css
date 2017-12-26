@@ -3,6 +3,31 @@
   margin-top: 25px;
 }
 
+.jumbotron {
+    background-color: #F0F7D4;
+    color: #347B98!important;
+    padding: 0rem 2rem 1rem 3rem;
+}
+
+
+.form-group {
+  margin-bottom: 0;
+  text-align: left;
+}
+.btn-primary {
+  background-color: #347B98; /* med green */
+  border-color: #347B98;
+  color: white;
+}
+
+
+label {
+  margin-top: 1rem;
+  margin-bottom: 0rem;
+}
+input {
+  color: #347B98!important;
+}
 /* HeroDetailComponent's private CSS styles 
 
 
@@ -81,9 +106,6 @@ input {
   margin-top: 20px;
 }
 
-.form-group {
-  margin-bottom: 0;
-  text-align: left;
-}
+
 
 */

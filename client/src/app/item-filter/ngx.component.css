@@ -62,11 +62,16 @@ input {
   border-right: 0px !important;
 }
 
+/*Filter button*/
 .btn {
   border: 0;
   border-radius: 3px;
   margin-top: 20px;
+  margin-bottom: 5px;
+  color: white;
+  background-color: #347B98 /*dark green*/
 }
+
 
 .form-group {
   margin-bottom: 0;
