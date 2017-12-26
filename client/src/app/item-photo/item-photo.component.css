@@ -1,4 +1,10 @@
 /* ItemPhotoComponent's private CSS styles */
+
+img {
+    max-height: 350px;
+    border-radius: 20px;
+}
+/*
 div#imagebox{
 	margin-left: 15%;
 	height: 400px;
@@ -7,12 +13,9 @@ div#imagebox{
     border-width: 5px;
 }
 
-img {
-    max-width: 100%;
-    max-height: 100%;
-}
 
-/*
+
+
 
 .square {
     height: 200px;

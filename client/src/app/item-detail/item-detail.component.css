@@ -1,4 +1,9 @@
-/* HeroDetailComponent's private CSS styles */
+#button-group {
+  text-align:center;
+  margin-top: 25px;
+}
+
+/* HeroDetailComponent's private CSS styles 
 
 
 label {
@@ -31,7 +36,7 @@ button:disabled {
   cursor: auto;
 }
 
-/*  adding form css here */
+
 #wrapper {
   width: 100%;
   max-width: 600px;
@@ -80,3 +85,5 @@ input {
   margin-bottom: 0;
   text-align: left;
 }
+
+*/

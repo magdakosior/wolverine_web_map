@@ -8,6 +8,10 @@ div#mapbox {
 }*/
 
 div#leafletbox {
-	height: 400px;
-	width: 700px;
+	height: 350px; 
+    width: 100%;
+    max-height: 350px;
+
+	
+    border-radius: 20px;
 }

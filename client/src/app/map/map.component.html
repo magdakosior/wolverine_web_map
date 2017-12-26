@@ -1,11 +1,19 @@
-<h3>Map Component Title</h3>
-<div class="container main">
-
-	<!-- Map -->
-	<div id="mapbox" class="col-md-7" style="margin-bottom: 30px;">
-		<div class="row">
-			<div >
-				<div >
+<h3>Wolverine Web Map</h3>
+<!--div class="container main"-->
+	<div class="container-fluid">
+		<div >
+			<div class="row">
+				<div class="col-md-1">
+					<ngx></ngx>			
+				</div>
+				<div class="col-md-6 d-inline ">
+					<app-item-search></app-item-search>
+				</div>
+			</div>
+			
+			<div class="row" >
+				<!-- Map -->
+				<div class="col-md-8" >
 					<div leaflet id="leafletbox"
 						 [leafletOptions]="options"
 						 [leafletBaseLayers]="baseLayers"
@@ -17,25 +25,21 @@
 						 (leafletMarkerClusterReady)="markerClusterReady($event)">
 					</div>
 				</div>
+
+				<!--Photo-->
+				<div class="col-md-4">
+					<div >
+						<app-item-photo></app-item-photo>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 	
-	<div class="col-md-5 featurette-image">
-		<app-item-photo></app-item-photo>
-	</div>
-
-	<div class="col-md-12 ">
-		<div class="col-md-1 ">
-			<ngx></ngx>			
+		<!--Details-->
+		<div ><!--class="jumbotron gray-light"-->
+			<app-item-detail></app-item-detail>
 		</div>
-		<div class="col-md-6 ">
-			<app-item-search></app-item-search>
-		</div>
-	</div>
-
-</div>
-<div ><!--class="jumbotron gray-light"-->
-	<app-item-detail></app-item-detail>
-</div>
+		
+	</div> <!--container-->
+<!--/div-->
 

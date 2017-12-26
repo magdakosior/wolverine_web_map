@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-primary" (click)="openModalWithClass(template)">Filter</button>
+<button type="button" class="btn btn-warning" (click)="openModalWithClass(template)">Filter</button>
 
 <ng-template #template>
 	<div id="wrapper" class="container">
@@ -36,6 +36,15 @@
 				    [ngModelOptions]="{standalone: true}">
 				    </angular2-multiselect>
 	            </div>
+	        </div>
+
+	        <div class="form-check">
+
+	            <label class="form-ckeck-label" for="nome">
+	            	<input class="form-check-input " type="radio"> All 
+	            	<input class="form-check-input " type="radio"> Extent
+	            </label>
+	            
 	        </div>
 
 	         <div class="row" style="display:block;margin-bottom: 10px !important;margin-top: 30px !important;">
