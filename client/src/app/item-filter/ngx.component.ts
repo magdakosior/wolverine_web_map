@@ -45,7 +45,6 @@ export class ngxModal implements OnInit{
   	private itemService: ItemService //to get filer options from db
     ) {
     this.modalOpen = false;
-  	//console.log('filter modal constructor');
   }
 
   //https://www.npmjs.com/package/angular2-multiselect-dropdown
@@ -83,39 +82,33 @@ export class ngxModal implements OnInit{
       enableSearchFilter: false,
       classes:"myclass custom-class"
     };   
-
+    this.itemStatusDropdownList = [];// reset dropdown
+    this.imgStatusDropdownList = [];// reset dropdown
+               
   	this.itemService.getFilterOptions('itemStatus')
       .subscribe((filters: any[]) => {
-
         var i = 1;
         filters.forEach(f => {
           var selection = {
             'id': i,
             'itemName': f.filter
           }
-          //console.log({"id":i,"itemName": f.filter});
-          this.itemStatusDropdownList.push(selection);
-          
+          this.itemStatusDropdownList.push(selection);          
           i++;
         });
-        //console.log(this.itemStatusDropdownList);
       }) 
 
     this.itemService.getFilterOptions('imgStatus')
       .subscribe((filters: any[]) => {
-
         var i = 1;
         filters.forEach(f => {
           var selection = {
             'id': i,
             'itemName': f.filter
           }
-          //console.log({"id":i,"itemName": f.filter});
           this.imgStatusDropdownList.push(selection);
-          
           i++;
         });
-        //console.log(this.itemStatusDropdownList);
       }) 
     
     //this makes modal show
@@ -161,7 +154,6 @@ export class ngxModal implements OnInit{
     this.modalRef.hide();
     this.modalOpen = false;
     this.itemStatusDropdownList = [];
-
     this.imgStatusDropdownList = [];
   }
 

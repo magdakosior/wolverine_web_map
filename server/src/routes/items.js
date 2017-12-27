@@ -20,7 +20,9 @@ router.get('/itemsMapBounds', function (req, res, next) {
     console.log('itemsMapBounds');
     console.log(req.query);
     var filterString = parseFilterQuery(req.query);
-
+    console.log('------->');
+    console.log(filterString);
+    
     const query = '\
           SELECT * \
           FROM "geo_items" \
@@ -29,6 +31,7 @@ router.get('/itemsMapBounds', function (req, res, next) {
           ' + req.query.east + ', \
           ' + req.query.north + ', 4326))' + filterString;
     
+    console.log('------->');
     console.log(query);
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -85,20 +88,21 @@ router.get('/items', function (req, res, next) {
 // get prev item http://localhost:3000/api/items/prev/5
 router.get('/items/prev', function (req, res, next) {
     console.log(req.query);
+    console.log('/items/prev');
+    console.log(req.query);
+    var filterString = parseFilterQuery(req.query);
+    console.log('------->');
+
     const item_id = req.query.id;
-    console.log(item_id);
-    var filterString = parseFilterQuery(req.query)? parseFilterQuery(req.query):'';
-    console.log('api - in prev item get by id: ' + filterString);
-    
     
     const query = '\
           SELECT * \
           FROM "geo_items" \
-          WHERE ' + filterString 
-          + '"geo_items"."id" < ' + String(item_id) + 
+          WHERE "geo_items"."id" < ' + String(item_id) + 
+          filterString +  
           ' ORDER BY "geo_items"."id" DESC LIMIT 1';
     
-    console.log('api - in prev item get by id: ' + query);
+    console.log(query);
     //http://localhost:3000/api/items/prev?id=7
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -132,20 +136,20 @@ router.get('/items/prev', function (req, res, next) {
 // get prev item http://localhost:3000/api/items/prev/5
 router.get('/items/next', function (req, res, next) {
     console.log(req.query);
+    console.log('/items/next');
+    console.log(req.query);
+    var filterString = parseFilterQuery(req.query);
+    console.log('------->');
+
     const item_id = req.query.id;
-    console.log(item_id);
-    var filterString = parseFilterQuery(req.query)? parseFilterQuery(req.query):'';
-    console.log('api - in next item get by id: ' + filterString);
-    
-    
     const query = '\
           SELECT * \
           FROM "geo_items" \
-          WHERE ' + filterString 
-          + '"geo_items"."id" > ' + String(item_id) + 
+          WHERE "geo_items"."id" > ' + String(item_id) +
+          filterString +  
           ' ORDER BY "geo_items"."id" ASC LIMIT 1';
     
-    console.log('api - in next item get by id: ' + query);
+    console.log(query);
     //http://localhost:3000/api/items/prev?id=7
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -324,20 +328,39 @@ function parseFilterQuery(params) {
     }
 */
     var filterString = '';
-    console.log(params);
+    var column = '';
+    var values = '';
+    var curvals = [];
+    var filteritem = [];
+
     if (params.filtercol) {
-        //console.log('in filter query prep');
         
-        for (var i = 0; i < params.filtercol.length; i++) {
-          var column = '"geo_items".' + '"' +params.filtercol[i] + '"';
-          var curvals = params.values[i];
-          var values = ' IN ('+ curvals + ')';
-          filterString = filterString + column + values + ' AND ';
+        //1 column
+        if (typeof(params.filtercol)=='string') {
+
+            column = '"geo_items".' + '"' +params.filtercol + '"';
+            //1 value
+            if (typeof(params.values)=='string') {
+                values = ' IN ('+ params.values + ')';
+                filteritem.push(column + values);
+            }
+        }
+        else { //more than 1 column
+            for (var i = 0; i < params.filtercol.length; i++) {
+                column = '"geo_items".' + '"' +params.filtercol[i] + '"';
+                values = ' IN ('+ params.values[i] + ')';
+                filteritem.push(column + values);
+            }
         }
 
-        filterString = " AND " + filterString.slice(0,-4);
+        filteritem = filteritem.join(' AND ');
+        //console.log(filteritem);
+        if (filteritem)
+            filterString = ' AND ' + filteritem;
+        else
+            filteritem = '';
     }
-    return filterString; //remove the ast AND 
+    return filterString;
 }
 
 module.exports = router;
