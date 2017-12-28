@@ -56,7 +56,7 @@ export class ItemService {
     if (!this.filterString)
       filterquery = '';
     else filterquery = String(this.filterString);
-    console.log(this.filterString);
+    //console.log(this.filterString);
     
     var query = '?east=' + String(this.serviceMapDetails.ext_east) + 
     '&west=' + String(this.serviceMapDetails.ext_west) + 

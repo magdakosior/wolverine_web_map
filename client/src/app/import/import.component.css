@@ -1,0 +1,90 @@
+.custom-file {
+  width: 150px;
+}
+
+.dropdowns  label {
+	display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.dropdowns select {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+#upload_button {
+  display: inline-block;
+  color: white;
+}
+#upload_button input[type=file] {
+  display:none;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+}
+
+p {
+  color: #999;
+}
+
+strong {
+  color: #333;
+}
+
+#wrapper {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 15px 0;
+}
+
+.page-head-image {
+  
+}
+
+.page-head-image img {
+  border-radius: 50%;
+}
+
+#form-trabalhe {
+  margin-top: 30px;
+  text-align: left;
+}
+
+label {
+  font-weight: normal;
+  margin-top: 25px;
+}
+
+/*input {
+  border: 2px solid #CCC !important;
+  height: 35px;
+  border-radius: 3px;
+  max-width: 100%;
+}*/
+
+.input-group-addon {
+  border: 2px solid #CCC !important;
+  border-right: 0px !important;
+}
+
+/*Filter button*/
+.btn-primary {
+  border: 0;
+  border-radius: 3px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  color: white;
+  background-color: #347B98 /*dark green*/
+}
+
+.form-group {
+  margin-bottom: 0;
+  text-align: left;
+}

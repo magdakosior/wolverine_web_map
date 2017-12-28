@@ -2,42 +2,42 @@
     <!--h1>{{ item.name }}</h1-->
 
     <form id="form-work" class="details" name="form-work" action="#" >
-      
       <fieldset class="form-group">
       
         <div class="row" >
             
             <div class="form-group col-md-2">
                 <label class="form-control-label" >Id</label>
-                <input readonly class="form-control-plaintext form-control-sm" value="{{item.id}}">
+                <input readonly class="form-control input-xs" value="{{item.id}}">
             </div>
         
             <div class="form-group col-md-2">
                 <label class="control-label" >Status</label>
-                <select class="form-control form-control-sm" [(ngModel)]="item.itemStatus" [ngModelOptions]="{standalone: true}">
+                <select class="form-control input-xs"  [(ngModel)]="item.itemStatus" [ngModelOptions]="{standalone: true}">
                      <option selected="option == item.itemStatus" *ngFor="let option of itemStatusOptionsDropdown" [value]="option">{{option}}</option>
                 </select>
             </div>
-        
-           
-            
+            <div class="col-md-2">
+                <label class="control-label">Date Created</label>
+                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.createdAt| date:'short'}}">
+            </div>
         </div><!--row-->
 
         <div class="row">
             
             <div class="form-group col-md-2">
                 <label class="control-label">Name</label>
-                <input name="name" class="form-control form-control-sm" [(ngModel)]="item.name" type="text">
+                <input name="name" class="form-control form-control input-xs" [(ngModel)]="item.name" type="text">
             </div>
             <div class="col-md-2">
                 <label class="control-label" >Photo Status</label>
-                <select class="form-control form-control-sm" [(ngModel)]="item.imgStatus" [ngModelOptions]="{standalone: true}">
+                <select class="form-control input-xs" [(ngModel)]="item.imgStatus" [ngModelOptions]="{standalone: true}">
                      <option selected="option == item.imgStatus" *ngFor="let option of imgStatusOptionsDropdown" [value]="option">{{option}}</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <label class="control-label">Date Updated</label>
-                <input name="district" class="form-control form-control-sm" placeholder="today" type="text">
+                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.updatedAt| date:'short'}}">
             </div>
         </div><!--row-->
         

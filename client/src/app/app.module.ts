@@ -23,7 +23,9 @@ import { ItemsComponent } from './items/items.component';
 
 //import { ItemFilterModal } from './item-filter/item-filter.component';
 
-import { ngxModal } from './item-filter/ngx.component';
+import { filterModal } from './item-filter/filter.component';
+import { importModal } from './import/import.component';
+
 import { ModalModule } from 'ngx-bootstrap';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
@@ -37,7 +39,8 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
     MessagesComponent,
     //DashboardComponent,
     ItemSearchComponent,
-    ngxModal
+    filterModal,
+    importModal
     //ItemFilterModal
   ],
   imports: [
@@ -52,7 +55,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
   ],
   providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
   bootstrap: [AppComponent],
-  entryComponents: [ ngxModal ]
+  entryComponents: [ filterModal, importModal ]
 })
 
 export class AppModule { }

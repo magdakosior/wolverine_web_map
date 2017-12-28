@@ -7,12 +7,12 @@ import { Filter } from '../filter';
 import { ItemService } from '../item.service';
 
 @Component({
-  selector: 'ngx',
-  templateUrl: './ngx.html',
-  styleUrls: ['./ngx.component.css'],
+  selector: 'filter',
+  templateUrl: './filter.component.html',
+  styleUrls: ['./filter.component.css'],
   host: {'(window:keydown)': 'hotkeys($event)'},
 })
-export class ngxModal implements OnInit{
+export class filterModal implements OnInit{
 	modalRef: BsModalRef;
   config = {
     animated: true,
@@ -120,7 +120,6 @@ export class ngxModal implements OnInit{
 
   applyFilter() {
     var filters = {};
-
     var filterwords = [];
     var concatstr1 = '';
     var concatstr2 = '';
@@ -130,7 +129,6 @@ export class ngxModal implements OnInit{
     filterwords = [];
     this.imgStatusSelectedItems.forEach(sel => filterwords.push("'" + sel.itemName+"'"));
     concatstr2 = filterwords.join(",");
-    //console.log(concatstr2);
     
     //put the two filter sources together
     filters = {

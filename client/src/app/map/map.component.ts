@@ -6,7 +6,9 @@ import { ItemService } from '../item.service';
 import { Item } from '../item';
 import { MapDetails } from '../mapDetails';
 
-import { ngxModal } from '../item-filter/ngx.component';
+import { filterModal } from '../item-filter/filter.component';
+import { importModal } from '../import/import.component';
+
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
