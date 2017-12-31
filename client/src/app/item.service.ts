@@ -40,6 +40,7 @@ export class ItemService {
   //mapDetails$ = this.mapDetailsSource.asObservable();
 
   readInfoFile(jsonData:any) {
+    console.log(jsonData);
     const url = `api/info?data=`+ JSON.stringify(jsonData);
 
     //open info.json file and send json results to server

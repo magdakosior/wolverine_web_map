@@ -1,18 +1,17 @@
-import { Component, TemplateRef, HostListener, OnInit} from '@angular/core';
+import { Component, TemplateRef, OnInit} from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { Filter } from '../filter';
-
 import { ItemService } from '../item.service';
+
 
 @Component({
   selector: 'filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.css'],
-  host: {'(window:keydown)': 'hotkeys($event)'},
 })
-export class filterModal implements OnInit{
+export class filterModal{
 	modalRef: BsModalRef;
   config = {
     animated: true,
@@ -22,13 +21,9 @@ export class filterModal implements OnInit{
   };
 
   modalOpen: boolean;
-  //for enter button press
-  keyCode: number;
-  event: string;
   //for itemsStatus filter
   itemStatusOptions: {};
   imgStatusOptions: {};
-  
 
   //item status
   itemStatusDropdownList = [];
@@ -48,27 +43,6 @@ export class filterModal implements OnInit{
   }
 
   //https://www.npmjs.com/package/angular2-multiselect-dropdown
-  ngOnInit() {
-  }
-
-  
- /*
-  @HostListener('window:keydown', ['$event'])
-  keyboardInput(event: KeyboardEvent) {
-    if (this.modalOpen) {
-      if (event == null) {
-        this.event = 'undefined!';
-      } else {
-        this.event = 'defined';
-      }
-      
-      event.preventDefault();
-      event.stopPropagation();
-      
-      this.keyCode = event.keyCode;
-      this.applyFilter();
-    }
-  }*/
 
   openModalWithClass(template: TemplateRef<any>) {
     this.modalOpen = true;

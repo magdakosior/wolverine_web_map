@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   var Item = sequelize.define('photos', {
     geom: DataTypes.GEOMETRY('MULTIPOINT'),
+    path: DataTypes.STRING,
     photopath: DataTypes.STRING,
     datetaken: DataTypes.DATE,
     temperature: DataTypes.NUMERIC,

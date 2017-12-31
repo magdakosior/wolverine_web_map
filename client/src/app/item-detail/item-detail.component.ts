@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy} from '@angular/core';
+import { Component, Input, HostListener, OnDestroy} from '@angular/core';
 import { Item } from '../item';
 
 import { ItemService }  from '../item.service';
@@ -7,7 +7,8 @@ import { Subscription }   from 'rxjs/Subscription';
 @Component({
   selector: 'app-item-detail',
   templateUrl: './item-detail.component.html',
-  styleUrls: ['./item-detail.component.css']
+  styleUrls: ['./item-detail.component.css'],
+  host: {'(keydown)': 'hotkeys($event)'}
 })
 export class ItemDetailComponent implements OnDestroy {
 
@@ -16,19 +17,12 @@ export class ItemDetailComponent implements OnDestroy {
 
   itemStatusOptionsDropdown = [];
   imgStatusOptionsDropdown = [];
-  //itemStatusSelectedOption = '';
+  //for enter button press
+  keyCode: number;
+  event: string;
   
   constructor(private itemService: ItemService) {
-    /*this.item = {
-      id: 1,
-      name: 'test',
-      photoPath: 'assets/photos/IMG_1121.JPG',
-      itemStatus: 'good',
-      imgStatus: 'great',
-      geom: null
-    };*/
-
-    this.subscription = itemService.selectedItem$.subscribe(
+     this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;
 
@@ -45,8 +39,42 @@ export class ItemDetailComponent implements OnDestroy {
           });
         }) 
     });
+  }  
 
+  @HostListener('keydown', ['$event'])
+  keyboardInput(event: KeyboardEvent) {
+    console.log('keyboard event in item-detail');
+    var keys = [39,37];
+    //39 -> 
+    //37 <-
+    //up 38
+    //down 40  
+    //tab 9
+
+    //console.log(event.keyCode);
+    if ( keys.indexOf(event.keyCode) != -1)
+    {
+      console.log(event.keyCode);
+      if (event.keyCode == 39) {
+        this.goNext();
+      }
+      if (event.keyCode == 37) {
+        this.goPrev();
+      }
+    }
+    /*
+    if (event == null) {
+      this.event = 'undefined!';
+    } else {
+      this.event = 'defined';
+    }
     
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.keyCode = event.keyCode;
+    console.log(this.keyCode);
+    */
   }
 
   goPrev(): void {

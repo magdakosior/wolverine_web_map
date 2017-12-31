@@ -5,7 +5,7 @@
   
 	  <h1>Import Photos</h1>
 
-		<form id="form-work" class="" name="form-work" action="#">
+		<form id="form-work" class="" name="form-work" (ngSubmit)="updateMap()">
 	      
 	      	<fieldset>
           	<!--div  id="image" class="mx-auto">
@@ -22,11 +22,32 @@
 			  </div>
 			  {{uploadCount}} Files Selected
 			-->
-
-          	<div id="upload_button">
+			<div class="form-group ">
+                <label class="form-control-label">Upload Folder Directory</label>
+                <input class="form-control input-xs" [(ngModel)]="loadInfo.path" name="path" placeholder='ex /assets/photos/session1'>
+            </div>
+            <div class="row" >
+	            <div class="form-group col-md-6">
+	                <label class="form-control-label">Location (latitude)</label>
+	                <input class="form-control input-xs" [(ngModel)]="loadInfo.lat" name="lat" placeholder='ex 51.45'>
+	            </div>
+	            <div class="form-group col-md-6">
+	                <label class="form-control-label">Location (longitude)</label>
+	                <input class="form-control input-xs" [(ngModel)]="loadInfo.lon" name="lon" placeholder='ex -115.49'>
+	            </div>
+	        </div>
+	        <div class="form-group ">
+                <label class="form-control-label">Session Name</label>
+                <input class="form-control input-xs" [(ngModel)]="loadInfo.session" name="session" placeholder='ex session1'>
+            </div>
+            <div class="form-group ">
+                <label class="form-control-label">File Type</label>
+                <input class="form-control input-xs" [(ngModel)]="loadInfo.filetype" name="filetype" placeholder='ex JPG'>
+            </div>
+          	<!--div id="upload_button">
 			   
 			      <button (click)="importNewFolder()" class="btn btn-danger btn-md center-block">Import New Folder</button>
-			  </div> 
+			  </div--> 
 			
 	        <!--
 				<div id="upload_button">
@@ -51,8 +72,10 @@
 
 	         <div class="row" style="display:block;margin-bottom: 10px !important;margin-top: 30px !important;">
 			    <div class="col-md-12 text-center">
+
 			        <button (click)="closeImport()" class="btn btn-primary btn-md center-block"  >Cancel</button>
-			        <button (click)="updateMap()" class="btn btn-primary btn-md center-block">Import Directory</button>
+
+			        <button type="submit" (click)="updateMap()" class="btn btn-primary btn-md center-block">Load Photos</button>
 			     </div>
 			</div>
 	             

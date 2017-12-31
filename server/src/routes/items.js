@@ -26,30 +26,31 @@ router.get('/info', function (req, res, next) {
     var response = {}
     var photoList = [];
 
-    fs.readdir(jsondata.folderPath, function(err, items) {     
+    fs.readdir(jsondata.path, function(err, items) {     
         //for each file in directory
         for (var i=0; i<items.length; i++) { 
             var photoObj = {};
-            photoObj.path = path.join(jsondata.folderPath, items[i]);
-            photoObj.session = jsondata.sessionName;
+            photoObj.path = path.join(jsondata.path, items[i]);
+            photoObj.session = jsondata.session;
             //store default info file location
-            console.log(jsondata.location);
-            photoObj.lat = jsondata.location.latitude;
-            photoObj.lon = jsondata.location.longitude;
+            //console.log(jsondata.location);
+            photoObj.lat = jsondata.lat;
+            photoObj.lon = jsondata.lon;
             photoList.push(photoObj);
         }
         processExifInfo(photoList, function (resultList) { 
             console.log('saving list to DB'); 
             //console.log(photoList);
-
+            var score = 0;
             for (var i = 0; i< resultList.length; i++) {
                 //console.log(photoList[i]);
                 addItem(resultList[i], function (result) {
-                    //console.log('added item to DB'); 
-                    console.log(i);
+                    //console.log('added item to DB');
+                    score = score +1; 
+                    console.log(score);
                     //add something here to say which ones were not added
                     response.result = result.message;
-                    if (i == resultList.length) {
+                    if (score == resultList.length) {
                         res.json(response);
                         console.log(response.result);
                     }
@@ -384,11 +385,15 @@ function addItem(params, callback) {
       crs: { type: 'name', properties: { name: 'EPSG:4326'} }
     };
 
-    console.log(params.dateTaken.replace(':','-').replace(':','-'));
+    //console.log(params.dateTaken.replace(':','-').replace(':','-'));
+    var pattern = '/assets';
+    params.photopath = params.path.substr(params.path.indexOf(pattern), params.path.length);
+    console.log(params.photopath);
 
     model.photos.create({
             geom: point,
-            photopath: params.path,
+            path: params.path,
+            photopath: params.photopath,
             datetaken: params.dateTaken.replace(':','-').replace(':','-'),
             temperature: null,
             session: params.session,

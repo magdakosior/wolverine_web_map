@@ -29,6 +29,9 @@ import { importModal } from './import/import.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
+import { EventListenerDirective } from './directives/eventListener.directive';
+
+import { HighlightDirective } from './directives/highlight.directive';
 //import { exif } from 'exif-js/exif';
 
 @NgModule({
@@ -42,7 +45,9 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
     //DashboardComponent,
     ItemSearchComponent,
     filterModal,
-    importModal
+    importModal,
+    EventListenerDirective,
+    HighlightDirective
     //ItemFilterModal
   ],
   imports: [
