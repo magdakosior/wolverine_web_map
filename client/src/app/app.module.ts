@@ -29,6 +29,8 @@ import { importModal } from './import/import.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
+//import { exif } from 'exif-js/exif';
+
 @NgModule({
   declarations: [
     AppComponent,

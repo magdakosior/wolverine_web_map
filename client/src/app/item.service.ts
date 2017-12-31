@@ -36,7 +36,30 @@ export class ItemService {
   // Observable string streams
   allItems$ = this.allItemsSource.asObservable();
   selectedItem$ = this.selectedItemSource.asObservable();
+  infoFileLocation = '/assets/photos/info.json';///Users/Magda/Projects/angular-projects/hero3/client/src/assets
   //mapDetails$ = this.mapDetailsSource.asObservable();
+
+  readInfoFile(jsonData:any) {
+    const url = `api/info?data=`+ JSON.stringify(jsonData);
+
+    //open info.json file and send json results to server
+    //this.http.get('/assets/photos/info.json').subscribe(res => {
+    //  console.log(res);
+    //});
+    //console.log(url);
+    return this.http.get<any>(url).pipe(
+      tap(_ => this.log(`fetched info file`)),
+      catchError(this.handleError<Item>(`error reading info file`))
+    );
+
+    /*return this.http.get(this.infoFileLocation)
+      //.map((response: Response) => response.json());
+      .subscribe((result: any) => {
+          //this.allItemsSource.next(items); 
+          console.log(result);
+        })*/
+                        
+  }
 
   // Service message commands
   setMapDetails(data: MapDetails) {

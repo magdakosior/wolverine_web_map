@@ -1,10 +1,10 @@
 <div id="imagebox" >
 	<div>
 		<div >
-			<!-- Photo *ngIf="item"  {{item.photoPath}} -->
-			<div>
+			<!-- Photo *ngIf="item"  "assets/photos/IMG_1121.JPG"  -->
+			<div *ngIf="item">
 				<div  id="image" class="mx-auto">
-					 <img class="img-fluid" src="assets/photos/IMG_1121.JPG" />
+					 <img class="img-fluid" src={{item.photoPath}} />
 				</div>
 			</div>
 		</div>
@@ -19,3 +19,5 @@
 			<div class="col-2 col-sm-4"><img class="img-thumbnail" src="" >
 			<div class="col-2 col-sm-4"><img class="img-thumbnail" src="" >
 	-->
+
+

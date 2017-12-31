@@ -32,13 +32,13 @@ export class ItemDetailComponent implements OnDestroy {
       item => {
         this.item = item;
 
-        this.itemService.getFilterOptions('itemStatus')
+        this.itemService.getFilterOptions('itemstatus')
         .subscribe((options: any[]) => {
           options.forEach(f => {
             this.itemStatusOptionsDropdown.push(f.filter);
           });
         }) 
-        this.itemService.getFilterOptions('imgStatus')
+        this.itemService.getFilterOptions('speciesother')
         .subscribe((options: any[]) => {
           options.forEach(f => {
             this.imgStatusOptionsDropdown.push(f.filter);

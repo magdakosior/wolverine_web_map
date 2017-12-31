@@ -8,34 +8,39 @@
 		<form id="form-work" class="" name="form-work" action="#">
 	      
 	      	<fieldset>
+          	<!--div  id="image" class="mx-auto">
+					 <img class="img-fluid" #abc id="image" src="assets/photos/IMG_1121.JPG" />
+				</div>
 
-          	<!--div class="col-md-12">
-	            <div class="form-group">
-						<input type="file"  multiple webkitdirectory id="fileURL"  />
-						<ul id="fileOutput" ></ul>
-	            </div>
-          	</div-->
-          	
-
-          	<div id="upload_button">
+				<div id="upload_button">
 			    <label>
 			      <input #folderInput
 				type="file" (change)="folderPicked(folderInput.files)" webkitDirectory>
 			      <span class="btn btn-danger">Upload Folder</span>
+
 			    </label>
 			  </div>
+			  {{uploadCount}} Files Selected
+			-->
 
-  			<!--div>
-          		<label for="#folderInput" class="btn btn-primary btn-block btn-outlined">Choose Folder</label>
-          		<input
-			    #folderInput
-				type="file"
-			    (change)="folderPicked(folderInput.files)"
-			    webkitDirectory style="display: none">
-			</div-->
-
+          	<div id="upload_button">
+			   
+			      <button (click)="importNewFolder()" class="btn btn-danger btn-md center-block">Import New Folder</button>
+			  </div> 
 			
-	        <!--div class="form-check">
+	        <!--
+				<div id="upload_button">
+			    <label>
+			      <input #folderInput
+				type="file" (change)="filePicked($event)"  >
+			      <span class="btn btn-danger">Upload New Folder</span>
+
+			    </label>
+			  </div> 
+			
+
+
+	        div class="form-check">
 
 	            <label class="form-ckeck-label" for="nome">
 	            	<input class="form-check-input " type="radio"> All 
@@ -47,7 +52,7 @@
 	         <div class="row" style="display:block;margin-bottom: 10px !important;margin-top: 30px !important;">
 			    <div class="col-md-12 text-center">
 			        <button (click)="closeImport()" class="btn btn-primary btn-md center-block"  >Cancel</button>
-			        <button (click)="importImages()" class="btn btn-primary btn-md center-block">Import Directory</button>
+			        <button (click)="updateMap()" class="btn btn-primary btn-md center-block">Import Directory</button>
 			     </div>
 			</div>
 	             

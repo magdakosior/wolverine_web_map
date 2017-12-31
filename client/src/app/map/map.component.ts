@@ -159,13 +159,13 @@ export class MapComponent { //implements OnInit, OnChanges {
     if (items) {
       var map_markers: any[] = [];
       for (let i = 0; i < Object.keys(items).length; i++) {
-      
-        var lat = items[i].geom.coordinates[0][1];
+         var lat = items[i].geom.coordinates[0][1];
         var lon = items[i].geom.coordinates[0][0];
         var id = items[i].id;
       
         var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
-          
+        console.log(items[i]);
+       
         if (this.selectedMarker) {
           //console.log(this.selectedMarker);
           if (this.selectedMarker.options.id == addmarker.options.id) {
