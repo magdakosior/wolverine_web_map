@@ -1,10 +1,9 @@
 <div *ngIf="item" id="wrapper" class="jumbotron text-white mt-4" > <!--*ngIf="item"-->
-    <!--h1>{{ item.name }}</h1-->
 
     <form id="form-work" class="details" name="form-work" action="#" >
       <fieldset class="form-group">
       
-        <div class="row" >
+        <div class="row" ><!--row 1-->
             <div class="form-group col-md-1">
                 <label class="form-control-label" >Id</label>
                 <input readonly class="form-control input-xs" value="{{item.id}}">
@@ -39,9 +38,9 @@
                     <input type="radio" [(ngModel)]="item.removedbait" [value]="false" name="removedbait">No
                 </div>
             </div>
-        </div><!--row 2-->
+        </div>
 
-        <div class="row">
+        <div class="row"><!--row 2-->
             <div class="form-group col-md-1">
                 <label class="control-label">Temperature</label>
                 <input readonly name="name" class="form-control form-control input-xs" value="{{item.temperature}}" type="text">
@@ -76,10 +75,10 @@
             </div>
             <div class="col-md-2">
                 <label class="control-label">Date Removed</label>
-                <input class="form-control form-control input-xs datetime" type="text" value="{{item.daterembait| date:'short'}}">
+                <input id="datetimepicker" type="date" [(ngModel)]="item.daterembait" name="daterembait"/>
             </div>
-        </div><!--row 3-->
-        <div class="row">
+        </div>
+        <div class="row"><!--row 3-->
             <div class="col-md-2">
                 <label for="checkbox1">Camera Check</label>
                 <div id="checkbox">
@@ -97,11 +96,25 @@
                      <option selected="option == item.speciesother" *ngFor="let option of otherSpeciesOptionsDropdown" [value]="option">{{option}}</option>
                 </select>
             </div>
-            <div class="col-md-2">
+
+            <!--div class="col-md-2">
                 <label class="control-label" >Behaviour</label>
                 <select class="form-control input-xs" [(ngModel)]="item.behaviour" [ngModelOptions]="{standalone: true}">
                      <option selected="option == item.behaviour" *ngFor="let option of behaviourOptionsDropdown" [value]="option">{{option}}</option>
                 </select>
+            </div-->
+            <div class="col-md-2">
+                <label class="control-label" >Behaviour</label>
+                <div class="form-group">
+                    <angular2-multiselect id="otherSpecies" [data]="behaviourOptionsDropdown" [(ngModel)]="behaviourSelectedItems" 
+                        [settings]="dropdownSettings" 
+                        (onSelect)="onItemSelect($event)" 
+                        (onDeSelect)="OnItemDeSelect($event)"
+                        (onSelectAll)="onSelectAll($event)"
+                        (onDeSelectAll)="onDeSelectAll($event)"
+                        [ngModelOptions]="{standalone: true}">
+                        </angular2-multiselect>
+                </div>
             </div>
             <div class="radio radio-info radio-inline col-md-2">
                 <label class="form-control-label" >Lactation Visible</label>
@@ -110,9 +123,9 @@
                     <input type="radio" [value]="false" [(ngModel)]="item.vislactation" name="vislactation">No
                 </div>
             </div>
-        </div><!--row-->
+        </div>
         
-        <div class="row">
+        <div class="row"><!--row 4-->
             <div class="form-group col-md-2">
             </div>
             <div class="form-group col-md-2">
@@ -132,7 +145,7 @@
                     <input type="radio" [(ngModel)]="item.visbait" [value]="false" name="visbait">No
                 </div>
             </div>
-        </div><!--row-->
+        </div>
 
           
 

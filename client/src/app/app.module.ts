@@ -34,6 +34,7 @@ import { EventListenerDirective } from './directives/eventListener.directive';
 import { HighlightDirective } from './directives/highlight.directive';
 //import { exif } from 'exif-js/exif';
 
+
 @NgModule({
   declarations: [
     AppComponent,

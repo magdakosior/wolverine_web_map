@@ -1,4 +1,4 @@
-import { Component, TemplateRef, OnInit} from '@angular/core';
+import { Component, TemplateRef} from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
@@ -58,7 +58,18 @@ export class filterModal{
     };   
     this.itemStatusDropdownList = [];// reset dropdown
     this.imgStatusDropdownList = [];// reset dropdown
-               
+    var selection = ['loaded', 'verified', 'deleted']; //{
+     
+    var i = 1;
+    selection.forEach(f => {
+          var selection = {
+            'id': i,
+            'itemName': f
+          }
+          this.itemStatusDropdownList.push(selection);          
+          i++;
+        });
+    /*           
   	this.itemService.getFilterOptions('itemstatus')
       .subscribe((filters: any[]) => {
         var i = 1;
@@ -84,7 +95,7 @@ export class filterModal{
           i++;
         });
       }) 
-    
+    */
     //this makes modal show
     this.modalRef = this.modalService.show(
       template,
@@ -107,8 +118,8 @@ export class filterModal{
     //put the two filter sources together
     filters = {
       "filters": [
-        {"itemStatus": concatstr1},
-        {"imgStatus": concatstr2}
+        {"itemstatus": concatstr1},
+        {"imgstatus": concatstr2}
       ]
     }
     console.log(JSON.stringify(filters));

@@ -4,6 +4,7 @@ import { Item } from '../item';
 import { ItemService }  from '../item.service';
 import { Subscription }   from 'rxjs/Subscription';
 
+
 @Component({
   selector: 'app-item-detail',
   templateUrl: './item-detail.component.html',
@@ -17,15 +18,38 @@ export class ItemDetailComponent implements OnDestroy {
 
   itemStatusOptionsDropdown = ['loaded', 'verified', 'deleted'];
   otherSpeciesOptionsDropdown = ['squirrel', 'moose', 'other'];
-  behaviourOptionsDropdown = ['climbing', 'Upsidedown', 'eating'];
+  behaviourSelectedItems = [];
+  behaviourOptionsDropdown = [];
+  dropdownSettings = {};
+  
   //for enter button press
   keyCode: number;
   event: string;
-  
+
   constructor(private itemService: ItemService) {
      this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;
+        
+        var selection = ['climbing', 'Upsidedown', 'eating']; 
+     
+        var i = 1;
+        selection.forEach(f => {
+          var selection = {
+            'id': i,
+            'itemName': f
+          }
+          this.behaviourOptionsDropdown.push(selection);          
+          i++;
+        });
+      this.dropdownSettings = { 
+        singleSelection: false, 
+        text:"Select",
+        selectAllText:'Select All',
+        unSelectAllText:'UnSelect All',
+        enableSearchFilter: false,
+        classes:"myclass custom-class"
+      };  
 /*
         this.itemService.getFilterOptions('itemstatus')
         .subscribe((options: any[]) => {
@@ -105,4 +129,9 @@ export class ItemDetailComponent implements OnDestroy {
     // prevent memory leak when component destroyed
     this.subscription.unsubscribe();
   }
+  //items for behaviours
+  onItemSelect(item:any){}
+  OnItemDeSelect(item:any){}
+  onSelectAll(items: any){}
+  onDeSelectAll(items: any){}
 }
