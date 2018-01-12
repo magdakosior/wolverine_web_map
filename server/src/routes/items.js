@@ -47,21 +47,16 @@ router.get('/info', function (req, res, next) {
                 addItem(resultList[i], function (result) {
                     //console.log('added item to DB');
                     score = score +1; 
-                    console.log(score);
+                    //console.log(score);
                     //add something here to say which ones were not added
                     response.result = result.message;
                     if (score == resultList.length) {
                         res.json(response);
-                        console.log(response.result);
+                        //console.log(response.result);
                     }
                 });
             }
-            //response.result = 'Data loaded sucessfully';
-            //console.log(response.result);
-            //res.json(response.result);
         })
-
-
     }); //end fs read
 
     //response.error = 'Could not load data';
@@ -277,41 +272,29 @@ router.get('/items', function (req, res, next) {
         }));
 });
 
-/* POST/add new item. */
-router.post('/item', function (req, res, next) {
-    console.log('in items post');
-    const {
-        name
-    } = req.body;
-
-    console.log(req.body);
-    
-    model.photos.create({
-            name: name
-        })
-        .then(item => res.status(201).json({
-            error: false,
-            data: item,
-            message: 'New item has been created.'
-        }))
-        .catch(error => res.json({
-            error: true,
-            data: [],
-            error: error
-        }));
-        
-});
-
 /* PUT/update item. */
 router.put('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
     console.log('saving ' + String(item_id));
-    const { name } = req.body;
-    console.log('NAME ' + JSON.stringify(req.body));
+    console.log('SAVE data ' + JSON.stringify(req.body));
     
     model.photos.update({
-            name: name
+            checkcamera: req.body.checkcamera,
+            itemstatus: req.body.itemstatus,
+            indivname: req.body.indivname,
+            specieswolv: req.body.specieswolv,
+            speciesother: req.body.speciesother,
+            age: req.body.age,
+            sex: req.body.sex,
+            behaviour: req.body.behaviour,
+            numanimals: req.body.numanimals,
+            vischest: req.body.vischest,
+            vissex: req.body.vissex,
+            vislactation: req.body.vislactation,
+            visbait: req.body.visbait,
+            removedbait: req.body.removedbait,
+            daterembait: req.body.daterembait
         }, {
             where: {
                 id: item_id

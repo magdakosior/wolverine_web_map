@@ -12,7 +12,7 @@
           	<div class="col-md-12">
 	            <label class="control-label" for="nome">Item Status</label>
 	            <div class="form-group">
-	                <angular2-multiselect [data]="itemStatusDropdownList" [(ngModel)]="itemStatusSelectedItems" 
+	                <angular2-multiselect [data]="imgStatusDropdownList" [(ngModel)]="itemStatusSelectedItems" 
 				    [settings]="dropdownSettings" 
 				    (onSelect)="onItemSelect($event)" 
 				    (onDeSelect)="OnItemDeSelect($event)"
@@ -27,7 +27,7 @@
 	       	<div class="col-md-12">
 	            <label class="control-label" for="nome">Photo Status</label>
 	            <div class="form-group">
-	                <angular2-multiselect [data]="imgStatusDropdownList" [(ngModel)]="imgStatusSelectedItems" 
+	                <angular2-multiselect [data]="imgStatusSelectedItems" [(ngModel)]="imgStatusSelectedItems" 
 				    [settings]="dropdownSettings" 
 				    (onSelect)="onItemSelect($event)" 
 				    (onDeSelect)="OnItemDeSelect($event)"

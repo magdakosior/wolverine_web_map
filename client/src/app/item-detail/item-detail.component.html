@@ -5,43 +5,138 @@
       <fieldset class="form-group">
       
         <div class="row" >
-            
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-1">
                 <label class="form-control-label" >Id</label>
                 <input readonly class="form-control input-xs" value="{{item.id}}">
             </div>
-        
+            <div class="form-group col-md-1">
+            </div>
+            <div class="col-md-2">
+                <label class="control-label">Date Taken</label>
+                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.datetaken| date:'short'}}">
+            </div>
             <div class="form-group col-md-2">
-                <label class="control-label" >Status</label>
-                <select class="form-control input-xs"  [(ngModel)]="item.itemStatus" [ngModelOptions]="{standalone: true}">
-                     <option selected="option == item.itemStatus" *ngFor="let option of itemStatusOptionsDropdown" [value]="option">{{option}}</option>
+                <label class="form-control-label" >Individual Name</label>
+                <input  class="form-control input-xs" [(ngModel)]="item.indivname" name="indivname">
+            </div>
+            <div class="form-group col-md-1">
+                <label class="form-control-label" >Age</label>
+                <input class="form-control input-xs" [(ngModel)]="item.age" name="age">
+            </div>
+            <div class="form-group col-md-1">
+            </div>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Chest Visible</label>
+                <div>
+                    <input type="radio" [(ngModel)]="item.vischest" [value]="true" name="vischest">Yes 
+                    <input type="radio" [(ngModel)]="item.vischest" [value]="false" name="vischest">No
+                </div>
+            </div>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Bait Removed</label>
+                <div >
+                    <input type="radio" [(ngModel)]="item.removedbait" [value]="true" name="removedbait">Yes 
+                    <input type="radio" [(ngModel)]="item.removedbait" [value]="false" name="removedbait">No
+                </div>
+            </div>
+        </div><!--row 2-->
+
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label class="control-label">Temperature</label>
+                <input readonly name="name" class="form-control form-control input-xs" value="{{item.temperature}}" type="text">
+            </div>
+            <div class="form-group col-md-1">
+            </div>
+            <div class="col-md-2">
+                <label class="control-label">Status</label>
+                <select class="form-control input-xs" [(ngModel)]="item.itemstatus" [ngModelOptions]="{standalone: true}">
+                     <option selected="option == item.itemstatus" *ngFor="let option of itemStatusOptionsDropdown" [value]="option">{{option}}</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="control-label">Date Created</label>
-                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.createdAt| date:'short'}}">
+                <label for="checkbox1">Wolverine Species</label>
+                <div id="checkbox">
+                    <input id="checkbox" [(ngModel)]="item.specieswolv" type="checkbox" name="specieswolv" ng-true-value="true" ng-false-value="false">
+                </div>
+            </div>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Sex</label>
+                <div>
+                    <input type="radio" [(ngModel)]="item.sex" [value]="'M'" name="sex">Male
+                    <input type="radio" [(ngModel)]="item.sex" [value]="'F'" name="sex">Female
+                </div>
+            </div>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Sex Visible</label>
+                <div>
+                    <input type="radio" [(ngModel)]="item.vissex" [value]="true" name="vissex">Yes 
+                    <input type="radio" [(ngModel)]="item.vissex" [value]="false" name="vissex">No
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label class="control-label">Date Removed</label>
+                <input class="form-control form-control input-xs datetime" type="text" value="{{item.daterembait| date:'short'}}">
+            </div>
+        </div><!--row 3-->
+        <div class="row">
+            <div class="col-md-2">
+                <label for="checkbox1">Camera Check</label>
+                <div id="checkbox">
+                    <input id="checkbox" type="checkbox" [(ngModel)]="item.checkcamera" name="checkcamera" ng-true-value="true" ng-false-value="false">
+                </div>
+            </div>
+             <div class="col-md-2">
+                <label class="control-label">Session Name</label>
+                <input readonly class="form-control form-control input-xs" type="text" value="{{item.session}}">
+            </div>
+            
+            <div class="col-md-2">
+                <label class="control-label" >Other Species</label>
+                <select class="form-control input-xs" [(ngModel)]="item.speciesother" [ngModelOptions]="{standalone: true}">
+                     <option selected="option == item.speciesother" *ngFor="let option of otherSpeciesOptionsDropdown" [value]="option">{{option}}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="control-label" >Behaviour</label>
+                <select class="form-control input-xs" [(ngModel)]="item.behaviour" [ngModelOptions]="{standalone: true}">
+                     <option selected="option == item.behaviour" *ngFor="let option of behaviourOptionsDropdown" [value]="option">{{option}}</option>
+                </select>
+            </div>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Lactation Visible</label>
+                <div >
+                    <input type="radio" [value]="true" [(ngModel)]="item.vislactation" name="vislactation">Yes 
+                    <input type="radio" [value]="false" [(ngModel)]="item.vislactation" name="vislactation">No
+                </div>
+            </div>
+        </div><!--row-->
+        
+        <div class="row">
+            <div class="form-group col-md-2">
+            </div>
+            <div class="form-group col-md-2">
+            </div>
+            <div class="form-group col-md-2">
+            </div>
+            <div class="form-group col-md-2">
+                <label class="form-control-label" ># Animals Visible</label>
+                <div class="form-group col-md-6" id="animvis">
+                    <input class="form-control input-xs" [(ngModel)]="item.numanimals" name="numanimals">
+                </div>
+            </div>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Bait Visible</label>
+                <div>
+                    <input type="radio" [(ngModel)]="item.visbait" [value]="true" name="visbait">Yes 
+                    <input type="radio" [(ngModel)]="item.visbait" [value]="false" name="visbait">No
+                </div>
             </div>
         </div><!--row-->
 
-        <div class="row">
-            
-            <div class="form-group col-md-2">
-                <label class="control-label">Name</label>
-                <input name="name" class="form-control form-control input-xs" [(ngModel)]="item.name" type="text">
-            </div>
-            <div class="col-md-2">
-                <label class="control-label" >Photo Status</label>
-                <select class="form-control input-xs" [(ngModel)]="item.imgStatus" [ngModelOptions]="{standalone: true}">
-                     <option selected="option == item.imgStatus" *ngFor="let option of imgStatusOptionsDropdown" [value]="option">{{option}}</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="control-label">Date Updated</label>
-                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.updatedAt| date:'short'}}">
-            </div>
-        </div><!--row-->
-        
           
+
+
         <div id="button-group">
             <button class="btn btn-primary " (click)="goPrev()">Prev</button>
             <button class="btn btn-danger" (click)="save()">Save</button>

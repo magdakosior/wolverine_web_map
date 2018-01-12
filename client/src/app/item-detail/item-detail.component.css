@@ -3,6 +3,20 @@
   margin-top: 25px;
 }
 
+#checkbox 
+{
+    position: relative;
+    top: -1px;
+}
+#animvis {
+  padding:0px 25px 0px 1px;
+}
+
+input[type="radio"]{
+  margin: 0 0 0 10px;
+  padding:0px 25px 0px 1px;
+}
+
 .jumbotron {
     background-color: #F0F7D4;
     color: #347B98!important;
@@ -14,11 +28,13 @@
   margin-bottom: 0;
   text-align: left;
 }
+
 .btn-primary {
   background-color: #347B98; /* med green */
   border-color: #347B98;
   color: white;
 }
+
 
 
 label {
@@ -40,6 +56,9 @@ input {
   min-width:120px!important;
 }
 
+.checkbox {
+  line-height: 65px;
+}
 /* HeroDetailComponent's private CSS styles 
 
 

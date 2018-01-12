@@ -59,7 +59,7 @@ export class filterModal{
     this.itemStatusDropdownList = [];// reset dropdown
     this.imgStatusDropdownList = [];// reset dropdown
                
-  	this.itemService.getFilterOptions('itemStatus')
+  	this.itemService.getFilterOptions('itemstatus')
       .subscribe((filters: any[]) => {
         var i = 1;
         filters.forEach(f => {
@@ -72,7 +72,7 @@ export class filterModal{
         });
       }) 
 
-    this.itemService.getFilterOptions('imgStatus')
+    this.itemService.getFilterOptions('imgstatus')
       .subscribe((filters: any[]) => {
         var i = 1;
         filters.forEach(f => {

@@ -15,8 +15,9 @@ export class ItemDetailComponent implements OnDestroy {
   @Input() item: Item;
   subscription: Subscription;
 
-  itemStatusOptionsDropdown = [];
-  imgStatusOptionsDropdown = [];
+  itemStatusOptionsDropdown = ['loaded', 'verified', 'deleted'];
+  otherSpeciesOptionsDropdown = ['squirrel', 'moose', 'other'];
+  behaviourOptionsDropdown = ['climbing', 'Upsidedown', 'eating'];
   //for enter button press
   keyCode: number;
   event: string;
@@ -25,7 +26,7 @@ export class ItemDetailComponent implements OnDestroy {
      this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;
-
+/*
         this.itemService.getFilterOptions('itemstatus')
         .subscribe((options: any[]) => {
           options.forEach(f => {
@@ -35,9 +36,16 @@ export class ItemDetailComponent implements OnDestroy {
         this.itemService.getFilterOptions('speciesother')
         .subscribe((options: any[]) => {
           options.forEach(f => {
-            this.imgStatusOptionsDropdown.push(f.filter);
+            this.otherSpeciesOptionsDropdown.push(f.filter);
           });
         }) 
+        this.itemService.getFilterOptions('behaviour')
+        .subscribe((options: any[]) => {
+          options.forEach(f => {
+            this.behaviourOptionsDropdown.push(f.filter);
+          });
+        }) 
+        */
     });
   }  
 
