@@ -122,7 +122,7 @@ export class filterModal{
         {"imgstatus": concatstr2}
       ]
     }
-    console.log(JSON.stringify(filters));
+    //console.log(JSON.stringify(filters));
 
     //send to item service to send to server
     this.itemService.setServicefilterOptions(filters);

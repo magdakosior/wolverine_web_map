@@ -104,9 +104,9 @@
                 </select>
             </div-->
             <div class="col-md-2">
-                <label class="control-label" >Behaviour</label>
-                <div class="form-group">
-                    <angular2-multiselect id="otherSpecies" [data]="behaviourOptionsDropdown" [(ngModel)]="behaviourSelectedItems" 
+                <label class="control-label" >Behaviour(s)</label>
+                <div class="form-group" id="behaviour">
+                    <angular2-multiselect style="padding: 0px;" [data]="behaviourOptionsDropdown" [(ngModel)]="behaviourSelectedItems" 
                         [settings]="dropdownSettings" 
                         (onSelect)="onItemSelect($event)" 
                         (onDeSelect)="OnItemDeSelect($event)"

@@ -44,8 +44,8 @@ export class MapComponent { //implements OnInit, OnChanges {
 
         if (selectedItem) {
           if (selectedItem.id != this.selectedMarker.options.id) {
-          console.log('change in item selected');
-          console.log(selectedItem);
+          //console.log('change in item selected');
+          //console.log(selectedItem);
           var newLat = selectedItem.geom.coordinates[0][1];
           var newLon = selectedItem.geom.coordinates[0][0]
           var marker = this.createCustomMarker(newLat, newLon, this.blueIcon, selectedItem.id);
@@ -67,7 +67,7 @@ export class MapComponent { //implements OnInit, OnChanges {
     itemService.allItems$.subscribe(
       items => {
         //set markers onto map
-        console.log(items);
+        //console.log(items);
         this.setMarkers(items);
       });
   }
@@ -164,7 +164,7 @@ export class MapComponent { //implements OnInit, OnChanges {
         var id = items[i].id;
       
         var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
-        console.log(items[i]);
+        //console.log(items[i]);
        
         if (this.selectedMarker) {
           //console.log(this.selectedMarker);

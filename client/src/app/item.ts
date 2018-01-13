@@ -5,4 +5,5 @@ export class Item {
   itemStatus: string;
   imgStatus: string;
   geom: any;
+  behaviour: string;
 }

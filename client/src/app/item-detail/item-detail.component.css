@@ -17,9 +17,12 @@
   height: 22px;
   margin: 0 auto;
 }
-#otherSpecies {
-  height: 22px;
+#behaviour {
+  padding: 0px!important;
 }
+
+
+.selected-list
 input[type="radio"]{
   margin: 0 0 0 10px;
   padding:0px 25px 0px 1px;

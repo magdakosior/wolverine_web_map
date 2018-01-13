@@ -18,8 +18,8 @@ export class ItemDetailComponent implements OnDestroy {
 
   itemStatusOptionsDropdown = ['loaded', 'verified', 'deleted'];
   otherSpeciesOptionsDropdown = ['squirrel', 'moose', 'other'];
-  behaviourSelectedItems = [];
   behaviourOptionsDropdown = [];
+  behaviourSelectedItems = [];
   dropdownSettings = {};
   
   //for enter button press
@@ -27,6 +27,7 @@ export class ItemDetailComponent implements OnDestroy {
   event: string;
 
   constructor(private itemService: ItemService) {
+    
      this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;
@@ -34,6 +35,9 @@ export class ItemDetailComponent implements OnDestroy {
         var selection = ['climbing', 'Upsidedown', 'eating']; 
      
         var i = 1;
+        var j = 1;
+        this.behaviourOptionsDropdown = [];
+        this.behaviourSelectedItems = [];
         selection.forEach(f => {
           var selection = {
             'id': i,
@@ -42,14 +46,28 @@ export class ItemDetailComponent implements OnDestroy {
           this.behaviourOptionsDropdown.push(selection);          
           i++;
         });
+
+        //if this item has behaviours then show them
+        if (this.item.behaviour) {
+          this.item.behaviour.split(',').forEach(f => {
+            console.log(f.replace(/'/g,""));
+            this.behaviourSelectedItems.push({
+              'id': j,
+              'itemName': f.replace(/'/g,"")
+            });
+            j++;
+          });
+        }
+
       this.dropdownSettings = { 
         singleSelection: false, 
         text:"Select",
         selectAllText:'Select All',
         unSelectAllText:'UnSelect All',
         enableSearchFilter: false,
-        classes:"myclass custom-class"
+        classes:"myclass customDropDownMulti"
       };  
+      
 /*
         this.itemService.getFilterOptions('itemstatus')
         .subscribe((options: any[]) => {
@@ -118,10 +136,21 @@ export class ItemDetailComponent implements OnDestroy {
   }
 
   save(): void {
+    var behaviours = [];
+    var resultStr = '';
+    console.log(this.behaviourSelectedItems);
+
+    this.behaviourSelectedItems.forEach(sel => behaviours.push("'" + sel.itemName+"'"));
+    resultStr = behaviours.join(",");
+    this.item.behaviour = resultStr;
+    //this.behaviourOptionsDropdown = [];
+    //this.behaviourSelectedItems = [];
+    
+    
      this.itemService.updateItem(this.item)
        .subscribe((item: Item) => {
         //this.item = item 
-        console.log(JSON.stringify(this.item));
+        //console.log(JSON.stringify(this.item));
       })
    }
 

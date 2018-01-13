@@ -118,7 +118,7 @@ export class ItemService {
   setServicefilterOptions(opts: any): void {
     //{"filters":[{"itemStatus":"'deleted','loaded','verified'"},{"imgStatus":"'bad','good'"}]}
     var result = '';
-    console.log(opts);
+    //console.log(opts);
 
     var result = '';
     for (var filterline in opts.filters) {
@@ -158,15 +158,15 @@ export class ItemService {
   }
 
   setNext() {
-    console.log('in set next');
-    console.log(this.serviceSelectedItemId);
+    //console.log('in set next');
+    //console.log(this.serviceSelectedItemId);
     this.getNextItem()
       .subscribe((item: Item) => {
         if (item[0] != null) {
           this.selectedItemSource.next(item[0]);
           this.serviceSelectedItemId = item[0].id;
-          console.log('iSERVICE SETTING ITEM');
-          console.log(this.serviceSelectedItemId);
+          //console.log('iSERVICE SETTING ITEM');
+          //console.log(this.serviceSelectedItemId);
     
         }
       })
@@ -212,8 +212,8 @@ export class ItemService {
   /** GET item by id. Will 404 if id not found */
   getItem(id: number): Observable<Item> {
     this.serviceSelectedItemId = id;
-    console.log('iSERVICE SETTING ITEM');
-    console.log(this.serviceSelectedItemId);
+    //console.log('iSERVICE SETTING ITEM');
+    //console.log(this.serviceSelectedItemId);
     
     //only get item if one has been set
     if (id) {
@@ -228,14 +228,14 @@ export class ItemService {
   //message sent from details->goPrev() -> dashboard
   getPrevItem(): Observable<Item> {
     var query = '';
-    console.log('in get prevItem');
-    console.log(this.filterString);
+    //console.log('in get prevItem');
+    //console.log(this.filterString);
     if (typeof this.filterString != 'undefined') 
       query = String(this.serviceSelectedItemId) + this.filterString;
     else
       query = String(this.serviceSelectedItemId);
 
-    console.log('in getPrevItem() ' + query);
+    //console.log('in getPrevItem() ' + query);
     const url = `${this.itemsUrl}/prev/?id=`+ query;
     return this.http.get<Item>(url).pipe(
       tap(_ => this.log(`fetched prev item id=${this.serviceSelectedItemId}`)),
@@ -248,15 +248,15 @@ export class ItemService {
     var query = '';
     if (typeof this.filterString != 'undefined') {
       query = String(this.serviceSelectedItemId) + this.filterString;
-      console.log(this.filterString);
+      //console.log(this.filterString);
     }
     else {
       query = String(this.serviceSelectedItemId);
-      console.log(String(this.serviceSelectedItemId));
+      //console.log(String(this.serviceSelectedItemId));
     }
 
     const url = `${this.itemsUrl}/next/?id=`+ query;
-    console.log('in getNextItem() ' + url);
+    //console.log('in getNextItem() ' + url);
     return this.http.get<Item>(url).pipe(
       tap(_ => this.log(`fetched next item id=${this.serviceSelectedItemId}`)),
       catchError(this.handleError<Item>(`getNextItem id=${this.serviceSelectedItemId}`))
