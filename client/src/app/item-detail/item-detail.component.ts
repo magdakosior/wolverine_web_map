@@ -50,10 +50,10 @@ export class ItemDetailComponent implements OnDestroy {
         //if this item has behaviours then show them
         if (this.item.behaviour) {
           this.item.behaviour.split(',').forEach(f => {
-            console.log(f.replace(/'/g,""));
+            console.log(f);//.replace(/'/g,"")
             this.behaviourSelectedItems.push({
               'id': j,
-              'itemName': f.replace(/'/g,"")
+              'itemName': f//.replace(/'/g,"")
             });
             j++;
           });
@@ -138,19 +138,16 @@ export class ItemDetailComponent implements OnDestroy {
   save(): void {
     var behaviours = [];
     var resultStr = '';
-    console.log(this.behaviourSelectedItems);
-
     this.behaviourSelectedItems.forEach(sel => behaviours.push("'" + sel.itemName+"'"));
     resultStr = behaviours.join(",");
-    this.item.behaviour = resultStr;
-    //this.behaviourOptionsDropdown = [];
-    //this.behaviourSelectedItems = [];
+    this.item.behaviour = resultStr.replace(/'/g,"");
     
+    console.log(typeof(this.item.daterembait));
+    this.item.daterembait = this.convertDate(this.item.daterembait);
+    console.log(this.item.daterembait);
     
      this.itemService.updateItem(this.item)
        .subscribe((item: Item) => {
-        //this.item = item 
-        //console.log(JSON.stringify(this.item));
       })
    }
 
@@ -163,4 +160,16 @@ export class ItemDetailComponent implements OnDestroy {
   OnItemDeSelect(item:any){}
   onSelectAll(items: any){}
   onDeSelectAll(items: any){}
+
+  convertDate(d) {
+    var date = new Date(d)
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth()+1).toString();
+    var dd  = date.getDate().toString();
+
+    var mmChars = mm.split('');
+    var ddChars = dd.split('');
+
+    return yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
+  }
 }

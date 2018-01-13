@@ -6,4 +6,5 @@ export class Item {
   imgStatus: string;
   geom: any;
   behaviour: string;
+  daterembait: string;
 }
