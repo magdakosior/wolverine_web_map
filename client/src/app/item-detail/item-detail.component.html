@@ -32,10 +32,10 @@
                 </div>
             </div>
             <div class="radio radio-info radio-inline col-md-2">
-                <label class="form-control-label" >Bait Removed</label>
-                <div >
-                    <input type="radio" [(ngModel)]="item.removedbait" [value]="true" name="removedbait">Yes 
-                    <input type="radio" [(ngModel)]="item.removedbait" [value]="false" name="removedbait">No
+                <label class="form-control-label" >Bait Visible</label>
+                <div>
+                    <input type="radio" [(ngModel)]="item.visbait" [value]="true" name="visbait">Yes 
+                    <input type="radio" [(ngModel)]="item.visbait" [value]="false" name="visbait">No
                 </div>
             </div>
         </div>
@@ -73,22 +73,26 @@
                     <input type="radio" [(ngModel)]="item.vissex" [value]="false" name="vissex">No
                 </div>
             </div>
-            <div class="col-md-2">
-                <label class="control-label">Date Removed</label>
-                <input id="datetimepicker" type="date" [(ngModel)]="item.daterembait" name="daterembait"/>
+            <div class="radio radio-info radio-inline col-md-2">
+                <label class="form-control-label" >Bait Removed</label>
+                <div >
+                    <input type="radio" [(ngModel)]="item.removedbait" [value]="true" name="removedbait">Yes 
+                    <input type="radio" [(ngModel)]="item.removedbait" [value]="false" name="removedbait">No
+                </div>
             </div>
         </div>
         <div class="row"><!--row 3-->
+            <div class="col-md-2">
+                <label class="control-label">Session Name</label>
+                <input readonly class="form-control form-control input-xs" type="text" value="{{item.session}}">
+            </div>
             <div class="col-md-2">
                 <label for="checkbox1">Camera Check</label>
                 <div id="checkbox">
                     <input id="checkbox" type="checkbox" [(ngModel)]="item.checkcamera" name="checkcamera" ng-true-value="true" ng-false-value="false">
                 </div>
             </div>
-             <div class="col-md-2">
-                <label class="control-label">Session Name</label>
-                <input readonly class="form-control form-control input-xs" type="text" value="{{item.session}}">
-            </div>
+             
             
             <div class="col-md-2">
                 <label class="control-label" >Other Species</label>
@@ -96,13 +100,6 @@
                      <option selected="option == item.speciesother" *ngFor="let option of otherSpeciesOptionsDropdown" [value]="option">{{option}}</option>
                 </select>
             </div>
-
-            <!--div class="col-md-2">
-                <label class="control-label" >Behaviour</label>
-                <select class="form-control input-xs" [(ngModel)]="item.behaviour" [ngModelOptions]="{standalone: true}">
-                     <option selected="option == item.behaviour" *ngFor="let option of behaviourOptionsDropdown" [value]="option">{{option}}</option>
-                </select>
-            </div-->
             <div class="col-md-2">
                 <label class="control-label" >Behaviour(s)</label>
                 <div class="form-group" id="behaviour">
@@ -123,6 +120,11 @@
                     <input type="radio" [value]="false" [(ngModel)]="item.vislactation" name="vislactation">No
                 </div>
             </div>
+            <div class="col-md-2">
+                <label class="control-label">Date Removed</label>
+                
+                <input id="datetimepicker" type="date" [(ngModel)]="item.daterembait" name="daterembait"/>
+            </div>
         </div>
         
         <div class="row"><!--row 4-->
@@ -131,19 +133,12 @@
             <div class="form-group col-md-2">
             </div>
             <div class="form-group col-md-2">
-            </div>
-            <div class="form-group col-md-2">
-                <label class="form-control-label" ># Animals Visible</label>
+                <label class="form-control-label"># Animals Visible</label>
                 <div class="form-group col-md-6" id="animvis">
                     <input class="form-control input-xs" [(ngModel)]="item.numanimals" name="numanimals">
                 </div>
             </div>
-            <div class="radio radio-info radio-inline col-md-2">
-                <label class="form-control-label" >Bait Visible</label>
-                <div>
-                    <input type="radio" [(ngModel)]="item.visbait" [value]="true" name="visbait">Yes 
-                    <input type="radio" [(ngModel)]="item.visbait" [value]="false" name="visbait">No
-                </div>
+            <div class="form-group col-md-2">
             </div>
         </div>
 
@@ -154,6 +149,12 @@
             <button class="btn btn-primary " (click)="goPrev()">Prev</button>
             <button class="btn btn-danger" (click)="save()">Save</button>
             <button class="btn btn-primary" (click)="goNext()">Next</button>
+            <div>
+                <label for="checkbox1" style="font-size:10px">Preset values on 'Next'</label>
+                <div id="checkbox">
+                    <input id="checkbox" type="checkbox" [(ngModel)]="datapreset.checked" (click)="saveNext()" name="datasave" ng-true-value="true" ng-false-value="false">
+                </div>
+            </div>
         </div>
         
       </fieldset> 

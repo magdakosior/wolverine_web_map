@@ -40,7 +40,7 @@ export class ItemService {
   //mapDetails$ = this.mapDetailsSource.asObservable();
 
   readInfoFile(jsonData:any) {
-    console.log(jsonData);
+    //console.log(jsonData);
     const url = `api/info?data=`+ JSON.stringify(jsonData);
 
     //open info.json file and send json results to server
@@ -64,13 +64,13 @@ export class ItemService {
 
   // Service message commands
   setMapDetails(data: MapDetails) {
-    console.log('in service got some map details');
+    //console.log('in service got some map details');
     //set the map details for the service to remember
     this.serviceMapDetails = data;
     
     //set map details for listeners ?? do we need this?
     //this.mapDetailsSource.next(data);
-    console.log(this.serviceMapDetails);
+    //console.log(this.serviceMapDetails);
     this.redrawMap();
     
   }
@@ -88,7 +88,7 @@ export class ItemService {
     '&south=' + String(this.serviceMapDetails.ext_south) +  
     filterquery;
 
-    console.log(query);
+    //console.log(query);
     this.getItemsWithinBounds(query) 
       .subscribe((items: Item[]) => {
           this.allItemsSource.next(items); 
@@ -105,11 +105,11 @@ export class ItemService {
     else {
       this.getItem(id) 
         .subscribe((item: Item) => {
-          console.log(item[0]);
+          //console.log(item[0]);
           this.selectedItemSource.next(item[0]);
           this.serviceSelectedItemId = item[0].id;
-          console.log('iSERVICE SETTING ITEM');
-          console.log(this.serviceSelectedItemId);
+          //console.log('iSERVICE SETTING ITEM');
+          //console.log(this.serviceSelectedItemId);
         })
     }
   }

@@ -1,6 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Item = sequelize.define('photos', {
+    importid: DataTypes.STRING,
     geom: DataTypes.GEOMETRY('MULTIPOINT'),
     path: DataTypes.STRING,
     photopath: DataTypes.STRING,

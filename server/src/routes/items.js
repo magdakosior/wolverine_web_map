@@ -25,43 +25,55 @@ router.get('/info', function (req, res, next) {
     
     var response = {}
     var photoList = [];
-
+    var importId = '';
+    
     fs.readdir(jsondata.path, function(err, items) {     
+        //console.log(jsondata.path);
+        //console.log(items);
+        
         //for each file in directory
-        for (var i=0; i<items.length; i++) { 
-            var photoObj = {};
-            photoObj.path = path.join(jsondata.path, items[i]);
-            photoObj.session = jsondata.session;
-            //store default info file location
-            //console.log(jsondata.location);
-            photoObj.lat = jsondata.lat;
-            photoObj.lon = jsondata.lon;
-            photoList.push(photoObj);
-        }
-        processExifInfo(photoList, function (resultList) { 
-            console.log('saving list to DB'); 
-            //console.log(photoList);
-            var score = 0;
-            for (var i = 0; i< resultList.length; i++) {
-                //console.log(photoList[i]);
-                addItem(resultList[i], function (result) {
-                    //console.log('added item to DB');
-                    score = score +1; 
-                    //console.log(score);
-                    //add something here to say which ones were not added
-                    response.result = result.message;
-                    if (score == resultList.length) {
-                        res.json(response);
-                        //console.log(response.result);
-                    }
-                });
-            }
-        })
-    }); //end fs read
+        if (items != undefined) {
+            for (var i=0; i<items.length; i++) { 
+                var photoObj = {};
+                var today = new Date();
 
-    //response.error = 'Could not load data';
-    //response.reason = 'no files found in ' + jsondata.folderPath;
-    //res.json(response)
+                importId = today.toISOString().slice(0,19) + '_' + jsondata.session;
+                photoObj.importid = importId;
+                photoObj.path = path.join(jsondata.path, items[i]);
+                photoObj.session = jsondata.session;
+                //store default info file location
+                photoObj.lat = jsondata.lat;
+                photoObj.lon = jsondata.lon;
+                photoList.push(photoObj);
+            }
+            processExifInfo(photoList, function (resultList) { 
+                console.log('saving list to DB'); 
+                //console.log(photoList);
+                var score = 0;
+                for (var i = 0; i< resultList.length; i++) {
+                    console.log(photoList[i]);
+                    addItem(resultList[i], function (result) {
+                        //console.log('added item to DB');
+                        score = score +1; 
+                        //console.log(score);
+                        //add something here to say which ones were not added
+                        response.result = result.message;
+                        if (score == resultList.length) {
+                            res.json(response);
+                            console.log(response.result);
+                        }
+                    });
+                }
+            })
+            console.log(importId);
+            saveImport(importId);
+        }
+        else {
+            response.result = 'Error - No files to process.';
+            res.json(response)
+        }
+        
+    }); //end fs read
 });
 
 /* GET heros listing. Called from item.service.ts getItemsWithinBounds()*/
@@ -371,10 +383,11 @@ function addItem(params, callback) {
     //console.log(params.dateTaken.replace(':','-').replace(':','-'));
     var pattern = '/assets';
     params.photopath = params.path.substr(params.path.indexOf(pattern), params.path.length);
-    console.log(params.photopath);
+    console.log(params);
 
     model.photos.create({
             geom: point,
+            importid: params.importid,
             path: params.path,
             photopath: params.photopath,
             datetaken: params.dateTaken.replace(':','-').replace(':','-'),
@@ -399,7 +412,7 @@ function addItem(params, callback) {
         .then(item => callback({
             error: false,
             //data: item,
-            message: 'New items have been added to the DB.'
+            message: 'New items have been added to the DB. Import ID: ' + params.importid
         }))
         .catch(error => callback({
             error: true,
@@ -430,6 +443,17 @@ function addItem(params, callback) {
         callback('ERROR: query did not go through .  '+ query)
       });
       */
+}
+
+
+function saveImport(importId) {
+    console.log(';--------save import-------------');
+    
+    model.imports.create({
+            importid: importId
+        })
+        .then(console.log('imported ' + importId))
+        .catch(console.log('Error writing import'));
 }
 
 function parseFilterQuery(params) {

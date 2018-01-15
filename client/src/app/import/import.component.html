@@ -5,44 +5,47 @@
   
 	  <h1>Import Photos</h1>
 
-		<form id="form-work" class="" name="form-work" (ngSubmit)="updateMap()">
+		<form [(formGroup)]="importForm" #formDir="ngForm" id="form-import" class="" name="form-import" >
 	      
 	      	<fieldset>
-          	<!--div  id="image" class="mx-auto">
-					 <img class="img-fluid" #abc id="image" src="assets/photos/IMG_1121.JPG" />
-				</div>
-
-				<div id="upload_button">
-			    <label>
-			      <input #folderInput
-				type="file" (change)="folderPicked(folderInput.files)" webkitDirectory>
-			      <span class="btn btn-danger">Upload Folder</span>
-
-			    </label>
-			  </div>
-			  {{uploadCount}} Files Selected
-			-->
 			<div class="form-group ">
                 <label class="form-control-label">Upload Folder Directory</label>
-                <input class="form-control input-xs" [(ngModel)]="loadInfo.path" name="path" placeholder='ex /assets/photos/session1'>
+                <input required id="path" class="form-control input-xs" formControlName="path" placeholder='/Users/Magda/Projects/angular-projects/hero3/client/src/assets/photos/session1' >
+
             </div>
             <div class="row" >
 	            <div class="form-group col-md-6">
 	                <label class="form-control-label">Location (latitude)</label>
-	                <input class="form-control input-xs" [(ngModel)]="loadInfo.lat" name="lat" placeholder='ex 51.45'>
+	                <input required id="lat" class="form-control input-xs" formControlName="lat" placeholder='ex 51.45'>
+	                <div *ngIf="lat.invalid && (lat.dirty || lat.touched)" class="alert alert-danger">
+             			<div *ngIf="lat.errors.min">
+			            	Number must be between 45.95 and 83.11.
+			          	</div>
+			          	<div *ngIf="lat.errors.max">
+			            	Number must be between 45.95 and 83.11.
+			          	</div>
+			        </div>
 	            </div>
 	            <div class="form-group col-md-6">
 	                <label class="form-control-label">Location (longitude)</label>
-	                <input class="form-control input-xs" [(ngModel)]="loadInfo.lon" name="lon" placeholder='ex -115.49'>
+	                <input required class="form-control input-xs" formControlName="lon"  placeholder='ex -115.49'>
+	                <div *ngIf="lon.invalid && (lon.dirty || lon.touched)" class="alert alert-danger">
+             			<div *ngIf="lon.errors.min">
+			            	Number must be between -52.61 and -141.00.
+			          	</div>
+			          	<div *ngIf="lon.errors.max">
+			            	Number must be between -52.61 and -141.00.
+			          	</div>
+			        </div>
 	            </div>
 	        </div>
 	        <div class="form-group ">
                 <label class="form-control-label">Session Name</label>
-                <input class="form-control input-xs" [(ngModel)]="loadInfo.session" name="session" placeholder='ex session1'>
+                <input required class="form-control input-xs" formControlName="session"  placeholder='ex session1'>
             </div>
             <div class="form-group ">
                 <label class="form-control-label">File Type</label>
-                <input class="form-control input-xs" [(ngModel)]="loadInfo.filetype" name="filetype" placeholder='ex JPG'>
+                <input class="form-control input-xs" formControlName="filetype" placeholder='ex JPG'>
             </div>
           	<!--div id="upload_button">
 			   
@@ -75,7 +78,7 @@
 
 			        <button (click)="closeImport()" class="btn btn-primary btn-md center-block"  >Cancel</button>
 
-			        <button type="submit" (click)="updateMap()" class="btn btn-primary btn-md center-block">Load Photos</button>
+			        <button type="submit" [disabled]="importForm.invalid" (click)="importPhotos()" class="btn btn-primary btn-md center-block">Load Photos</button>
 			     </div>
 			</div>
 	             

@@ -40,7 +40,7 @@ export class MapComponent { //implements OnInit, OnChanges {
     //listen for selected item change from service
     itemService.selectedItem$.subscribe(
       selectedItem => {
-        console.log(selectedItem);
+        //console.log(selectedItem);
 
         if (selectedItem) {
           if (selectedItem.id != this.selectedMarker.options.id) {
@@ -119,7 +119,7 @@ export class MapComponent { //implements OnInit, OnChanges {
   };
 
   onMapReady(map: L.Map) {
-    console.log('in map onMapReady with Map element');
+    //console.log('in map onMapReady with Map element');
     this.map = map;
     this.announceMapDetails(map);
 

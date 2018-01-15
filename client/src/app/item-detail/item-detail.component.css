@@ -21,7 +21,9 @@
   padding: 0px!important;
 }
 
-
+.row {
+  max-height: 60px;
+}
 .selected-list
 input[type="radio"]{
   margin: 0 0 0 10px;

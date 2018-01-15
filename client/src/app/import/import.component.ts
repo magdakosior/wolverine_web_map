@@ -2,6 +2,7 @@ import { Component, TemplateRef, OnInit, ChangeDetectorRef, ViewChild} from '@an
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ItemService } from '../item.service';
 
 @Component({
@@ -17,8 +18,15 @@ export class importModal implements OnInit{
     backdrop: true,
     ignoreBackdropClick: false
   };
-
   modalOpen: boolean;
+  
+  importForm: FormGroup;
+  path: FormControl;
+  lat: FormControl;
+  lon: FormControl;
+  session: FormControl;
+  filetype: FormControl;
+
   loadInfo: {
     path: '',
     lat: null,
@@ -31,19 +39,40 @@ export class importModal implements OnInit{
   	private itemService: ItemService, 
     private cdr: ChangeDetectorRef
     ) {
-    this.loadInfo = {
-    path: '',
-    lat: null,
-    lon: null,
-    session: null,
-    filetype: null}
-
+    
     this.modalOpen = false;
   }
 
   ngOnInit() {
+    this.loadInfo = {
+      path: '',
+      lat: null,
+      lon: null,
+      session: null,
+      filetype: null}
+
+    this.path = new FormControl(this.loadInfo.path, [
+        Validators.required
+      ]);
+    this.lat = new FormControl(this.loadInfo.lat, [
+        Validators.min(45.95),
+        Validators.max(83.11)
+        ]);
+    this.lon = new FormControl(this.loadInfo.lon, [
+        Validators.min(-141.00),
+        Validators.max(-52.61)
+        ]);
+    this.session = new FormControl(this.loadInfo.session, Validators.required);
+    this.filetype = new FormControl(this.loadInfo.filetype);
+
+    this.importForm = new FormGroup({
+      path: this.path,
+      lat: this.lat,
+      lon: this.lon,
+      session: this.session,
+      filetype: this.filetype
+    });
   }
- 
   
   openModalWithClass(template: TemplateRef<any>) {
     this.modalOpen = true;
@@ -53,8 +82,8 @@ export class importModal implements OnInit{
     );
   }  
 
-  updateMap() {
-    console.log(this.loadInfo);
+  importPhotos() {
+    console.log(this.importForm.get('path').value);
     /*
     var sampleData = {
       folderPath: "/Users/Magda/Projects/angular-projects/hero3/client/src/assets/photos/session1",
@@ -64,17 +93,25 @@ export class importModal implements OnInit{
       },
       sessionName: "session1",
       fileType: "JPG"
-    };*/
+    };
 
-    
-    this.itemService.readInfoFile(this.loadInfo)
-      .subscribe((result: any) => {
-          //will want to display this as alert!? if error or alert saying everything went through
-          console.log(result);
-          alert(result.result); 
-          //this.items = items;
-        })
+    if (this.importForm.get('path').value) {
+      //load values from form
+      this.loadInfo = {
+        path: this.importForm.get('path').value,
+        lat: this.importForm.get('lat').value,
+        lon: this.importForm.get('lon').value,
+        session: this.importForm.get('session').value,
+        filetype: this.importForm.get('filetype').value}
 
+      this.itemService.readInfoFile(this.loadInfo)
+        .subscribe((result: any) => {
+            //will want to display this as alert!? if error or alert saying everything went through
+            console.log(result);
+            alert(result.result); 
+            //this.items = items;
+          })
+    }*/
     //close down modal and unset dropdown lists
     this.modalRef.hide();
     this.modalOpen = false;
