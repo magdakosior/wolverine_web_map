@@ -353,15 +353,15 @@ Called from item-detail.component->setNext
 
   /*
     Called from import.component importPhotos()
-    To get import to display in map when loading a previous imported 
+    To get last verified item id from imported batch
   */
   getImportsId(term: string): Observable<any> {
     //console.log('getting item status filter opts');
     const url = `${this.importsUrl}/${term}`;
-    //console.log(url);
+    console.log(url);
     return this.http.get<String[]>(url).pipe(
-      tap(_ => this.log(`found filters for "${term}"`)),
-      catchError(this.handleError<String[]>('filterItems', []))
+      tap(_ => this.log(`getImportsId for "${term}"`)),
+      catchError(this.handleError<String[]>('getImportsId', []))
     );
   }
 
@@ -371,7 +371,7 @@ Called from item-detail.component->setNext
   */
   updateImportsLastVerified(terms: any): Observable<any> {
     //console.log('updateImportsLastVerified');
-    //console.log(terms);
+    console.log(terms);
     const url = `${this.importsUrl}/${terms.importid}`;
     //console.log(url);
     

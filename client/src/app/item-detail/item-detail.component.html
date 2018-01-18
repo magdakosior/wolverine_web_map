@@ -112,6 +112,13 @@
                         [ngModelOptions]="{standalone: true}">
                         </angular2-multiselect>
                 </div>
+                <!--div class="form-group" id="behaviour">
+                    <select class="form-control  input-sm"
+                        multiple multiselect-dropdown 
+                        style="padding: 0px;">
+                         <option *ngFor="let option of behaviourOptionsDropdown" [value]="option.itemName" >{{option.itemName}}</option>
+                     </select>
+                 </div-->
             </div>
             <div class="radio radio-info radio-inline col-md-2">
                 <label class="form-control-label" >Lactation Visible</label>

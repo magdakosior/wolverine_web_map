@@ -46,12 +46,10 @@ export class importModal implements OnInit{
   	private itemService: ItemService, 
     private cdr: ChangeDetectorRef
     ) {
-    
     this.modalOpen = false;
   }
 
   ngOnInit() {
-
     this.loadInfo = {
       path: '',
       lat: null,
@@ -83,14 +81,7 @@ export class importModal implements OnInit{
       previmport: this.previmport
     });
     
-    //load previous imports into dropdown
-    this.itemService.getImports()
-      .subscribe((options: any[]) => {
-        //console.log(options);
-        options.forEach(f => {
-          this.prevImportDropdown.push(f.importid);
-        });
-      }) 
+    
 
     //change import type, unset validators to new import type
     this.importForm.get('previmport').valueChanges.subscribe(
@@ -110,6 +101,15 @@ export class importModal implements OnInit{
   
   openModalWithClass(template: TemplateRef<any>) {
     this.modalOpen = true;
+    this.prevImportDropdown = [];
+    //load previous imports into dropdown each time the modal is opened (to update this list)
+    this.itemService.getImports()
+      .subscribe((options: any[]) => {
+        options.forEach(f => {
+          //console.log(f.importid);
+          this.prevImportDropdown.push(f.importid);
+        });
+      }) 
     this.modalRef = this.modalService.show(
       template,
       Object.assign({}, this.config, { class: 'gray modal-lg' })
@@ -137,6 +137,7 @@ export class importModal implements OnInit{
       .subscribe((result: any) => {
           this.itemService.setSelectedItem(result[0].lastverified, true);
         })
+    //clear the form
     this.importForm.setValue({path: '', lat:'', lon:'', session:'', previmport:'', filetype:''});
   }
   else if (this.importForm.get('path').value) {////load new import from file
@@ -153,17 +154,21 @@ export class importModal implements OnInit{
       .subscribe((result: any) => {
           //will want to display this as alert!? if error or alert saying everything went through
           alert(result.result); 
+
           //now that we have a result we can call a function to set the first marker
           this.importForm.setValue({path: '', lat:'', lon:'', session:'', previmport:'', filetype:''});
-          //set lastVerified in imports table to this firstid
-          this.import.importid = result.importid;
-          this.import.lastverified = result.firstid;
-          this.itemService.updateImportsLastVerified(this.import)
-            .subscribe((item: Import) => {
-              //console.log('updated import');
-            })
 
-          this.itemService.setSelectedItem(parseInt(result.firstid), true);
+          if (result.importid) {
+            //set lastVerified in imports table to this firstid
+            this.import.importid = result.importid;
+            this.import.lastverified = result.firstid;
+            this.itemService.updateImportsLastVerified(this.import)
+              .subscribe((item: Import) => {
+                //console.log('updated import');
+              })
+
+            this.itemService.setSelectedItem(parseInt(result.firstid), true);
+          }// end if we got a result
         })
     }
     //close down modal and unset dropdown lists

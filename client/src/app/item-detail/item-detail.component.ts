@@ -46,38 +46,11 @@ export class ItemDetailComponent implements OnDestroy {
     this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item; //set item to selected item
-
-        //behaviour dropdown options
-        var selection = ['climbing', 'Upsidedown', 'eating']; 
-        var i = 1;
-        this.behaviourOptionsDropdown = [];
-        this.behaviourSelectedItems = [];
-        selection.forEach(f => {
-          var selection = {
-            'id': i,
-            'itemName': f
-          }
-          this.behaviourOptionsDropdown.push(selection);          
-          i++;
-        }); //end loading item
-
+        //console.log(item);
         //format daterembait date field to not have time (breaks input)
         if ((this.item) && (this.item.daterembait != null)) {
           this.item.daterembait = this.item.daterembait.slice(0, 10);
         }
-        
-        //if this item has behaviours then show them
-        if ((this.item) && (this.item.behaviour != null)) {
-          var j = 1;
-          this.item.behaviour.split(',').forEach(f => {
-            //console.log(f);//.replace(/'/g,"")
-            this.behaviourSelectedItems.push({
-              'id': j,
-              'itemName': f
-            });
-            j++;
-          });
-        }//end item behaviour
 
         //console.log(this.itemService.getImportType());
         //listen for  type = import set by selected item from service
@@ -89,10 +62,10 @@ export class ItemDetailComponent implements OnDestroy {
           //load saved values to check if preset was checked to be true
           var loadItem = new Item();
           loadItem = this.itemService.retrievePresetData();
-          console.log(loadItem);
+          //console.log(loadItem);
           if (loadItem.datapreset) {  
-            console.log(loadItem.indivname);
             this.item.itemstatus = loadItem.itemstatus;
+            console.log(this.item.itemstatus);
             this.item.checkcamera = loadItem.checkcamera;
             this.item.indivname = loadItem.indivname;
             this.item.specieswolv = loadItem.specieswolv;
@@ -111,6 +84,33 @@ export class ItemDetailComponent implements OnDestroy {
           }
         }//end importType
 
+        //load default behaviour dropdown options
+        var selection = ['climbing', 'Upsidedown', 'eating']; 
+        var i = 1;
+        this.behaviourOptionsDropdown = [];
+        this.behaviourSelectedItems = [];
+        selection.forEach(f => {
+          var selection = {
+            'id': i,
+            'itemName': f
+          }
+          this.behaviourOptionsDropdown.push(selection);          
+          i++;
+        }); 
+        //if this item has behaviours then show them
+        //console.log(this.item.behaviour);
+        if ((this.item != null) && (this.item.behaviour != null)) {
+          var j = 1;
+          this.item.behaviour.split(',').forEach(f => {
+            //console.log(f);//.replace(/'/g,"")
+            this.behaviourSelectedItems.push({
+              'id': j,
+              'itemName': f
+            });
+            j++;
+          });
+        }//end item behaviour
+
         //set general dropdown settings
         this.dropdownSettings = { 
           singleSelection: false, 
@@ -126,6 +126,7 @@ export class ItemDetailComponent implements OnDestroy {
   goPrev(): void {
     this.savedData = {};
     this.itemService.savePresetData(this.savedData);
+    
     if (this.importType)
       this.itemService.setPrev(true);//setting this ensures that the preset values checkbox is visible again
     else
@@ -135,11 +136,11 @@ export class ItemDetailComponent implements OnDestroy {
   goNext(): void {
     this.save();
 
-    console.log(this.item.datapreset);
+    //console.log(this.item.datapreset);
     //save data to item.service for the next item (pre-sets)
     if (this.item.datapreset) {
-      //console.log('saving data');
-      this.savedData.itemStatus = this.item.itemstatus;
+      console.log('saving data');
+      this.savedData.itemstatus = this.item.itemstatus;
       this.savedData.checkcamera = this.item.checkcamera;
       this.savedData.indivname = this.item.indivname;
       this.savedData.specieswolv = this.item.specieswolv;
@@ -161,7 +162,6 @@ export class ItemDetailComponent implements OnDestroy {
       this.savedData = {};
       this.itemService.savePresetData(this.savedData);
     }
-    
 
     if (this.importType)
       this.itemService.setNext(true); //setting this ensures that the preset values checkbox is visible again
@@ -181,13 +181,14 @@ export class ItemDetailComponent implements OnDestroy {
   save(): void {
     var behaviours = [];
     var resultStr = '';
-
+    console.log(this.behaviourSelectedItems);
     //set behaviour string from options chosen in dropdown
-    this.behaviourSelectedItems.forEach(sel => behaviours.push("'" + sel.itemName+"'"));
-    resultStr = behaviours.join(",");
-    this.item.behaviour = resultStr.replace(/'/g,"");
-
-    console.log(this.item);
+    if (this.behaviourSelectedItems.length > 0) {
+      this.behaviourSelectedItems.forEach(sel => behaviours.push("'" + sel.itemName+"'"));
+      resultStr = behaviours.join(",");
+      this.item.behaviour = resultStr.replace(/'/g,"");
+  }
+    //console.log(this.item);
     //save item data to db
     this.itemService.updateItem(this.item)
       .subscribe((item: Item) => {
@@ -196,6 +197,7 @@ export class ItemDetailComponent implements OnDestroy {
     //update last verified if it was an import so that we know where we are in verifying import photos
     this.import.importid = this.item.importid;
     this.import.lastverified = this.item.id;
+    console.log(this.import);
     this.itemService.updateImportsLastVerified(this.import)
       .subscribe((item: Import) => {
         //console.log('updated import');
