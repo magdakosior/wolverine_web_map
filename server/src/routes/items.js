@@ -17,10 +17,14 @@ const awaitErorrHandlerFactory = middleware => {
     }
   };
 };
-
-/* load file http://localhost:3000/api/info */
+var itemCount = 0;
+    
+/* 
+    load file into contents into photos and add entry to imports table
+    http://localhost:3000/api/info 
+*/
 router.get('/info', function (req, res, next) {
-    console.log('info');
+    //console.log('info');
     var jsondata = JSON.parse(req.query.data);
     
     var response = {}
@@ -28,16 +32,12 @@ router.get('/info', function (req, res, next) {
     var importId = '';
     
     fs.readdir(jsondata.path, function(err, items) {     
-        //console.log(jsondata.path);
-        //console.log(items);
         
         //for each file in directory
         if (items != undefined) {
             for (var i=0; i<items.length; i++) { 
                 var photoObj = {};
-                var today = new Date();
-
-                importId = today.toISOString().slice(0,19) + '_' + jsondata.session;
+                importId = jsondata.importId
                 photoObj.importid = importId;
                 photoObj.path = path.join(jsondata.path, items[i]);
                 photoObj.session = jsondata.session;
@@ -47,26 +47,30 @@ router.get('/info', function (req, res, next) {
                 photoList.push(photoObj);
             }
             processExifInfo(photoList, function (resultList) { 
-                console.log('saving list to DB'); 
+                //console.log('saving list to DB'); 
                 //console.log(photoList);
                 var score = 0;
                 for (var i = 0; i< resultList.length; i++) {
-                    console.log(photoList[i]);
+                    //console.log(photoList[i]);
                     addItem(resultList[i], function (result) {
                         //console.log('added item to DB');
                         score = score +1; 
-                        //console.log(score);
-                        //add something here to say which ones were not added
+                        //console.log(result);
+                        //add something here to say which ones were not added ?
+                        //send firstid and importid back to update map details
+                        response.firstid = result.firstid;
+                        response.importid = result.importid;
                         response.result = result.message;
                         if (score == resultList.length) {
                             res.json(response);
-                            console.log(response.result);
                         }
                     });
                 }
             })
-            console.log(importId);
-            saveImport(importId);
+            /* 
+            Adds value to imports table (importid)
+            */
+            putImport(importId);
         }
         else {
             response.result = 'Error - No files to process.';
@@ -76,25 +80,39 @@ router.get('/info', function (req, res, next) {
     }); //end fs read
 });
 
-/* GET heros listing. Called from item.service.ts getItemsWithinBounds()*/
-//http://localhost:3000/api/itemsMapBounds?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
+/* 
+    GET heros listing with map bounds.
+    Called from item.service.ts getItemsWithinBounds()
+    ex: http://localhost:3000/api/itemsMapBounds?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
+*/
 router.get('/itemsMapBounds', function (req, res, next) {
-    console.log('itemsMapBounds');
-    console.log(req.query);
-    var filterString = parseFilterQuery(req.query);
-    console.log('------->');
-    console.log(filterString);
-    
-    const query = '\
+    //console.log('itemsMapBounds');
+    //console.log(req.query);
+    var filterString = parseFilterQuery(req.query).replace('AND', '');
+    //console.log(filterString);
+    var query = '';
+    //console.log('=--------------');
+    //console.log(req.query);
+
+    if (req.query.importid) {
+        //console.log('=------** -------');
+        query = '\
+          SELECT * \
+          FROM "photos" \
+          WHERE ' + filterString;
+    }
+    else
+    {
+        query = '\
           SELECT * \
           FROM "photos" \
           WHERE ST_Intersects("geom", ST_MakeEnvelope(' + req.query.west + ', \
           ' + req.query.south + ', \
           ' + req.query.east + ', \
           ' + req.query.north + ', 4326))' + filterString;
-    
-    console.log('------->');
-    console.log(query);
+    }
+    //console.log('------->');
+    //console.log(query);
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
         model: model.photos
@@ -105,22 +123,21 @@ router.get('/itemsMapBounds', function (req, res, next) {
       });
 });
 
-/* get item by id http://localhost:3000/api/heros/1 */
+/* 
+    get item by id http://localhost:3000/api/heros/1 
+*/
 router.get('/items', function (req, res, next) {
-    console.log('items');
-    console.log(req.query);
+    //console.log('items');
+    //console.log(req.query);
     const item_id = req.query.id;
-    //console.log(item_id);
-    //var filterString = parseFilterQuery(req.query)? ' AND ' + parseFilterQuery(req.query):'';
-    //console.log('api - in selected item get by id: ' + filterString);
     
     const query = '\
           SELECT * \
           FROM "photos" \
           WHERE "photos"."id" = ' + String(item_id);
     
-    console.log('api - in selected item get by id: ' + query);
-    //http://localhost:3000/api/items/prev?id=7
+    //console.log('api - in selected item get by id: ' + query);
+    
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
         model: model.photos
@@ -129,31 +146,15 @@ router.get('/items', function (req, res, next) {
       }).catch(err => {
         console.log('ERROR: ', err)
       });
-
-
-      /*console.log(req.query);
-    const item_id = req.query.id;
-    console.log('api - in item get by id: ' + String(item_id));
-    
-    model.photos.findAll({
-            where: {
-                id: item_id
-            }
-        })
-        .then(items => res.json(items))
-        .catch(error => res.json({
-            error: true,
-            error: error
-        }));*/
 });
 
 // get prev item http://localhost:3000/api/items/prev/5
 router.get('/items/prev', function (req, res, next) {
-    console.log(req.query);
-    console.log('/items/prev');
-    console.log(req.query);
+    //console.log(req.query);
+    //console.log('/items/prev');
+    //console.log(req.query);
     var filterString = parseFilterQuery(req.query);
-    console.log('------->');
+    //console.log('------->');
 
     const item_id = req.query.id;
     
@@ -161,10 +162,11 @@ router.get('/items/prev', function (req, res, next) {
           SELECT * \
           FROM "photos" \
           WHERE "photos"."id" < ' + String(item_id) + 
+          ' ' +
           filterString +  
           ' ORDER BY "photos"."id" DESC LIMIT 1';
     
-    console.log(query);
+    //console.log(query);
     //http://localhost:3000/api/items/prev?id=7
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -197,21 +199,22 @@ router.get('/items/prev', function (req, res, next) {
 
 // get prev item http://localhost:3000/api/items/prev/5
 router.get('/items/next', function (req, res, next) {
-    console.log(req.query);
-    console.log('/items/next');
-    console.log(req.query);
+    //console.log(req.query);
+    //console.log('/items/next');
+    //console.log(req.query);
     var filterString = parseFilterQuery(req.query);
-    console.log('------->');
+    console.log(filterString);
 
     const item_id = req.query.id;
     const query = '\
           SELECT * \
           FROM "photos" \
           WHERE "photos"."id" > ' + String(item_id) +
+          ' ' +
           filterString +  
           ' ORDER BY "photos"."id" ASC LIMIT 1';
     
-    console.log(query);
+    //console.log(query);
     //http://localhost:3000/api/items/prev?id=7
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -221,76 +224,34 @@ router.get('/items/next', function (req, res, next) {
       }).catch(err => {
         console.log('ERROR: ', err)
       });
-
-/*
-      console.log(req.query);
-    const item_id = req.query.id;
-    console.log('api - in next item get by id: ' + String(item_id));
-    var filterString = parseFilterQuery(req.query);
-    console.log(filterString);
-    
-    if (req.query.values) {
-        model.photos.findOne({
-            where: {
-                id: {
-                  $gt: item_id
-                },
-                itemStatus: {
-                    $in: req.query.values
-                }
-            },
-            order: [['id', 'ASC']]
-        })
-        .then(items => res.json(items))
-        .catch(error => res.json({
-            error: true,
-            error: error
-        }));
-    }
-    else {
-        model.photos.findOne({
-            where: {
-                id: {
-                  $gt: item_id
-                }
-            },
-            order: [['id', 'ASC']]
-        })
-        .then(items => res.json(items))
-        .catch(error => res.json({
-            error: true,
-            error: error
-        }));
-    }*/
 });
+
 // GET all items and search for items 
 router.get('/items', function (req, res, next) {
-    console.log('items');
+    //console.log('items');
     const filter = req.query.name;
-    console.log(JSON.stringify(req.params));
+    //console.log(JSON.stringify(req.params));
     model.photos.findAll({
 
         where: { 
             name: { $like: '%'+filter+'%' } 
         }
     })
-        
-        .then(items => res.json(items))
-        
-        .catch(error => res.json({
-            error: true,
-            data: [],
-            error: error
-        }));
+    .then(items => res.json(items))
+    
+    .catch(error => res.json({
+        error: true,
+        data: [],
+        error: error
+    }));
 });
 
 /* PUT/update item. */
 router.put('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
-    console.log('saving ' + String(item_id));
-    console.log('SAVE data ' + JSON.stringify(req.body));
-    
+    //console.log('saving ' + String(item_id));
+    console.log('Update item ' + JSON.stringify(req.body));
     model.photos.update({
             checkcamera: req.body.checkcamera,
             itemstatus: req.body.itemstatus,
@@ -341,7 +302,7 @@ router.delete('/:id', function (req, res, next) {
 
 // GET all items 
 router.get('/item_status', function (req, res, next) {
-    console.log(req.params);
+    //console.log(req.params);
     model.item_status.findAll({})
         
         .then(items => res.json(items))
@@ -353,27 +314,117 @@ router.get('/item_status', function (req, res, next) {
         }));
 });
 
-// GET distinct values in column for filtering
+// GET distinct values in given column within photos table
 router.get('/filters/:col', function (req, res, next) {
-    console.log(req.params); //SELECT DISTINCT "itemStatus" FROM photos
+    //console.log(req.params); //SELECT DISTINCT "itemStatus" FROM photos
     const columnName = req.params.col;
-    var distinct = model.Sequelize.fn('DISTINCT', model.sequelize.col(columnName));
     
-    model.photos.findAll({
-        attributes: [[model.sequelize.fn('DISTINCT', model.sequelize.col(columnName)), 'filter']]
+    const query = '\
+          SELECT DISTINCT ("' + columnName + ') \
+          FROM "photos"';
+    
+    //console.log(query);
+    
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.photos
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
+});
+
+/* 
+    Adds value to imports table (importid, lastVerified)
+    Called from this class -> router.get('/info', function (req, res, next)
+*/
+function putImport(importId) {
+    //console.log(';--------add import-------------');
+    model.imports.create({
+            importid: importId
+        })
+        .then(console.log('imported ' + importId))
+        .catch(console.log('Error writing import'));
+}
+
+/*
+    GET all imports by importid for import modal dropdown
+    Used in 
+*/
+router.get('/imports', function (req, res, next) {
+    //console.log(req.params); 
+    
+    const query = '\
+          SELECT "importid" \
+          FROM "imports" ORDER BY "id" DESC';
+    
+    //console.log(query);
+    
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.photos
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
+});
+
+/*
+    GET import from imports table by importid 
+    Used in imports modal and to pull up lastVerified id
+*/
+router.get('/imports/:id', function (req, res, next) {
+    console.log('imports/:id'); 
+    const importId = req.params.id;
+    
+    const query = "\
+          SELECT lastverified  \
+          FROM imports \
+          WHERE importid = '" + importId + "'";
+    
+    console.log(query);
+
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.photos
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
+});
+
+
+// Put import id lastVerifiedId 
+router.put('/imports/:id', function (req, res, next) {
+    console.log('in put imports by id'); 
+    //console.log(req.params); 
+    const id = req.params.id;
+    console.log(req.body);
+    console.log('updating ' + String(id));
+    console.log('update data ' + JSON.stringify(req.body));
+    
+    model.imports.update({
+        lastverified: req.body.lastverified
+    }, {
+        where: {
+            importid: id
+        }
     })
-        
-        .then(items => res.json(items))
-        
-        .catch(error => res.json({
-            error: true,
-            data: [],
-            error: error
-        }));
+    .then(item => res.status(201).json({
+        error: false,
+        message: 'import has been updated.'
+    }))
+    .catch(error => res.json({
+        error: true,
+        error: error
+    }));
 });
 
 function addItem(params, callback) {
-    console.log(';--------add item-------------');
+    //console.log(';--------add item-------------');
     var point = { 
       type: 'MultiPoint', 
       coordinates: [[params.lon, params.lat]],
@@ -383,7 +434,8 @@ function addItem(params, callback) {
     //console.log(params.dateTaken.replace(':','-').replace(':','-'));
     var pattern = '/assets';
     params.photopath = params.path.substr(params.path.indexOf(pattern), params.path.length);
-    console.log(params);
+    //console.log(params);
+    var firstId = 0;
 
     model.photos.create({
             geom: point,
@@ -409,51 +461,25 @@ function addItem(params, callback) {
             daterembait: null,
             checkcamera: null
         })
+        .then((item) => {
+                //console.log(item.dataValues.id);
+                itemCount = itemCount + 1;
+                firstId = item.dataValues.id; //get the first entry
+                //console.log(itemCount);
+                
+            })
         .then(item => callback({
             error: false,
             //data: item,
-            message: 'New items have been added to the DB. Import ID: ' + params.importid
+            message: 'New items have been added to the DB. Import ID: ' + params.importid,
+            importid: params.importid,
+            firstid: firstId - (itemCount -1)
         }))
         .catch(error => callback({
             error: true,
             data: [],
             error: error
         }));
-        
-/*
-    //console.log(params);
-    const query = '\
-          INSERT INTO "photos" \
-          ("name", \
-          "photoPath", \
-          "dateTaken" \
-          ) VALUES (\'' + params.session + '\',\'' +
-          params.path + '\',\'' +
-          params.dateTaken.replace(':','-').replace(':','-') + '\')';
-    
-    console.log(query);
-
-    
-    model.sequelize.query(query, {  
-        type: Sequelize.QueryTypes.SELECT,
-        model: model.photos
-      }).then(result => {
-        callback(result)
-      }).catch(err => {
-        callback('ERROR: query did not go through .  '+ query)
-      });
-      */
-}
-
-
-function saveImport(importId) {
-    console.log(';--------save import-------------');
-    
-    model.imports.create({
-            importid: importId
-        })
-        .then(console.log('imported ' + importId))
-        .catch(console.log('Error writing import'));
 }
 
 function parseFilterQuery(params) {
@@ -462,6 +488,7 @@ function parseFilterQuery(params) {
       west: '-115.4652786254883',
       north: '51.12421275782688',
       south: '51.037939894299356',
+      importid: '2018-01-15T19:00:20_test1',
       filtercol: [ 'itemStatus', 'imgStatus' ],
       values: [ '"\'deleted\',\'loaded\',\'verified\'', '"\'bad\',\'good\'' ] 
     }
@@ -472,7 +499,10 @@ function parseFilterQuery(params) {
     var curvals = [];
     var filteritem = [];
 
-    if (params.filtercol) {
+    if (params.importid) {
+        filterString = "AND importid='" + params.importid + "'";
+    }
+    else if (params.filtercol) {
         
         //1 column
         if (typeof(params.filtercol)=='string') {
@@ -499,6 +529,7 @@ function parseFilterQuery(params) {
         else
             filteritem = '';
     }
+     
     return filterString;
 }
 
@@ -526,7 +557,7 @@ function processExifInfo(v1photoList, callback) {
                         var dmsCoords = dmsStrings.map(dms.parseDms); // [-122.902336120571, 46.9845854731319] 
                         item.lat = dmsCoords[0];
                         item.lon = dmsCoords[1];
-                        console.log(dmsCoords);
+                        //console.log(dmsCoords);
                     }
                     if (exifData.exif) {
                         item.dateTaken = exifData.exif.DateTimeOriginal;  //capture date taken

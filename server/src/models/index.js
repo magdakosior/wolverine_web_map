@@ -63,8 +63,9 @@ const connection = new Sequelize(config.database, config.username, config.passwo
     max: 5,
     min: 0,
     idle: 10000
-  }});
-//}
+  },
+  define: { freezeTableName: true }
+});
 
 fs
   .readdirSync(__dirname)

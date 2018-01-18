@@ -51,7 +51,6 @@ export class MapComponent { //implements OnInit, OnChanges {
           var marker = this.createCustomMarker(newLat, newLon, this.blueIcon, selectedItem.id);
           this.selectedMarker = marker;
           //console.log(this.selectedMarker);
-          //this.itemService.setSelectedItem(selectedItem);
           //this.map_info.selectedId = this.item.id;
           //center on newly set marker
           this.map.panTo(new L.LatLng(newLat, newLon));
@@ -70,6 +69,7 @@ export class MapComponent { //implements OnInit, OnChanges {
         //console.log(items);
         this.setMarkers(items);
       });
+    
   }
   
   announceMapDetails(map: L.Map) {
@@ -125,7 +125,7 @@ export class MapComponent { //implements OnInit, OnChanges {
 
     map.on('moveend', () => {
       this.announceMapDetails(map);  //to service, service will get items and listener in constructor wil listen to set map markers
-      console.log('in move map');
+      //console.log('in move map');
     });
   }
   markerClusterReady(group: L.MarkerClusterGroup) {

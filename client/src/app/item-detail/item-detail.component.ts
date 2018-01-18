@@ -1,5 +1,6 @@
 import { Component, Input, HostListener, OnDestroy} from '@angular/core';
 import { Item } from '../item';
+import { Import } from '../import';
 
 import { ItemService }  from '../item.service';
 import { Subscription }   from 'rxjs/Subscription';
@@ -21,49 +22,33 @@ export class ItemDetailComponent implements OnDestroy {
   behaviourOptionsDropdown = [];
   behaviourSelectedItems = [];
   dropdownSettings = {};
-  
+
+  importType: boolean = false;
+  saveSettings: boolean = false;
+
+  import = new Import(); //this is to set some import details to retrieve lastverified num
+
+  savedData: any = {}
+
   startDate: any=new Date();
 
   //for enter button press
   keyCode: number;
   event: string;
-  
-  savedData = {checked: false}
-
-  /*savedData = new any({
-    checked: boolean;
-    status: string;
-    cameracheck: boolean;
-    indivname: string;
-    wolvspecies: boolean;
-    otherspecies: string;
-    numanimalsvis: number;
-    age: number;
-    sex: string;
-    behaviour: string;
-    chestvis: boolean;
-    sexvis: boolean;
-    lactvis: boolean;
-    baitvis: boolean;
-    baitrem: boolean;
-    baitremdate: Date;
-  }
-*/
+  /*
   datapreset:any = {
     visible: false,
     checked: false,
     };
-
+*/
   constructor(private itemService: ItemService) {
-    console.log('in constructor');
+    //console.log(this.savedData);
     this.subscription = itemService.selectedItem$.subscribe(
       item => {
-        this.item = item;
-        if(this.item.daterembait) {
-          this.item.daterembait = this.item.daterembait.slice(0, 10);
-        }
+        this.item = item; //set item to selected item
+
+        //behaviour dropdown options
         var selection = ['climbing', 'Upsidedown', 'eating']; 
-     
         var i = 1;
         this.behaviourOptionsDropdown = [];
         this.behaviourSelectedItems = [];
@@ -74,96 +59,148 @@ export class ItemDetailComponent implements OnDestroy {
           }
           this.behaviourOptionsDropdown.push(selection);          
           i++;
-        });
+        }); //end loading item
 
-      this.dropdownSettings = { 
-        singleSelection: false, 
-        text:"Select",
-        selectAllText:'Select All',
-        unSelectAllText:'UnSelect All',
-        enableSearchFilter: false,
-        classes:"myclass customDropDownMulti"
-      }; 
-      
-      //if this item has behaviours then show them
-      if (this.item.behaviour) {
-        var j = 1;
-        this.item.behaviour.split(',').forEach(f => {
-          //console.log(f);//.replace(/'/g,"")
-          this.behaviourSelectedItems.push({
-            'id': j,
-            'itemName': f
+        //format daterembait date field to not have time (breaks input)
+        if ((this.item) && (this.item.daterembait != null)) {
+          this.item.daterembait = this.item.daterembait.slice(0, 10);
+        }
+        
+        //if this item has behaviours then show them
+        if ((this.item) && (this.item.behaviour != null)) {
+          var j = 1;
+          this.item.behaviour.split(',').forEach(f => {
+            //console.log(f);//.replace(/'/g,"")
+            this.behaviourSelectedItems.push({
+              'id': j,
+              'itemName': f
+            });
+            j++;
           });
-          j++;
-        });
-      }
+        }//end item behaviour
 
-      /*checked: boolean;
-    status: string;
-    cameracheck: boolean;
-    indivname: string;
-    wolvspecies: boolean;
-    otherspecies: string;
-    numanimalsvis: number;
-    age: number;
-    sex: string;
-    behaviour: string;
-    chestvis: boolean;
-    sexvis: boolean;
-    lactvis: boolean;
-    baitvis: boolean;
-    baitrem: boolean;
-    baitremdate: Date;
+        //console.log(this.itemService.getImportType());
+        //listen for  type = import set by selected item from service
+        if (this.itemService.getImportType()) {
+          this.importType = true;
 
+          //if save settings option was checked off then load settings from previous itemv (overwrite if necessary).
+          //console.log(this.item.datapreset);
+          //load saved values to check if preset was checked to be true
+          var loadItem = new Item();
+          loadItem = this.itemService.retrievePresetData();
+          console.log(loadItem);
+          if (loadItem.datapreset) {  
+            console.log(loadItem.indivname);
+            this.item.itemstatus = loadItem.itemstatus;
+            this.item.checkcamera = loadItem.checkcamera;
+            this.item.indivname = loadItem.indivname;
+            this.item.specieswolv = loadItem.specieswolv;
+            this.item.speciesother = loadItem.speciesother;
+            this.item.numanimals = loadItem.numanimals;
+            this.item.age = loadItem.age;
+            this.item.sex = loadItem.sex;
+            this.item.behaviour = loadItem.behaviour;
+            this.item.vischest = loadItem.vischest;
+            this.item.vissex = loadItem.vissex;
+            this.item.vislactation = loadItem.vislactation;
+            this.item.visbait = loadItem.visbait;
+            this.item.removedbait = loadItem.removedbait;
+            this.item.daterembait = loadItem.daterembait;
+            this.item.datapreset = loadItem.datapreset; //keep it to save 
+          }
+        }//end importType
 
-        this.itemService.getFilterOptions('itemstatus')
-        .subscribe((options: any[]) => {
-          options.forEach(f => {
-            this.itemStatusOptionsDropdown.push(f.filter);
-          });
-        }) 
-        this.itemService.getFilterOptions('speciesother')
-        .subscribe((options: any[]) => {
-          options.forEach(f => {
-            this.otherSpeciesOptionsDropdown.push(f.filter);
-          });
-        }) 
-        this.itemService.getFilterOptions('behaviour')
-        .subscribe((options: any[]) => {
-          options.forEach(f => {
-            this.behaviourOptionsDropdown.push(f.filter);
-          });
-        }) 
-        */
-    });
-  }  
+        //set general dropdown settings
+        this.dropdownSettings = { 
+          singleSelection: false, 
+          text:"Select",
+          selectAllText:'Select All',
+          unSelectAllText:'UnSelect All',
+          enableSearchFilter: false,
+          classes:"myclass customDropDownMulti"
+        }; 
+    });// end item
+  }//end constructor
 
   goPrev(): void {
-    this.itemService.setPrev();
+    this.savedData = {};
+    this.itemService.savePresetData(this.savedData);
+    if (this.importType)
+      this.itemService.setPrev(true);//setting this ensures that the preset values checkbox is visible again
+    else
+      this.itemService.setPrev();
   }
 
   goNext(): void {
     this.save();
-    this.itemService.setNext();
-  }
 
+    console.log(this.item.datapreset);
+    //save data to item.service for the next item (pre-sets)
+    if (this.item.datapreset) {
+      //console.log('saving data');
+      this.savedData.itemStatus = this.item.itemstatus;
+      this.savedData.checkcamera = this.item.checkcamera;
+      this.savedData.indivname = this.item.indivname;
+      this.savedData.specieswolv = this.item.specieswolv;
+      this.savedData.speciesother = this.item.speciesother;
+      this.savedData.numanimals = this.item.numanimals;
+      this.savedData.age = this.item.age;
+      this.savedData.sex = this.item.sex;
+      this.savedData.behaviour = this.item.behaviour;
+      this.savedData.vischest = this.item.vischest;
+      this.savedData.vissex = this.item.vissex;
+      this.savedData.vislactation = this.item.vislactation;
+      this.savedData.visbait = this.item.visbait;
+      this.savedData.removedbait = this.item.removedbait;
+      this.savedData.daterembait = this.item.daterembait;
+      this.savedData.datapreset = this.item.datapreset;
+      this.itemService.savePresetData(this.savedData);
+    }
+    else {
+      this.savedData = {};
+      this.itemService.savePresetData(this.savedData);
+    }
+    
+
+    if (this.importType)
+      this.itemService.setNext(true); //setting this ensures that the preset values checkbox is visible again
+    else
+      this.itemService.setNext();
+
+    //console.log(this.savedData);
+  }
+/*
   //set this only after an import?!
   saveNext(): void {
-    console.log('saving data');
-
+    console.log('saving presets set to: ');
+    console.log(this.item.datapreset);
+    //this.datapreset.checked = true;
   }
-
+*/
   save(): void {
     var behaviours = [];
     var resultStr = '';
+
+    //set behaviour string from options chosen in dropdown
     this.behaviourSelectedItems.forEach(sel => behaviours.push("'" + sel.itemName+"'"));
     resultStr = behaviours.join(",");
     this.item.behaviour = resultStr.replace(/'/g,"");
-    
+
+    console.log(this.item);
+    //save item data to db
     this.itemService.updateItem(this.item)
       .subscribe((item: Item) => {
       })
-   }
+
+    //update last verified if it was an import so that we know where we are in verifying import photos
+    this.import.importid = this.item.importid;
+    this.import.lastverified = this.item.id;
+    this.itemService.updateImportsLastVerified(this.import)
+      .subscribe((item: Import) => {
+        //console.log('updated import');
+      })
+   }//end save()
 
    ngOnDestroy() {
     // prevent memory leak when component destroyed
@@ -196,7 +233,7 @@ export class ItemDetailComponent implements OnDestroy {
 
   @HostListener('keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
-    console.log('keyboard event in item-detail');
+    //console.log('keyboard event in item-detail');
     var keys = [39,37];
     //39 -> 
     //37 <-
@@ -207,7 +244,7 @@ export class ItemDetailComponent implements OnDestroy {
     //console.log(event.keyCode);
     if ( keys.indexOf(event.keyCode) != -1)
     {
-      console.log(event.keyCode);
+      //console.log(event.keyCode);
       if (event.keyCode == 39) {
         this.goNext();
       }

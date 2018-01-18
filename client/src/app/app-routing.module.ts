@@ -2,7 +2,6 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MapComponent }      from './map/map.component';
-import { ItemsComponent }      from './items/items.component';
 //import { DashboardComponent }   from './dashboard/dashboard.component';
 import { ItemPhotoComponent }  from './item-photo/item-photo.component';
 import { ItemDetailComponent }  from './item-detail/item-detail.component';

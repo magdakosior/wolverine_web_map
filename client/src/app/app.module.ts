@@ -17,7 +17,6 @@ import { MessagesComponent } from './messages/messages.component';
 import { MessageService } from './message.service';
 import { ItemSearchComponent } from './item-search/item-search.component';
 
-import { ItemsComponent } from './items/items.component';
 import { filterModal } from './item-filter/filter.component';
 import { importModal } from './import/import.component';
 
@@ -37,7 +36,6 @@ import { HighlightDirective } from './directives/highlight.directive';
   declarations: [
     AppComponent,
     MapComponent,
-    ItemsComponent,
     ItemPhotoComponent,
     ItemDetailComponent,
     MessagesComponent,

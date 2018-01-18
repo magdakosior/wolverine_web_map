@@ -6,9 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var items = require('./routes/items');
-
 var app = express();
-
 
 // view engine setup *use this only if running api seperately
 /*

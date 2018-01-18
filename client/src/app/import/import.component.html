@@ -6,73 +6,59 @@
 	  <h1>Import Photos</h1>
 
 		<form [(formGroup)]="importForm" #formDir="ngForm" id="form-import" class="" name="form-import" >
-	      
-	      	<fieldset>
-			<div class="form-group ">
-                <label class="form-control-label">Upload Folder Directory</label>
-                <input required id="path" class="form-control input-xs" formControlName="path" placeholder='/Users/Magda/Projects/angular-projects/hero3/client/src/assets/photos/session1' >
+		    <fieldset>
+				<div class="form-group ">
+	                <label class="form-control-label">Upload Folder Directory</label>
+	                <input required id="path" class="form-control input-xs" formControlName="path" placeholder='/Users/Magda/Projects/angular-projects/hero3/client/src/assets/photos/session1' >
 
-            </div>
-            <div class="row" >
-	            <div class="form-group col-md-6">
-	                <label class="form-control-label">Location (latitude)</label>
-	                <input required id="lat" class="form-control input-xs" formControlName="lat" placeholder='ex 51.45'>
-	                <div *ngIf="lat.invalid && (lat.dirty || lat.touched)" class="alert alert-danger">
-             			<div *ngIf="lat.errors.min">
-			            	Number must be between 45.95 and 83.11.
-			          	</div>
-			          	<div *ngIf="lat.errors.max">
-			            	Number must be between 45.95 and 83.11.
-			          	</div>
-			        </div>
 	            </div>
-	            <div class="form-group col-md-6">
-	                <label class="form-control-label">Location (longitude)</label>
-	                <input required class="form-control input-xs" formControlName="lon"  placeholder='ex -115.49'>
-	                <div *ngIf="lon.invalid && (lon.dirty || lon.touched)" class="alert alert-danger">
-             			<div *ngIf="lon.errors.min">
-			            	Number must be between -52.61 and -141.00.
-			          	</div>
-			          	<div *ngIf="lon.errors.max">
-			            	Number must be between -52.61 and -141.00.
-			          	</div>
-			        </div>
-	            </div>
-	        </div>
-	        <div class="form-group ">
-                <label class="form-control-label">Session Name</label>
-                <input required class="form-control input-xs" formControlName="session"  placeholder='ex session1'>
-            </div>
-            <div class="form-group ">
-                <label class="form-control-label">File Type</label>
-                <input class="form-control input-xs" formControlName="filetype" placeholder='ex JPG'>
-            </div>
-          	<!--div id="upload_button">
-			   
-			      <button (click)="importNewFolder()" class="btn btn-danger btn-md center-block">Import New Folder</button>
-			  </div--> 
-			
-	        <!--
-				<div id="upload_button">
-			    <label>
-			      <input #folderInput
-				type="file" (change)="filePicked($event)"  >
-			      <span class="btn btn-danger">Upload New Folder</span>
+	            <div class="row" >
+		            <div class="form-group col-md-6">
+		                <label class="form-control-label">Location (latitude)</label>
+		                <input required id="lat" class="form-control input-xs" formControlName="lat" placeholder='ex 51.45'>
+		                <div *ngIf="lat.invalid && (lat.dirty || lat.touched)" class="alert alert-danger">
+	             			<div *ngIf="lat.errors.min">
+				            	Number must be between 45.95 and 83.11.
+				          	</div>
+				          	<div *ngIf="lat.errors.max">
+				            	Number must be between 45.95 and 83.11.
+				          	</div>
+				        </div>
+		            </div>
+		            <div class="form-group col-md-6">
+		                <label class="form-control-label">Location (longitude)</label>
+		                <input required class="form-control input-xs" formControlName="lon"  placeholder='ex -115.49'>
+		                <div *ngIf="lon.invalid && (lon.dirty || lon.touched)" class="alert alert-danger">
+	             			<div *ngIf="lon.errors.min">
+				            	Number must be between -52.61 and -141.00.
+				          	</div>
+				          	<div *ngIf="lon.errors.max">
+				            	Number must be between -52.61 and -141.00.
+				          	</div>
+				        </div>
+		            </div>
+		        </div>
+		        <div class="row" >
+			        <div class="form-group col-md-6">
+		                <label class="form-control-label">Session Name</label>
+		                <input required class="form-control input-xs" formControlName="session"  placeholder='ex session1'>
+		            </div>
 
-			    </label>
-			  </div> 
-			
-
-
-	        div class="form-check">
-
-	            <label class="form-ckeck-label" for="nome">
-	            	<input class="form-check-input " type="radio"> All 
-	            	<input class="form-check-input " type="radio"> Extent
-	            </label>
-	            
-	        </div-->
-
+		            <div class="form-group col-md-6">
+		                <label class="form-control-label">File Type</label>
+		                <input class="form-control input-xs" formControlName="filetype" placeholder='ex JPG'>
+		            </div>
+		        </div>
+		        <hr />
+		        <div class="row" >
+		            <div class="col-md-12">
+		                <label class="control-label">Or <br />Load previous import</label>
+		                <select class="form-control input-xs" formControlName="previmport">
+		                     <option *ngFor="let option of prevImportDropdown" [value]="option" (click)="importTypeChanges()">{{option}}</option>
+		                </select>
+		            </div>
+		        </div>
+		    </fieldset> 
 	         <div class="row" style="display:block;margin-bottom: 10px !important;margin-top: 30px !important;">
 			    <div class="col-md-12 text-center">
 
@@ -82,7 +68,7 @@
 			     </div>
 			</div>
 	             
-	      </fieldset> 
+	      
 	    </form>
 	</div>
 

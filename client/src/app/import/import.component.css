@@ -6,11 +6,6 @@
   border-left: 5px solid #a94442; /* red */
 }
 
-
-.custom-file {
-  width: 150px;
-}
-
 .dropdowns  label {
 	display: inline-block !important;
     vertical-align: middle !important;
@@ -47,14 +42,13 @@ strong {
 
 #wrapper {
   width: 100%;
-  max-width: 300px;
+  max-width: 450px;
   margin: 0 auto;
   text-align: center;
   padding: 15px 0;
 }
 
 .page-head-image {
-  
 }
 
 .page-head-image img {

@@ -4,20 +4,23 @@
     "password": null,
     "database": "wolverine",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "freezeTableName": true
   },
   "test": {
     "username": "postgres",
     "password": null,
     "database": "wolverine",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "freezeTableName": true
   },
   "production": {
     "username": "postgres",
     "password": null,
     "database": "wolverine",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "freezeTableName": true
   }
 }

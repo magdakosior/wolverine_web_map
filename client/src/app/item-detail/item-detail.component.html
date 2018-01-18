@@ -147,12 +147,13 @@
 
         <div id="button-group">
             <button class="btn btn-primary " (click)="goPrev()">Prev</button>
-            <button class="btn btn-danger" (click)="save()">Save</button>
-            <button class="btn btn-primary" (click)="goNext()">Next</button>
-            <div>
+            <!--button class="btn btn-danger" (click)="save()">Save</button-->
+            <button class="btn btn-danger" (click)="goNext()" data-toggle="tooltip"
+        data-placement="top" title="Tooltip on top">Next</button>
+            <div *ngIf="importType" >
                 <label for="checkbox1" style="font-size:10px">Preset values on 'Next'</label>
                 <div id="checkbox">
-                    <input id="checkbox" type="checkbox" [(ngModel)]="datapreset.checked" (click)="saveNext()" name="datasave" ng-true-value="true" ng-false-value="false">
+                    <input id="checkbox" type="checkbox" [(ngModel)]="item.datapreset" name="datasave" ng-true-value="true" ng-false-value="false">
                 </div>
             </div>
         </div>

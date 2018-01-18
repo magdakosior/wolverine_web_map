@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
 
 import { Item } from './item';
+import { Import } from './import';
 import { MapDetails } from './mapDetails';
 
 import { Observable } from 'rxjs/Observable';
@@ -23,10 +24,10 @@ export class ItemService {
   // Observable  sources
   private allItemsSource = new Subject<Item[]>();
   private selectedItemSource = new Subject<Item>();
-  //private mapDetailsSource = new Subject<MapDetails>();
-
+  
   private itemsUrl = 'api/items'; // 'api/items';  // URL to web api
   private filtersUrl = 'api/filters'; // 'api/items';  // URL to web api
+  private importsUrl = 'api/imports';
 
   private servicefilterOptions: any;
   private filterString: String;
@@ -37,29 +38,42 @@ export class ItemService {
   allItems$ = this.allItemsSource.asObservable();
   selectedItem$ = this.selectedItemSource.asObservable();
   infoFileLocation = '/assets/photos/info.json';///Users/Magda/Projects/angular-projects/hero3/client/src/assets
-  //mapDetails$ = this.mapDetailsSource.asObservable();
+  
+  currImport: String = '';
+  itemPresets = new Item();  //this is a holder for item-detail saving data
+  importType: boolean;
+  /* 
+    called by temService.importFromFile
+    load file into contents into photos and add entry to imports table
+    http://localhost:3000/api/info 
+    return success/fail message back to itemService.importFromFile
+  */
+  importFromFile(jsonData:any) {
+    var today = new Date();
+    var importId = today.toISOString().slice(0,19) + '_' + jsonData.session;
+    jsonData.importId = importId;
 
-  readInfoFile(jsonData:any) {
-    //console.log(jsonData);
     const url = `api/info?data=`+ JSON.stringify(jsonData);
+    this.setImportDetails(jsonData.importId);
+    
+    return this.http.get<any>(url)
+      .pipe(
+        //map(this.extractResults),
+        tap(_ => {this.log(`fetched info file`)}),
+        catchError(this.handleError<Item>(`error reading info file`))
+      );     
+  }
 
-    //open info.json file and send json results to server
-    //this.http.get('/assets/photos/info.json').subscribe(res => {
-    //  console.log(res);
-    //});
-    //console.log(url);
-    return this.http.get<any>(url).pipe(
-      tap(_ => this.log(`fetched info file`)),
-      catchError(this.handleError<Item>(`error reading info file`))
-    );
-
-    /*return this.http.get(this.infoFileLocation)
-      //.map((response: Response) => response.json());
-      .subscribe((result: any) => {
-          //this.allItemsSource.next(items); 
-          console.log(result);
-        })*/
-                        
+  /* 
+  called by importFromFile and import.components->importPhotos (when loading a previous import)
+  sets up filter string and prompts for map redraw
+  */
+  setImportDetails(importId) {
+    this.currImport = importId;
+    this.filterString = '&importid=' + importId; 
+   
+    //figure out bounds based on filter
+    //this.redrawMap(); //dont need this because setSelectedMarker is called later
   }
 
   // Service message commands
@@ -80,13 +94,13 @@ export class ItemService {
     if (!this.filterString)
       filterquery = '';
     else filterquery = String(this.filterString);
-    //console.log(this.filterString);
+    //console.log(filterquery);
     
     var query = '?east=' + String(this.serviceMapDetails.ext_east) + 
-    '&west=' + String(this.serviceMapDetails.ext_west) + 
-    '&north=' + String(this.serviceMapDetails.ext_north) +  
-    '&south=' + String(this.serviceMapDetails.ext_south) +  
-    filterquery;
+      '&west=' + String(this.serviceMapDetails.ext_west) + 
+      '&north=' + String(this.serviceMapDetails.ext_north) +  
+      '&south=' + String(this.serviceMapDetails.ext_south) +  
+      filterquery;
 
     //console.log(query);
     this.getItemsWithinBounds(query) 
@@ -95,8 +109,13 @@ export class ItemService {
           //this.items = items;
         })
   }
-  // Service message commands
-  setSelectedItem(id: number) {
+
+  /*
+    Sets selected marker on map (red)
+    Called in import.component->importPhotos and map.component->createCustomMarker
+  */
+  setSelectedItem(id: number, importType?: boolean) {
+    //console.log('in set selected item, calling getItem on ' + String(id));    
     //look through our items and find corresponding id to assign to selectedItemSource
     if (!id) {
       this.serviceSelectedItemId = null;
@@ -105,11 +124,11 @@ export class ItemService {
     else {
       this.getItem(id) 
         .subscribe((item: Item) => {
-          //console.log(item[0]);
+          if (importType)
+            this.importType = true;
+          //console.log('setting import type');
           this.selectedItemSource.next(item[0]);
           this.serviceSelectedItemId = item[0].id;
-          //console.log('iSERVICE SETTING ITEM');
-          //console.log(this.serviceSelectedItemId);
         })
     }
   }
@@ -157,27 +176,30 @@ export class ItemService {
     this.redrawMap();
   }
 
-  setNext() {
-    //console.log('in set next');
-    //console.log(this.serviceSelectedItemId);
+/*
+Called from item-detail.component->setNext
+*/
+  setNext(importType?: boolean) {
     this.getNextItem()
       .subscribe((item: Item) => {
         if (item[0] != null) {
           this.selectedItemSource.next(item[0]);
           this.serviceSelectedItemId = item[0].id;
-          //console.log('iSERVICE SETTING ITEM');
-          //console.log(this.serviceSelectedItemId);
-    
+          if (importType)
+            this.importType = true;
         }
       })
   }
 
-  setPrev() {
+  setPrev(importType?: boolean) {
     this.getPrevItem()
       .subscribe((item: Item) => {
         if (item[0] != null) {
+          item[0].datapreset = false;
           this.selectedItemSource.next(item[0]);
           this.serviceSelectedItemId = item[0].id;
+          if (importType)
+            this.importType = true;
         }
       })
   }
@@ -211,9 +233,8 @@ export class ItemService {
 
   /** GET item by id. Will 404 if id not found */
   getItem(id: number): Observable<Item> {
+    //console.log('calling get Item');    
     this.serviceSelectedItemId = id;
-    //console.log('iSERVICE SETTING ITEM');
-    //console.log(this.serviceSelectedItemId);
     
     //only get item if one has been set
     if (id) {
@@ -263,8 +284,12 @@ export class ItemService {
     );
   }
 
-  /** PUT: update the item on the server */
+  /*
+    PUT: update the item on the server 
+    Called from item-detail.component save 
+  */
   updateItem (item: Item): Observable<any> {
+    //console.log('calling update item');
     const url = `${this.itemsUrl}/${item.id}`;
     return this.http.put(url, item, httpOptions).pipe(
       tap(_ => this.log(`updated item id=${item.id}`)),
@@ -274,6 +299,7 @@ export class ItemService {
 
   /** POST: add a new item to the server --post instead of put*/
   addItem (item: Item): Observable<Item> {
+    console.log('calling addItem');    
     return this.http.post<Item>(this.itemsUrl, item, httpOptions).pipe(
       tap((item: Item) => this.log(`added item w/ id=${item.id}`)),
       catchError(this.handleError<Item>('addItem'))
@@ -282,6 +308,7 @@ export class ItemService {
 
   /** DELETE: delete the item from the server */
   deleteItem (item: Item | number): Observable<Item> {
+    console.log('calling delete Item');    
     const id = typeof item === 'number' ? item : item.id;
     const url = `${this.itemsUrl}/${id}`;
 
@@ -314,6 +341,87 @@ export class ItemService {
     );
   }
 
+  /* Called from import.component import modal ngOnInit() */
+  getImports(): Observable<any[]> {
+    const url = `${this.importsUrl}`;
+
+    return this.http.get<String[]>(url).pipe(
+      tap(_ => this.log(`found imports"`)),
+      catchError(this.handleError<String[]>('imports', []))
+    );
+  }
+
+  /*
+    Called from import.component importPhotos()
+    To get import to display in map when loading a previous imported 
+  */
+  getImportsId(term: string): Observable<any> {
+    //console.log('getting item status filter opts');
+    const url = `${this.importsUrl}/${term}`;
+    //console.log(url);
+    return this.http.get<String[]>(url).pipe(
+      tap(_ => this.log(`found filters for "${term}"`)),
+      catchError(this.handleError<String[]>('filterItems', []))
+    );
+  }
+
+  /*
+    Called from import.component importPhotos()
+    To set selected last verified import marker after initial import
+  */
+  updateImportsLastVerified(terms: any): Observable<any> {
+    //console.log('updateImportsLastVerified');
+    //console.log(terms);
+    const url = `${this.importsUrl}/${terms.importid}`;
+    //console.log(url);
+    
+    return this.http.put(url, terms, httpOptions).pipe(
+      tap(_ => this.log(`updated import importid=${terms.importid}`)),
+      catchError(this.handleError<any>('updateImport'))
+    );
+  }
+
+  /*
+    saves preset item detail values to item.service
+    Called from item-detail.component save 
+  */
+  savePresetData (item: Item) {
+    console.log('calling savePresetData');
+    console.log(item);
+    this.itemPresets.itemstatus = item.itemstatus;
+    this.itemPresets.checkcamera = item.checkcamera;
+    this.itemPresets.indivname = item.indivname;
+    this.itemPresets.specieswolv = item.specieswolv;
+    this.itemPresets.speciesother = item.speciesother;
+    this.itemPresets.numanimals = item.numanimals;
+    this.itemPresets.age = item.age;
+    this.itemPresets.sex = item.sex;
+    this.itemPresets.behaviour = item.behaviour;
+    this.itemPresets.vischest = item.vischest;
+    this.itemPresets.vissex = item.vissex;
+    this.itemPresets.vislactation = item.vislactation;
+    this.itemPresets.visbait = item.visbait;
+    this.itemPresets.removedbait = item.removedbait;
+    this.itemPresets.daterembait = item.daterembait;
+    this.itemPresets.datapreset = item.datapreset;
+  }
+
+/*
+    saves preset item detail values to item.service
+    Called from item-detail.component save 
+  */
+  retrievePresetData (): Item {
+    //console.log('calling retrievePresetData');
+    return this.itemPresets;
+  }
+
+  getImportType (): boolean {
+    //console.log(this.importType);
+    return this.importType;
+  }
+  setImportType (value: boolean) {
+    this.importType = value;
+  }
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
     this.messageService.add('ItemService: ' + message);
