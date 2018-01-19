@@ -24,7 +24,6 @@ var itemCount = 0;
     http://localhost:3000/api/info 
 */
 router.get('/info', function (req, res, next) {
-    //console.log('info');
     var jsondata = JSON.parse(req.query.data);
     
     var response = {}
@@ -47,15 +46,10 @@ router.get('/info', function (req, res, next) {
                 photoList.push(photoObj);
             }
             processExifInfo(photoList, function (resultList) { 
-                //console.log('saving list to DB'); 
-                //console.log(photoList);
                 var score = 0;
                 for (var i = 0; i< resultList.length; i++) {
-                    //console.log(photoList[i]);
                     addItem(resultList[i], function (result) {
-                        //console.log('added item to DB');
                         score = score +1; 
-                        //console.log(result);
                         //add something here to say which ones were not added ?
                         //send firstid and importid back to update map details
                         response.firstid = result.firstid;
@@ -81,21 +75,15 @@ router.get('/info', function (req, res, next) {
 });
 
 /* 
-    GET heros listing with map bounds.
+    GET item listing with map bounds.
     Called from item.service.ts getItemsWithinBounds()
     ex: http://localhost:3000/api/itemsMapBounds?east=-115.13946533203126&west=-115.55042266845705&north=51.12421275782688&south=51.037939894299356
 */
 router.get('/itemsMapBounds', function (req, res, next) {
-    //console.log('itemsMapBounds');
-    //console.log(req.query);
     var filterString = parseFilterQuery(req.query).replace('AND', '');
-    //console.log(filterString);
     var query = '';
-    //console.log('=--------------');
-    //console.log(req.query);
-
+    
     if (req.query.importid) {
-        //console.log('=------** -------');
         query = '\
           SELECT * \
           FROM "photos" \
@@ -111,8 +99,6 @@ router.get('/itemsMapBounds', function (req, res, next) {
           ' + req.query.east + ', \
           ' + req.query.north + ', 4326))' + filterString;
     }
-    //console.log('------->');
-    //console.log(query);
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
         model: model.photos
@@ -127,16 +113,11 @@ router.get('/itemsMapBounds', function (req, res, next) {
     get item by id http://localhost:3000/api/heros/1 
 */
 router.get('/items', function (req, res, next) {
-    //console.log('items');
-    //console.log(req.query);
     const item_id = req.query.id;
-    
     const query = '\
           SELECT * \
           FROM "photos" \
           WHERE "photos"."id" = ' + String(item_id);
-    
-    //console.log('api - in selected item get by id: ' + query);
     
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -150,12 +131,7 @@ router.get('/items', function (req, res, next) {
 
 // get prev item http://localhost:3000/api/items/prev/5
 router.get('/items/prev', function (req, res, next) {
-    //console.log(req.query);
-    //console.log('/items/prev');
-    //console.log(req.query);
     var filterString = parseFilterQuery(req.query);
-    //console.log('------->');
-
     const item_id = req.query.id;
     
     const query = '\
@@ -166,7 +142,6 @@ router.get('/items/prev', function (req, res, next) {
           filterString +  
           ' ORDER BY "photos"."id" DESC LIMIT 1';
     
-    //console.log(query);
     //http://localhost:3000/api/items/prev?id=7
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -176,35 +151,11 @@ router.get('/items/prev', function (req, res, next) {
       }).catch(err => {
         console.log('ERROR: ', err)
       });
-
-
-      /*
-    const item_id = req.query.id;
-    console.log('api - in prev item get by id: ' + String(item_id));
-    
-    model.photos.findOne({
-            where: {
-                id: {
-                  $lt: item_id
-                }
-            },
-            order: [['id', 'DESC']]
-        })
-        .then(items => res.json(items))
-        .catch(error => res.json({
-            error: true,
-            error: error
-        }));*/
 });
 
 // get prev item http://localhost:3000/api/items/prev/5
 router.get('/items/next', function (req, res, next) {
-    //console.log(req.query);
-    //console.log('/items/next');
-    //console.log(req.query);
     var filterString = parseFilterQuery(req.query);
-    console.log(filterString);
-
     const item_id = req.query.id;
     const query = '\
           SELECT * \
@@ -214,7 +165,6 @@ router.get('/items/next', function (req, res, next) {
           filterString +  
           ' ORDER BY "photos"."id" ASC LIMIT 1';
     
-    //console.log(query);
     //http://localhost:3000/api/items/prev?id=7
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -228,17 +178,13 @@ router.get('/items/next', function (req, res, next) {
 
 // GET all items and search for items 
 router.get('/items', function (req, res, next) {
-    //console.log('items');
     const filter = req.query.name;
-    //console.log(JSON.stringify(req.params));
     model.photos.findAll({
-
         where: { 
             name: { $like: '%'+filter+'%' } 
         }
     })
     .then(items => res.json(items))
-    
     .catch(error => res.json({
         error: true,
         data: [],
@@ -250,8 +196,6 @@ router.get('/items', function (req, res, next) {
 router.put('/items/:id', function (req, res, next) {
 
     const item_id = req.params.id;
-    //console.log('saving ' + String(item_id));
-    console.log('Update item ' + JSON.stringify(req.body));
     model.photos.update({
             checkcamera: req.body.checkcamera,
             itemstatus: req.body.itemstatus,
@@ -302,11 +246,8 @@ router.delete('/:id', function (req, res, next) {
 
 // GET all items 
 router.get('/item_status', function (req, res, next) {
-    //console.log(req.params);
     model.item_status.findAll({})
-        
         .then(items => res.json(items))
-        
         .catch(error => res.json({
             error: true,
             data: [],
@@ -316,14 +257,10 @@ router.get('/item_status', function (req, res, next) {
 
 // GET distinct values in given column within photos table
 router.get('/filters/:col', function (req, res, next) {
-    //console.log(req.params); //SELECT DISTINCT "itemStatus" FROM photos
     const columnName = req.params.col;
-    
     const query = '\
           SELECT DISTINCT ("' + columnName + ') \
           FROM "photos"';
-    
-    //console.log(query);
     
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -340,7 +277,6 @@ router.get('/filters/:col', function (req, res, next) {
     Called from this class -> router.get('/info', function (req, res, next)
 */
 function putImport(importId) {
-    //console.log(';--------add import-------------');
     model.imports.create({
             importid: importId
         })
@@ -353,13 +289,9 @@ function putImport(importId) {
     Used in 
 */
 router.get('/imports', function (req, res, next) {
-    //console.log(req.params); 
-    
     const query = '\
           SELECT "importid" \
           FROM "imports" ORDER BY "id" DESC';
-    
-    //console.log(query);
     
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
@@ -376,16 +308,12 @@ router.get('/imports', function (req, res, next) {
     Used in imports modal and to pull up lastVerified id
 */
 router.get('/imports/:id', function (req, res, next) {
-    console.log('imports/:id'); 
     const importId = req.params.id;
-    
     const query = "\
           SELECT lastverified  \
           FROM imports \
           WHERE importid = '" + importId + "'";
     
-    console.log(query);
-
     model.sequelize.query(query, {  
         type: Sequelize.QueryTypes.SELECT,
         model: model.photos
@@ -399,13 +327,7 @@ router.get('/imports/:id', function (req, res, next) {
 
 // Put import id lastVerifiedId 
 router.put('/imports/:id', function (req, res, next) {
-    console.log('in put imports by id'); 
-    //console.log(req.params); 
     const id = req.params.id;
-    console.log(req.body);
-    console.log('updating ' + String(id));
-    console.log('update data ' + JSON.stringify(req.body));
-    
     model.imports.update({
         lastverified: req.body.lastverified
     }, {
@@ -424,17 +346,14 @@ router.put('/imports/:id', function (req, res, next) {
 });
 
 function addItem(params, callback) {
-    //console.log(';--------add item-------------');
     var point = { 
       type: 'MultiPoint', 
       coordinates: [[params.lon, params.lat]],
       crs: { type: 'name', properties: { name: 'EPSG:4326'} }
     };
 
-    //console.log(params.dateTaken.replace(':','-').replace(':','-'));
     var pattern = '/assets';
     params.photopath = params.path.substr(params.path.indexOf(pattern), params.path.length);
-    //console.log(params);
     var firstId = 0;
 
     model.photos.create({
@@ -462,15 +381,11 @@ function addItem(params, callback) {
             checkcamera: null
         })
         .then((item) => {
-                //console.log(item.dataValues.id);
                 itemCount = itemCount + 1;
                 firstId = item.dataValues.id; //get the first entry
-                //console.log(itemCount);
-                
             })
         .then(item => callback({
             error: false,
-            //data: item,
             message: 'New items have been added to the DB. Import ID: ' + params.importid,
             importid: params.importid,
             firstid: firstId - (itemCount -1)
@@ -523,13 +438,11 @@ function parseFilterQuery(params) {
         }
 
         filteritem = filteritem.join(' AND ');
-        //console.log(filteritem);
         if (filteritem)
             filterString = ' AND ' + filteritem;
         else
             filteritem = '';
     }
-     
     return filterString;
 }
 
@@ -557,7 +470,6 @@ function processExifInfo(v1photoList, callback) {
                         var dmsCoords = dmsStrings.map(dms.parseDms); // [-122.902336120571, 46.9845854731319] 
                         item.lat = dmsCoords[0];
                         item.lon = dmsCoords[1];
-                        //console.log(dmsCoords);
                     }
                     if (exifData.exif) {
                         item.dateTaken = exifData.exif.DateTimeOriginal;  //capture date taken
