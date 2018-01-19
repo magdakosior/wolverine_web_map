@@ -1,45 +1,43 @@
 
-<!--div class="container main"-->
-	<div class="container-fluid">
-		<div >
-			<div class="options" >
-				<div class="col-md-8">
-					<app-item-import></app-item-import>
-					<filter></filter>
-					<app-item-search></app-item-search>
-				</div>
-				<br class="clearBoth" />
+<div class="container-fluid">
+	<div >
+		<div class="options" >
+			<div class="col-md-8">
+				<app-item-import></app-item-import>
+				<filter></filter>
+				<app-item-search></app-item-search>
 			</div>
-			
-			<div class="row" >
-				<!-- Map -->
-				<div class="col-md-8" >
-					<div leaflet id="leafletbox"
-						 [leafletOptions]="options"
-						 [leafletBaseLayers]="baseLayers"
-						 [leafletLayersControlOptions]="layersControlOptions"
-						 (leafletMapReady)="onMapReady($event)"
-
-						 [leafletMarkerCluster]="markerClusterData"
-						 [leafletMarkerClusterOptions]="markerClusterOptions"
-						 (leafletMarkerClusterReady)="markerClusterReady($event)">
-					</div>
-				</div>
-
-				<!--Photo-->
-				<div class="col-md-4">
-					<div >
-						<app-item-photo></app-item-photo>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!--Details-->
-		<div ><!--class="jumbotron gray-light"-->
-			<app-item-detail></app-item-detail>
+			<br class="clearBoth" />
 		</div>
 		
-	</div> <!--container-->
-<!--/div-->
+		<div class="row" >
+			<!-- Map -->
+			<div class="col-md-8" >
+				<div leaflet id="leafletbox"
+					 [leafletOptions]="options"
+					 [leafletBaseLayers]="baseLayers"
+					 [leafletLayersControlOptions]="layersControlOptions"
+					 (leafletMapReady)="onMapReady($event)"
+
+					 [leafletMarkerCluster]="markerClusterData"
+					 [leafletMarkerClusterOptions]="markerClusterOptions"
+					 (leafletMarkerClusterReady)="markerClusterReady($event)">
+				</div>
+			</div>
+
+			<!--Photo-->
+			<div class="col-md-4">
+				<div >
+					<app-item-photo></app-item-photo>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--Details-->
+	<div ><!--class="jumbotron gray-light"-->
+		<app-item-detail></app-item-detail>
+	</div>
+	
+</div> <!--container-->
 

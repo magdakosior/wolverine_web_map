@@ -2,15 +2,11 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MapComponent }      from './map/map.component';
-//import { DashboardComponent }   from './dashboard/dashboard.component';
 import { ItemPhotoComponent }  from './item-photo/item-photo.component';
 import { ItemDetailComponent }  from './item-detail/item-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/map', pathMatch: 'full' },
-  //{ path: 'dashboard', component: DashboardComponent },
-  //{ path: 'dashboard/:id', component: DashboardComponent },
-  //{ path: 'items', component: ItemsComponent },
   { path: 'detail', component: ItemDetailComponent },
   { path: 'map', component: MapComponent }
 ];

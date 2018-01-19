@@ -33,7 +33,6 @@ export class filterModal{
   //item status
   imgStatusDropdownList = [];
   imgStatusSelectedItems = [];
-  //dropdownSettings = {};
   
    constructor(
   	private modalService: BsModalService,
@@ -43,7 +42,6 @@ export class filterModal{
   }
 
   //https://www.npmjs.com/package/angular2-multiselect-dropdown
-
   openModalWithClass(template: TemplateRef<any>) {
     this.modalOpen = true;
 
@@ -122,8 +120,7 @@ export class filterModal{
         {"imgstatus": concatstr2}
       ]
     }
-    //console.log(JSON.stringify(filters));
-
+    
     //send to item service to send to server
     this.itemService.setServicefilterOptions(filters);
     //close down modal and unset dropdown lists

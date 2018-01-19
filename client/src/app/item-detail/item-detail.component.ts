@@ -35,34 +35,25 @@ export class ItemDetailComponent implements OnDestroy {
   //for enter button press
   keyCode: number;
   event: string;
-  /*
-  datapreset:any = {
-    visible: false,
-    checked: false,
-    };
-*/
+  
   constructor(private itemService: ItemService) {
     //console.log(this.savedData);
     this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item; //set item to selected item
-        //console.log(item);
         //format daterembait date field to not have time (breaks input)
         if ((this.item) && (this.item.daterembait != null)) {
           this.item.daterembait = this.item.daterembait.slice(0, 10);
         }
 
-        //console.log(this.itemService.getImportType());
         //listen for  type = import set by selected item from service
         if (this.itemService.getImportType()) {
           this.importType = true;
 
           //if save settings option was checked off then load settings from previous itemv (overwrite if necessary).
-          //console.log(this.item.datapreset);
           //load saved values to check if preset was checked to be true
           var loadItem = new Item();
           loadItem = this.itemService.retrievePresetData();
-          //console.log(loadItem);
           if (loadItem.datapreset) {  
             this.item.itemstatus = loadItem.itemstatus;
             console.log(this.item.itemstatus);
@@ -98,7 +89,6 @@ export class ItemDetailComponent implements OnDestroy {
           i++;
         }); 
         //if this item has behaviours then show them
-        //console.log(this.item.behaviour);
         if ((this.item != null) && (this.item.behaviour != null)) {
           var j = 1;
           this.item.behaviour.split(',').forEach(f => {
@@ -136,7 +126,6 @@ export class ItemDetailComponent implements OnDestroy {
   goNext(): void {
     this.save();
 
-    //console.log(this.item.datapreset);
     //save data to item.service for the next item (pre-sets)
     if (this.item.datapreset) {
       console.log('saving data');
@@ -167,17 +156,8 @@ export class ItemDetailComponent implements OnDestroy {
       this.itemService.setNext(true); //setting this ensures that the preset values checkbox is visible again
     else
       this.itemService.setNext();
+  }
 
-    //console.log(this.savedData);
-  }
-/*
-  //set this only after an import?!
-  saveNext(): void {
-    console.log('saving presets set to: ');
-    console.log(this.item.datapreset);
-    //this.datapreset.checked = true;
-  }
-*/
   save(): void {
     var behaviours = [];
     var resultStr = '';
@@ -188,7 +168,6 @@ export class ItemDetailComponent implements OnDestroy {
       resultStr = behaviours.join(",");
       this.item.behaviour = resultStr.replace(/'/g,"");
   }
-    //console.log(this.item);
     //save item data to db
     this.itemService.updateItem(this.item)
       .subscribe((item: Item) => {

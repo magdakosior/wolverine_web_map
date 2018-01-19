@@ -1,11 +1,12 @@
 {
-  "name": "hero_project",
+  "name": "wolverine_web_map",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "main": "gulpfile.js",
   "scripts": {
-    "start": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\""
+    "start": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
+    "run-script": "node server/src/bin/www"
   },
   "author": "",
   "license": "ISC",

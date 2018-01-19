@@ -23,14 +23,7 @@ import { importModal } from './import/import.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
-//import { EventListenerDirective } from './directives/eventListener.directive';
-
 import { HighlightDirective } from './directives/highlight.directive';
-//import { datepicker } from 'angularjs-datepicker/src/js/angular-datepicker.js';
-//import { SharedModule } from './shared.module';
-
-//import { exif } from 'exif-js/exif';
-
 
 @NgModule({
   declarations: [
@@ -42,7 +35,6 @@ import { HighlightDirective } from './directives/highlight.directive';
     ItemSearchComponent,
     filterModal,
     importModal,
-    //EventListenerDirective,
     HighlightDirective
   ],
   imports: [
@@ -55,8 +47,6 @@ import { HighlightDirective } from './directives/highlight.directive';
     LeafletMarkerClusterModule,
     ModalModule.forRoot(),
     AngularMultiSelectModule
-    //datepicker
-    //SharedModule
   ],
   providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
   bootstrap: [AppComponent],

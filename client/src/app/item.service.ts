@@ -71,22 +71,15 @@ export class ItemService {
   setImportDetails(importId) {
     this.currImport = importId;
     this.filterString = '&importid=' + importId; 
-   
-    //figure out bounds based on filter
-    //this.redrawMap(); //dont need this because setSelectedMarker is called later
   }
 
   // Service message commands
   setMapDetails(data: MapDetails) {
-    //console.log('in service got some map details');
     //set the map details for the service to remember
     this.serviceMapDetails = data;
     
     //set map details for listeners ?? do we need this?
-    //this.mapDetailsSource.next(data);
-    //console.log(this.serviceMapDetails);
     this.redrawMap();
-    
   }
 
   redrawMap() {
@@ -94,7 +87,6 @@ export class ItemService {
     if (!this.filterString)
       filterquery = '';
     else filterquery = String(this.filterString);
-    //console.log(filterquery);
     
     var query = '?east=' + String(this.serviceMapDetails.ext_east) + 
       '&west=' + String(this.serviceMapDetails.ext_west) + 
@@ -102,11 +94,9 @@ export class ItemService {
       '&south=' + String(this.serviceMapDetails.ext_south) +  
       filterquery;
 
-    //console.log(query);
     this.getItemsWithinBounds(query) 
       .subscribe((items: Item[]) => {
           this.allItemsSource.next(items); 
-          //this.items = items;
         })
   }
 
@@ -114,8 +104,7 @@ export class ItemService {
     Sets selected marker on map (red)
     Called in import.component->importPhotos and map.component->createCustomMarker
   */
-  setSelectedItem(id: number, importType?: boolean) {
-    //console.log('in set selected item, calling getItem on ' + String(id));    
+  setSelectedItem(id: number, importType?: boolean) {  
     //look through our items and find corresponding id to assign to selectedItemSource
     if (!id) {
       this.serviceSelectedItemId = null;
@@ -126,7 +115,6 @@ export class ItemService {
         .subscribe((item: Item) => {
           if (importType)
             this.importType = true;
-          //console.log('setting import type');
           this.selectedItemSource.next(item[0]);
           this.serviceSelectedItemId = item[0].id;
         })
@@ -137,18 +125,13 @@ export class ItemService {
   setServicefilterOptions(opts: any): void {
     //{"filters":[{"itemStatus":"'deleted','loaded','verified'"},{"imgStatus":"'bad','good'"}]}
     var result = '';
-    //console.log(opts);
-
+    
     var result = '';
     for (var filterline in opts.filters) {
         if (!opts.filters.hasOwnProperty(filterline)) {
             continue;
         }
-      //console.log(opts.filters[filterline]);
       for (var key in opts.filters[filterline]) {
-        //console.log(key);
-        //console.log(opts.filters[filterline][key]);
-
         //check to make sure that a filter was selected
         if (opts.filters[filterline][key]) {
           result = result + '&filtercol=' + 
@@ -156,22 +139,10 @@ export class ItemService {
             opts.filters[filterline][key]; 
         }
       }
-      //console.log(result); 
     }  
-
-
-
-    //var filterJsonArray = opts;
-
-    //this.servicefilterOptions = opts;
-    //console.log('service - setting filter options');
-    //console.log(JSON.stringify(this.servicefilterOptions));
-
-    
 
     this.filterString = result; //"filter1col=itemStatus&filter1values='deleted','verified','another'";
     //re-draw map and items
-    //console.log(this.filterString);
     this.setSelectedItem(null);
     this.redrawMap();
   }
@@ -233,7 +204,6 @@ Called from item-detail.component->setNext
 
   /** GET item by id. Will 404 if id not found */
   getItem(id: number): Observable<Item> {
-    //console.log('calling get Item');    
     this.serviceSelectedItemId = id;
     
     //only get item if one has been set
@@ -249,14 +219,11 @@ Called from item-detail.component->setNext
   //message sent from details->goPrev() -> dashboard
   getPrevItem(): Observable<Item> {
     var query = '';
-    //console.log('in get prevItem');
-    //console.log(this.filterString);
     if (typeof this.filterString != 'undefined') 
       query = String(this.serviceSelectedItemId) + this.filterString;
     else
       query = String(this.serviceSelectedItemId);
 
-    //console.log('in getPrevItem() ' + query);
     const url = `${this.itemsUrl}/prev/?id=`+ query;
     return this.http.get<Item>(url).pipe(
       tap(_ => this.log(`fetched prev item id=${this.serviceSelectedItemId}`)),
@@ -269,15 +236,12 @@ Called from item-detail.component->setNext
     var query = '';
     if (typeof this.filterString != 'undefined') {
       query = String(this.serviceSelectedItemId) + this.filterString;
-      //console.log(this.filterString);
     }
     else {
       query = String(this.serviceSelectedItemId);
-      //console.log(String(this.serviceSelectedItemId));
     }
 
     const url = `${this.itemsUrl}/next/?id=`+ query;
-    //console.log('in getNextItem() ' + url);
     return this.http.get<Item>(url).pipe(
       tap(_ => this.log(`fetched next item id=${this.serviceSelectedItemId}`)),
       catchError(this.handleError<Item>(`getNextItem id=${this.serviceSelectedItemId}`))
@@ -289,7 +253,6 @@ Called from item-detail.component->setNext
     Called from item-detail.component save 
   */
   updateItem (item: Item): Observable<any> {
-    //console.log('calling update item');
     const url = `${this.itemsUrl}/${item.id}`;
     return this.http.put(url, item, httpOptions).pipe(
       tap(_ => this.log(`updated item id=${item.id}`)),
@@ -332,7 +295,6 @@ Called from item-detail.component->setNext
 
   //message sent from filter modal (on dashboard)
   getFilterOptions(term: string): Observable<any[]> {
-    //console.log('getting item status filter opts');
     const url = `${this.filtersUrl}/${term}`;
 
     return this.http.get<String[]>(url).pipe(
@@ -356,7 +318,6 @@ Called from item-detail.component->setNext
     To get last verified item id from imported batch
   */
   getImportsId(term: string): Observable<any> {
-    //console.log('getting item status filter opts');
     const url = `${this.importsUrl}/${term}`;
     console.log(url);
     return this.http.get<String[]>(url).pipe(
@@ -370,10 +331,8 @@ Called from item-detail.component->setNext
     To set selected last verified import marker after initial import
   */
   updateImportsLastVerified(terms: any): Observable<any> {
-    //console.log('updateImportsLastVerified');
     console.log(terms);
     const url = `${this.importsUrl}/${terms.importid}`;
-    //console.log(url);
     
     return this.http.put(url, terms, httpOptions).pipe(
       tap(_ => this.log(`updated import importid=${terms.importid}`)),
@@ -411,12 +370,10 @@ Called from item-detail.component->setNext
     Called from item-detail.component save 
   */
   retrievePresetData (): Item {
-    //console.log('calling retrievePresetData');
     return this.itemPresets;
   }
 
   getImportType (): boolean {
-    //console.log(this.importType);
     return this.importType;
   }
   setImportType (value: boolean) {

@@ -79,9 +79,7 @@ export class importModal implements OnInit{
       session: this.session,
       filetype: this.filetype,
       previmport: this.previmport
-    });
-    
-    
+    });    
 
     //change import type, unset validators to new import type
     this.importForm.get('previmport').valueChanges.subscribe(
@@ -106,7 +104,6 @@ export class importModal implements OnInit{
     this.itemService.getImports()
       .subscribe((options: any[]) => {
         options.forEach(f => {
-          //console.log(f.importid);
           this.prevImportDropdown.push(f.importid);
         });
       }) 
