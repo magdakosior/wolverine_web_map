@@ -29,7 +29,8 @@ router.get('/info', function (req, res, next) {
     var response = {}
     var photoList = [];
     var importId = '';
-    
+    jsondata.path = jsondata.path.replace(/\\/g, "\\\\");
+
     fs.readdir(jsondata.path, function(err, items) {     
         
         //for each file in directory
