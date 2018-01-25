@@ -8,8 +8,8 @@
      "dev": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
     "prod": "node server/src/bin/www"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Magda Kosior",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/core": ">=2",
     "@angular/common": ">=2",
