@@ -5,8 +5,8 @@
   "private": true,
   "main": "gulpfile.js",
   "scripts": {
-    "start": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
-    "run-script": "node server/src/bin/www"
+    "dev": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
+    "prod": "node server/src/bin/www"
   },
   "author": "",
   "license": "ISC",
