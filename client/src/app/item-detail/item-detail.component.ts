@@ -161,7 +161,7 @@ export class ItemDetailComponent implements OnDestroy {
   save(): void {
     var behaviours = [];
     var resultStr = '';
-    console.log(this.behaviourSelectedItems);
+    
     //set behaviour string from options chosen in dropdown
     if (this.behaviourSelectedItems.length > 0) {
       this.behaviourSelectedItems.forEach(sel => behaviours.push("'" + sel.itemName+"'"));
@@ -176,7 +176,7 @@ export class ItemDetailComponent implements OnDestroy {
     //update last verified if it was an import so that we know where we are in verifying import photos
     this.import.importid = this.item.importid;
     this.import.lastverified = this.item.id;
-    console.log(this.import);
+    
     this.itemService.updateImportsLastVerified(this.import)
       .subscribe((item: Import) => {
         //console.log('updated import');

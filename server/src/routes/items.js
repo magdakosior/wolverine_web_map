@@ -7,6 +7,8 @@ var path = require('path');
 var ExifImage = require('exif').ExifImage;
 var dms = require("dms-conversion");
 
+const photodir = '/Users/Magda/Documents/Photos';
+
 //middleware to hanlde errors 
 const awaitErorrHandlerFactory = middleware => {
   return async (req, res, next) => {
@@ -23,14 +25,14 @@ var itemCount = 0;
     load file into contents into photos and add entry to imports table
     http://localhost:3000/api/info 
 */
-router.get('/info', function (req, res, next) {
+router.get('/importfile', function (req, res, next) {
     var jsondata = JSON.parse(req.query.data);
     
     var response = {}
     var photoList = [];
     var importId = '';
     jsondata.path = jsondata.path.replace(/\\/g, "\\\\");
-
+    
     fs.readdir(jsondata.path, function(err, items) {     
         
         //for each file in directory
@@ -39,6 +41,7 @@ router.get('/info', function (req, res, next) {
                 var photoObj = {};
                 importId = jsondata.importId
                 photoObj.importid = importId;
+                //photoObj.photopath = path.join(jsondata.path, items[i]);
                 photoObj.path = path.join(jsondata.path, items[i]);
                 photoObj.session = jsondata.session;
                 //store default info file location
@@ -46,29 +49,43 @@ router.get('/info', function (req, res, next) {
                 photoObj.lon = jsondata.lon;
                 photoList.push(photoObj);
             }
+
             processExifInfo(photoList, function (resultList) { 
                 var score = 0;
-                for (var i = 0; i< resultList.length; i++) {
-                    addItem(resultList[i], function (result) {
-                        score = score +1; 
-                        //add something here to say which ones were not added ?
-                        //send firstid and importid back to update map details
-                        response.firstid = result.firstid;
-                        response.importid = result.importid;
-                        response.result = result.message;
-                        if (score == resultList.length) {
-                            res.json(response);
-                        }
-                    });
+                if (resultList.length == 0 ) {
+                    response.importid = importId;
+                    response.result = "Items were not able to load, no exif data was found";
+                    res.json(response);
+                }
+                else {
+                                
+                    for (var i = 0; i< resultList.length; i++) {
+                                
+                        addItem(resultList[i], function (result) {
+                            score = score +1; 
+                            //add something here to say which ones were not added ?
+                            //send firstid and importid back to update map details
+                            response.firstid = result.firstid;
+                            response.importid = result.importid;
+                            response.result = result.message;
+                            if (score == resultList.length) {
+                                console.log('response line 68 in items.js');
+                                console.log(response);
+                                res.json(response);
+                            }
+                        });
+                    }
                 }
             })
             /* 
             Adds value to imports table (importid)
             */
+
             putImport(importId);
         }
         else {
             response.result = 'Error - No files to process.';
+            console.log(response);
             res.json(response)
         }
         
@@ -353,10 +370,9 @@ function addItem(params, callback) {
       crs: { type: 'name', properties: { name: 'EPSG:4326'} }
     };
 
-    var pattern = '/assets';
-    params.photopath = params.path.substr(params.path.indexOf(pattern), params.path.length);
     var firstId = 0;
-
+    params.photopath = params.path.substr(params.path.indexOf(photodir) + photodir.length, params.path.length);
+    
     model.photos.create({
             geom: point,
             importid: params.importid,
@@ -387,7 +403,7 @@ function addItem(params, callback) {
             })
         .then(item => callback({
             error: false,
-            message: 'New items have been added to the DB. Import ID: ' + params.importid,
+            message: itemCount + ' new items have been added to the DB. Import ID: ' + params.importid,
             importid: params.importid,
             firstid: firstId - (itemCount -1)
         }))
@@ -453,10 +469,14 @@ function processExifInfo(v1photoList, callback) {
     
     try {  
         v1photoList.forEach((item, index, array) => {
-            
+            console.log(item.length);
+            console.log(item);
             new ExifImage({ image : item.path }, function (error, exifData) {
-                if (error || item.path.endsWith('.DS_Store')) {
+                if (error) {
                     console.log('Error1: '+error.message);
+                }
+                else if(item.path.endsWith('.DS_Store')) {
+                    console.log('Error1: Incompatible .DS_Store file');
                 }
                 else {
                     if (exifData.gps.GPSLatitude && exifData.gps.GPSLongitude) {

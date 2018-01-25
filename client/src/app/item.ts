@@ -4,7 +4,7 @@ export class Item {
   session: string;
   temperature: number;
   indivname: string;
-  photoPath: string;
+  photopath: string;
   itemstatus: string;
   geom: any;
   checkcamera: boolean;

@@ -8,14 +8,6 @@ var env       = process.env.NODE_ENV || 'development';
 var config    = require(__dirname + '/../config/config.json')[env];
 var db        = {};
 
-
-//if (config.use_env_variable) {
-  //use sequelize without any operators aliases
-  //const connection = new Sequelize(process.env[config.use_env_variable], config);
-
-  //var sequelize = new Sequelize(process.env[config.use_env_variable], config);
-//} else {
-  //var sequelize = new Sequelize(config.database, config.username, config.password, config);
 const Op = Sequelize.Op;
 const operatorsAliases = {
   $eq: Op.eq,
@@ -54,7 +46,6 @@ const operatorsAliases = {
   $col: Op.col
 };
 
-//const connection = new Sequelize(config.database, config.username, config.password, { operatorsAliases });
 const connection = new Sequelize(config.database, config.username, config.password, {
   host: '127.0.0.1',
   dialect: 'postgres',

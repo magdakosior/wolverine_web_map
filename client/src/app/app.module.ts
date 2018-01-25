@@ -23,8 +23,6 @@ import { importModal } from './import/import.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
-import { HighlightDirective } from './directives/highlight.directive';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,8 +32,7 @@ import { HighlightDirective } from './directives/highlight.directive';
     MessagesComponent,
     ItemSearchComponent,
     filterModal,
-    importModal,
-    HighlightDirective
+    importModal
   ],
   imports: [
     BrowserModule,

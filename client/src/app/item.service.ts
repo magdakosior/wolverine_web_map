@@ -37,7 +37,6 @@ export class ItemService {
   // Observable string streams
   allItems$ = this.allItemsSource.asObservable();
   selectedItem$ = this.selectedItemSource.asObservable();
-  infoFileLocation = '/assets/photos/info.json';///Users/Magda/Projects/angular-projects/hero3/client/src/assets
   
   currImport: String = '';
   itemPresets = new Item();  //this is a holder for item-detail saving data
@@ -45,7 +44,7 @@ export class ItemService {
   /* 
     called by temService.importFromFile
     load file into contents into photos and add entry to imports table
-    http://localhost:3000/api/info 
+    http://localhost:3000/api/importfile 
     return success/fail message back to itemService.importFromFile
   */
   importFromFile(jsonData:any) {
@@ -53,14 +52,14 @@ export class ItemService {
     var importId = today.toISOString().slice(0,19) + '_' + jsonData.session;
     jsonData.importId = importId;
 
-    const url = `api/info?data=`+ JSON.stringify(jsonData);
+    const url = `api/importfile?data=`+ JSON.stringify(jsonData);
     this.setImportDetails(jsonData.importId);
     
     return this.http.get<any>(url)
       .pipe(
         //map(this.extractResults),
-        tap(_ => {this.log(`fetched info file`)}),
-        catchError(this.handleError<Item>(`error reading info file`))
+        tap(_ => {this.log(`fetched importfile`)}),
+        catchError(this.handleError<Item>(`error reading importfile`))
       );     
   }
 
@@ -331,7 +330,6 @@ Called from item-detail.component->setNext
     To set selected last verified import marker after initial import
   */
   updateImportsLastVerified(terms: any): Observable<any> {
-    console.log(terms);
     const url = `${this.importsUrl}/${terms.importid}`;
     
     return this.http.put(url, terms, httpOptions).pipe(
@@ -345,8 +343,6 @@ Called from item-detail.component->setNext
     Called from item-detail.component save 
   */
   savePresetData (item: Item) {
-    console.log('calling savePresetData');
-    console.log(item);
     this.itemPresets.itemstatus = item.itemstatus;
     this.itemPresets.checkcamera = item.checkcamera;
     this.itemPresets.indivname = item.indivname;

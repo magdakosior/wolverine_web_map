@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var exec = require('child_process').exec;
 
 var items = require('./routes/items');
 var app = express();
@@ -28,13 +29,26 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../dist/client/index.html'));
 });
 
+/*
+exec('"C:/..path to executable or bat file../Wolverine Map-win32-x64/Wolverine Map.exe"')
+  .on('error', function(error) {
+    console.log("ERROR: DETAILS: " + error);
+  })
+  .on('close', function(code) {
+    console.log("SUCCESS: CODE: " + code);
+    process.exit(code);
+  })
+  .on('exit', function(code) {
+    console.log("EXIT: CODE: " + code);
+  });
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
-
+*/
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
