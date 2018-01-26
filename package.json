@@ -5,7 +5,7 @@
   "private": true,
   "main": "gulpfile.js",
   "scripts": {
-     "dev": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
+    "dev": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
     "prod": "node server/src/bin/www"
   },
   "author": "Magda Kosior",
@@ -52,17 +52,13 @@
     "method-override": "^2.3.10",
     "morgan": "~1.9.0",
     "mysql2": "^1.5.1",
-    "ng2-opd-popup": "^1.1.21",
-    "ng2-select": "^2.0.0",
     "ngx-bootstrap": "^2.0.0-rc.0",
     "pg": "^7.4.0",
     "pg-hstore": "^2.3.2",
-    "popper.js": "^1.12.9",
     "pug": "2.0.0-beta11",
     "rxjs": "^5.5.5",
     "sequelize": "^4.26.0",
-    "serve-favicon": "~2.4.5",
-    "zone.js": "^0.8.14"
+    "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
     "@angular/cli": "^1.5.5",
