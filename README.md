@@ -1,7 +1,11 @@
 General install (node is a prerequesite):
+
 	'npm run dev' for full development
+	
  		http://localhost:3000/map
+		
  	'ng serve' for client side only
+	
  		http://localhost:4200/map with ng serve
 
  Full Install on Windows Machine:
