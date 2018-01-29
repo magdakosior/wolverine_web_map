@@ -1,14 +1,15 @@
 General install (node is a prerequesite):
-	'npm run dev' for full development
- 		http://localhost:3000/map
- 	'ng serve' for client side only
- 		http://localhost:4200/map with ng serve
 
- Full Install on Windows Machine:
-	Download and install node.js (https://nodejs.org/en/download/)
-	npm install -g @angular/cli
-	npm install -g concurrently
-	npm install -g nativefier
+	'npm run dev' for full development  
+ 		http://localhost:3000/map  
+ 	'ng serve' for client side only  
+ 		http://localhost:4200/map with ng serve  
+
+ Full Install on Windows Machine:  
+	Download and install node.js (https://nodejs.org/en/download/)  
+	npm install -g @angular/cli  
+	npm install -g concurrently  
+	npm install -g nativefier  
 	
 	Download and install postgreSQL and postgis (https://www.postgresql.org/download/windows/ and https://postgis.net/install/)
 	Configure ...wolverine_web_map/server/src/config/config.json file with db name and password
