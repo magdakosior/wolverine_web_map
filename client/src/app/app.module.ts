@@ -23,6 +23,9 @@ import { importModal } from './import/import.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
+import { MatButtonModule, MatSidenavModule, MatIconModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +46,11 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
     LeafletModule,
     LeafletMarkerClusterModule,
     ModalModule.forRoot(),
-    AngularMultiSelectModule
+    AngularMultiSelectModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
+    BrowserAnimationsModule
   ],
   providers: [ ItemService, MessagesComponent, MessageService ], //MapServiceprovided the HeroService in the root AppModule so that it can be injected anywhere.
   bootstrap: [AppComponent],

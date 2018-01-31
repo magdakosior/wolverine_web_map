@@ -24,7 +24,7 @@ export class ItemDetailComponent implements OnDestroy {
   dropdownSettings = {};
 
   importType: boolean = false;
-  saveSettings: boolean = false;
+  //saveSettings: boolean = false;
 
   import = new Import(); //this is to set some import details to retrieve lastverified num
 

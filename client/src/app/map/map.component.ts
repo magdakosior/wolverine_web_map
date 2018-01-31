@@ -12,6 +12,8 @@ import { importModal } from '../import/import.component';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
+import {MatSidenavModule} from '@angular/material/sidenav';
+
 //@Component is a decorator function that specifies the Angular metadata for the component.
 @Component({
   selector: 'app-map',

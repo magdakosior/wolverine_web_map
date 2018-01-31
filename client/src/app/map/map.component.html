@@ -1,15 +1,22 @@
-
-<div class="container-fluid">
-	<div >
-		<div class="options" >
-			<div class="col-md-8">
-				<app-item-import></app-item-import>
-				<filter></filter>
-				<app-item-search></app-item-search>
-			</div>
-			<br class="clearBoth" />
-		</div>
-		
+<mat-sidenav-container class="sidenav-container">
+	
+    <mat-sidenav #sidenav class="left-sidenav" >
+		<app-item-import (click)="sidenav.close()"></app-item-import>
+		<br>
+		<filter (click)="sidenav.close()"></filter>
+		<br>
+		<!--app-item-search (click)="sidenav.close()"></app-item-search-->
+    </mat-sidenav>
+    
+    <div class="menu-sidenav-content">
+        <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+        <div class="title">
+	        <h3>Wolverine Mapper</h3>
+	    </div>
+    </div>
+	    
+	    
+	<div class="container-fluid">			
 		<div class="row" >
 			<!-- Map -->
 			<div class="col-md-8" >
@@ -32,12 +39,13 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<!--Details-->
-	<div ><!--class="jumbotron gray-light"-->
-		<app-item-detail></app-item-detail>
-	</div>
 	
-</div> <!--container-->
+		<!--Details-->
+		<div ><!--class="jumbotron gray-light"-->
+			<app-item-detail></app-item-detail>
+		</div>
+
+	</div> <!--container-->
+</mat-sidenav-container>
+	
 
