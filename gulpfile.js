@@ -4,17 +4,18 @@ let gulp = require('gulp');
 let ts = require('gulp-typescript');
 let uglify = require('gulp-uglify');
 let sourcemaps = require('gulp-sourcemaps');
-let exec = require('child_process').exec;
+//let exec = require('child_process').exec;
+const spawn = require('cross-spawn');
 
 let clientTsProject = ts.createProject('client/tsconfig.json');
 let serverTsProject = ts.createProject('server/tsconfig.json');
-debugger;
+//debugger;
 
 // These tasks will be run when you just type "gulp"
 gulp.task('default', [ 'clientBuild']);
-gulp.task('default', [ 'clientscripts']);//, 'serverscripts' 
+/*gulp.task('default', [ 'clientscripts']);//, 'serverscripts' 
 
-/**/
+
 // This task can be run alone with "gulp clientscripts"
 gulp.task('clientscripts', () => {
   return clientTsProject.src()
@@ -22,8 +23,11 @@ gulp.task('clientscripts', () => {
                         .js
                         .pipe(gulp.dest('dist/client'));
 });
-
-
+*/
+gulp.task('clientBuild', () => {
+  spawn('ng', ['build'], { stdio: 'inherit' });
+});
+/*
 gulp.task('clientBuild', function (cb) {
   exec('ng build', function (err, stdout, stderr) {
     console.log(stdout);
@@ -31,7 +35,7 @@ gulp.task('clientBuild', function (cb) {
     cb(err);
   });
 })
-
+*/
 /*
 // This task can be run alone with "gulp serverscripts"
 gulp.task('serverscripts', () => {
