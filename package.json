@@ -6,7 +6,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "dev": "gulp && concurrently \"gulp watch\" \"nodemon server/src/bin/www\"",
-    "prod": "node server/src/bin/www"
+    "prod": "node server/src/bin/www",
+    "test": "gulp"
   },
   "author": "Magda Kosior",
   "license": "MIT",
@@ -56,6 +57,7 @@
     "method-override": "^2.3.10",
     "morgan": "~1.9.0",
     "mysql2": "^1.5.1",
+    "popper.js": "^1.12.9",
     "ngx-bootstrap": "^2.0.0-rc.0",
     "pg": "^7.4.0",
     "pg-hstore": "^2.3.2",
@@ -72,6 +74,7 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "codelyzer": "~4.0.1",
+    "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-typescript": "^3.2.3",
     "gulp-uglify": "^3.0.0",
