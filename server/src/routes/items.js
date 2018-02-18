@@ -216,6 +216,7 @@ router.put('/items/:id', function (req, res, next) {
     const item_id = req.params.id;
     model.photos.update({
             checkcamera: req.body.checkcamera,
+            marker: req.body.marker,
             itemstatus: req.body.itemstatus,
             indivname: req.body.indivname,
             specieswolv: req.body.specieswolv,
@@ -395,7 +396,8 @@ function addItem(params, callback) {
             visbait: null,
             removedbait: null,
             daterembait: null,
-            checkcamera: null
+            checkcamera: null,
+            marker: null
         })
         .then((item) => {
                 itemCount = itemCount + 1;

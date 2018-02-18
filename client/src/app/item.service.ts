@@ -345,6 +345,7 @@ Called from item-detail.component->setNext
   savePresetData (item: Item) {
     this.itemPresets.itemstatus = item.itemstatus;
     this.itemPresets.checkcamera = item.checkcamera;
+    this.itemPresets.marker = item.marker;
     this.itemPresets.indivname = item.indivname;
     this.itemPresets.specieswolv = item.specieswolv;
     this.itemPresets.speciesother = item.speciesother;

@@ -56,8 +56,8 @@ export class ItemDetailComponent implements OnDestroy {
           loadItem = this.itemService.retrievePresetData();
           if (loadItem.datapreset) {  
             this.item.itemstatus = loadItem.itemstatus;
-            console.log(this.item.itemstatus);
             this.item.checkcamera = loadItem.checkcamera;
+            this.item.marker = loadItem.marker;
             this.item.indivname = loadItem.indivname;
             this.item.specieswolv = loadItem.specieswolv;
             this.item.speciesother = loadItem.speciesother;
@@ -131,6 +131,7 @@ export class ItemDetailComponent implements OnDestroy {
       console.log('saving data');
       this.savedData.itemstatus = this.item.itemstatus;
       this.savedData.checkcamera = this.item.checkcamera;
+      this.savedData.marker = this.item.marker;
       this.savedData.indivname = this.item.indivname;
       this.savedData.specieswolv = this.item.specieswolv;
       this.savedData.speciesother = this.item.speciesother;
