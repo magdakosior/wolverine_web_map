@@ -24,8 +24,8 @@ export class ItemDetailComponent implements OnDestroy {
   dropdownSettings = {};
 
   importType: boolean = false;
-  //saveSettings: boolean = false;
-
+  markerSet = false;
+  
   import = new Import(); //this is to set some import details to retrieve lastverified num
 
   savedData: any = {}
@@ -49,6 +49,8 @@ export class ItemDetailComponent implements OnDestroy {
         //listen for  type = import set by selected item from service
         if (this.itemService.getImportType()) {
           this.importType = true;
+          //determine if any markers have been set for this batch (chech with item.service)
+          this.markerSet = true;
 
           //if save settings option was checked off then load settings from previous itemv (overwrite if necessary).
           //load saved values to check if preset was checked to be true

@@ -12,8 +12,6 @@ import { importModal } from '../import/import.component';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
-import {MatSidenavModule} from '@angular/material/sidenav';
-
 //@Component is a decorator function that specifies the Angular metadata for the component.
 @Component({
   selector: 'app-map',
@@ -21,8 +19,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   styleUrls: ['./map.component.css'],
   providers: [ItemService]
 })
-export class MapComponent { //implements OnInit, OnChanges {
-  
+export class MapComponent { 
+ 
   //leaflet  Marker cluster stuff
   markerClusterGroup: L.MarkerClusterGroup;
   markerClusterData: any[] = [];
@@ -104,19 +102,23 @@ export class MapComponent { //implements OnInit, OnChanges {
   baseLayers = {
     'Open Street Map': this.LAYER_OSM.layer
   };
+  
   options = {
-    zoom: 12,
+    zoom: 6,//see all of ab, bc
     center: L.latLng([ 51.0810, -115.3451 ])
   };
 
   onMapReady(map: L.Map) {
-    this.map = map;
-    this.announceMapDetails(map);
+    //this resize window event was necessary . map container size not valid at map initialization 
+    window.dispatchEvent(new Event('resize'));
 
+    this.map = map;
+    
     map.on('moveend', () => {
       this.announceMapDetails(map);  //to service, service will get items and listener in constructor wil listen to set map markers
     });
   }
+
   markerClusterReady(group: L.MarkerClusterGroup) {
     this.markerClusterGroup = group;
   } 
@@ -154,7 +156,6 @@ export class MapComponent { //implements OnInit, OnChanges {
     if (items) {
       var map_markers: any[] = [];
       for (let i = 0; i < Object.keys(items).length; i++) {
-        console.log(items[i]);
         if ((items[i].marker) || (importType)) {
           var lat = items[i].geom.coordinates[0][1];
           var lon = items[i].geom.coordinates[0][0];
