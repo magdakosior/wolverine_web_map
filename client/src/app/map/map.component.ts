@@ -145,24 +145,33 @@ export class MapComponent { //implements OnInit, OnChanges {
   }
 
   setMarkers(items:Item[]): void {  
+    //check to see if we are showing map and items on import, if so then we display all, otherwise just the ones that were set with marker
+    var importType = false;
+    if (this.itemService.getImportType()) {
+      importType = true;
+      console.log('we are in import type');
+    }
     if (items) {
       var map_markers: any[] = [];
       for (let i = 0; i < Object.keys(items).length; i++) {
-         var lat = items[i].geom.coordinates[0][1];
-        var lon = items[i].geom.coordinates[0][0];
-        var id = items[i].id;
-      
-        var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
+        console.log(items[i]);
+        if ((items[i].marker) || (importType)) {
+          var lat = items[i].geom.coordinates[0][1];
+          var lon = items[i].geom.coordinates[0][0];
+          var id = items[i].id;
         
-        if (this.selectedMarker) {
-          if (this.selectedMarker.options.id == addmarker.options.id) {
-            addmarker.setIcon(this.redIcon);
-            this.selectedMarker = addmarker;
-            var coords = L.latLng([ 51.0810, -115.3451 ])
-          }
+          var addmarker = this.createCustomMarker(lat, lon, this.blueIcon, id);
+          
+          if (this.selectedMarker) {
+            if (this.selectedMarker.options.id == addmarker.options.id) {
+              addmarker.setIcon(this.redIcon);
+              this.selectedMarker = addmarker;
+              var coords = L.latLng([ 51.0810, -115.3451 ])
+            }
+          }//end if loop
+          map_markers.push(addmarker);
         }
-        map_markers.push(addmarker);
-      }
+      }//end for loop
       this.markerClusterData = map_markers;
     }
   }
