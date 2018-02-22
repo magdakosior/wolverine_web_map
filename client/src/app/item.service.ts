@@ -165,11 +165,16 @@ Called from item-detail.component->setNext
     this.getNextItem()
       .subscribe((item: Item) => {
         if (item[0] != null) {
-          this.selectedItemSource.next(item[0]);
-          this.serviceSelectedItemId = item[0].id;
-          if (importType)
+          if (importType) {            
             this.importType = true;
-        }
+            this.selectedItemSource.next(item[0]);
+            this.serviceSelectedItemId = item[0].id;
+          }
+          if (item[0].marker) {
+            this.selectedItemSource.next(item[0]);
+            this.serviceSelectedItemId = item[0].id;
+          }
+        }//end if not null
       })
   }
 
@@ -177,12 +182,19 @@ Called from item-detail.component->setNext
     this.getPrevItem()
       .subscribe((item: Item) => {
         if (item[0] != null) {
-          item[0].datapreset = false;
-          this.selectedItemSource.next(item[0]);
-          this.serviceSelectedItemId = item[0].id;
-          if (importType)
+          if (importType) {            
             this.importType = true;
-        }
+
+            item[0].datapreset = false;
+            this.selectedItemSource.next(item[0]);
+            this.serviceSelectedItemId = item[0].id;
+          }
+          if (item[0].marker) {
+            item[0].datapreset = false;
+            this.selectedItemSource.next(item[0]);
+            this.serviceSelectedItemId = item[0].id;
+          }
+        }// end item[0] != null
       })
   }
   //used Angular Dependency Injection to inject it into a component
