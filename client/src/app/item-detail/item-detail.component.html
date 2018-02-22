@@ -11,8 +11,10 @@
             <div class="form-group col-md-1">
             </div>
             <div class="col-md-2">
-                <label class="control-label">Date Taken</label>
-                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.datetaken| date:'short'}}">
+                <label class="control-label">Status</label>
+                <select class="form-control input-xs" [(ngModel)]="item.itemstatus" [ngModelOptions]="{standalone: true}">
+                     <option selected="option == item.itemstatus" *ngFor="let option of itemStatusOptionsDropdown" [value]="option">{{option}}</option>
+                </select>
             </div>
             <div class="form-group col-md-2">
                 <label class="form-control-label" >Individual Name</label>
@@ -48,10 +50,10 @@
             <div class="form-group col-md-1">
             </div>
             <div class="col-md-2">
-                <label class="control-label">Status</label>
-                <select class="form-control input-xs" [(ngModel)]="item.itemstatus" [ngModelOptions]="{standalone: true}">
-                     <option selected="option == item.itemstatus" *ngFor="let option of itemStatusOptionsDropdown" [value]="option">{{option}}</option>
-                </select>
+                <label for="checkbox1">Camera Check</label>
+                <div id="checkbox">
+                    <input id="checkbox" type="checkbox" [(ngModel)]="item.checkcamera" name="checkcamera" ng-true-value="true" ng-false-value="false">
+                </div>
             </div>
             <div class="col-md-2">
                 <label for="checkbox1">Wolverine Species</label>
@@ -87,12 +89,11 @@
                 <input readonly class="form-control form-control input-xs" type="text" value="{{item.session}}">
             </div>
             <div class="col-md-2">
-                <label for="checkbox1">Camera Check</label>
+                <label for="checkbox1">Set Marker</label>
                 <div id="checkbox">
-                    <input id="checkbox" type="checkbox" [(ngModel)]="item.checkcamera" name="checkcamera" ng-true-value="true" ng-false-value="false">
+                    <input id="marker" type="checkbox" [(ngModel)]="item.marker" name="marker" ng-true-value="true" ng-false-value="false">
                 </div>
             </div>
-             
             
             <div class="col-md-2">
                 <label class="control-label" >Other Species</label>
@@ -135,7 +136,9 @@
         </div>
         
         <div class="row"><!--row 4-->
-            <div class="form-group col-md-2">
+            <div class="col-md-2">
+                <label class="control-label">Date Taken</label>
+                <input readonly class="form-control form-control input-xs datetime" type="text" value="{{item.datetaken| date:'short'}}">
             </div>
             <div class="form-group col-md-2">
             </div>
@@ -156,12 +159,15 @@
             <button class="btn btn-primary " (click)="goPrev()">Prev</button>
             <!--button class="btn btn-danger" (click)="save()">Save</button-->
             <button class="btn btn-danger" (click)="goNext()" data-toggle="tooltip"
-        data-placement="top" title="Tooltip on top">Next</button>
+        data-placement="top" title="Current data will be saved">Next</button>
             <div *ngIf="importType" >
                 <label for="checkbox1" style="font-size:10px">Preset values on 'Next'</label>
                 <div id="checkbox">
                     <input id="checkbox" type="checkbox" [(ngModel)]="item.datapreset" name="datasave" ng-true-value="true" ng-false-value="false">
                 </div>
+            </div>
+            <div *ngIf="markerNotSet" class="alert alert-danger" role="alert">
+              <strong>Don't Forget!</strong> No markers have been set for this import
             </div>
         </div>
         

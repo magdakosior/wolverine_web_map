@@ -18,7 +18,8 @@ export class ItemPhotoComponent implements OnDestroy  {
     this.subscription = itemService.selectedItem$.subscribe(
       item => {
         this.item = item;
-        this.item.photopath = 'http://127.0.0.1:8887' + this.item.photopath;
+        this.item.photopath = 'http://127.0.0.1:8887/' + this.item.photopath;
+        console.log(this.item.photopath);
     });
   }
 

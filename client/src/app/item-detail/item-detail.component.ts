@@ -24,12 +24,11 @@ export class ItemDetailComponent implements OnDestroy {
   dropdownSettings = {};
 
   importType: boolean = false;
-  //saveSettings: boolean = false;
-
+  markerNotSet = false;
+  
   import = new Import(); //this is to set some import details to retrieve lastverified num
 
   savedData: any = {}
-
   startDate: any=new Date();
 
   //for enter button press
@@ -49,6 +48,15 @@ export class ItemDetailComponent implements OnDestroy {
         //listen for  type = import set by selected item from service
         if (this.itemService.getImportType()) {
           this.importType = true;
+          //determine if any markers have been set for this batch (chech with item.service)
+          this.itemService.getMarkerSet(this.item.importid)
+            .subscribe((result: any) => {
+              if (result[0].count > 0) {
+                this.markerNotSet = false;
+              }
+              else
+                this.markerNotSet = true;
+            })
 
           //if save settings option was checked off then load settings from previous itemv (overwrite if necessary).
           //load saved values to check if preset was checked to be true
@@ -56,8 +64,8 @@ export class ItemDetailComponent implements OnDestroy {
           loadItem = this.itemService.retrievePresetData();
           if (loadItem.datapreset) {  
             this.item.itemstatus = loadItem.itemstatus;
-            console.log(this.item.itemstatus);
             this.item.checkcamera = loadItem.checkcamera;
+            this.item.marker = loadItem.marker;
             this.item.indivname = loadItem.indivname;
             this.item.specieswolv = loadItem.specieswolv;
             this.item.speciesother = loadItem.speciesother;
@@ -131,6 +139,7 @@ export class ItemDetailComponent implements OnDestroy {
       console.log('saving data');
       this.savedData.itemstatus = this.item.itemstatus;
       this.savedData.checkcamera = this.item.checkcamera;
+      this.savedData.marker = this.item.marker;
       this.savedData.indivname = this.item.indivname;
       this.savedData.specieswolv = this.item.specieswolv;
       this.savedData.speciesother = this.item.speciesother;

@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     removedbait: DataTypes.BOOLEAN,
     daterembait: DataTypes.DATE,
     checkcamera: DataTypes.BOOLEAN,
+    marker: DataTypes.BOOLEAN,
     createdAt:  DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {

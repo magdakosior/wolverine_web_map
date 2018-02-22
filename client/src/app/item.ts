@@ -8,6 +8,7 @@ export class Item {
   itemstatus: string;
   geom: any;
   checkcamera: boolean;
+  marker: boolean;
   specieswolv: boolean;
   speciesother: string;
   numanimals: number;
