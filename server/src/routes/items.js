@@ -31,6 +31,7 @@ router.get('/importfile', function (req, res, next) {
     var response = {}
     var photoList = [];
     var importId = '';
+    itemCount = 0;
     jsondata.path = jsondata.path.replace(/\\/g, "\\\\");
     
     fs.readdir(jsondata.path, function(err, items) {     
@@ -58,7 +59,6 @@ router.get('/importfile', function (req, res, next) {
                     res.json(response);
                 }
                 else {
-                                
                     for (var i = 0; i< resultList.length; i++) {
                                 
                         addItem(resultList[i], function (result) {
@@ -69,8 +69,6 @@ router.get('/importfile', function (req, res, next) {
                             response.importid = result.importid;
                             response.result = result.message;
                             if (score == resultList.length) {
-                                console.log('response line 68 in items.js');
-                                console.log(response);
                                 res.json(response);
                             }
                         });
@@ -85,7 +83,6 @@ router.get('/importfile', function (req, res, next) {
         }
         else {
             response.result = 'Error - No files to process.';
-            console.log(response);
             res.json(response)
         }
         
@@ -128,7 +125,7 @@ router.get('/itemsMapBounds', function (req, res, next) {
 });
 
 /* 
-    get item by id http://localhost:3000/api/heros/1 
+    get item by id http://localhost:3000/api/items/1 
 */
 router.get('/items', function (req, res, next) {
     const item_id = req.query.id;
@@ -364,6 +361,27 @@ router.put('/imports/:id', function (req, res, next) {
     }));
 });
 
+/*
+    Return true or false status which tells if import has at least 1 marker selected by user 
+    Used in item-detail.component.ts
+*/
+router.get('/imports/markerSet/:importId', function (req, res, next) {
+    const importId = req.params.importId;
+    const query = "\
+          SELECT count(*) \
+          FROM photos where marker and importId = '" + importId + "'";
+    
+    model.sequelize.query(query, {  
+        type: Sequelize.QueryTypes.SELECT,
+        model: model.photos
+      }).then(result => {
+        res.json(result)
+      }).catch(err => {
+        console.log('ERROR: ', err)
+      });
+});
+
+
 function addItem(params, callback) {
     var point = { 
       type: 'MultiPoint', 
@@ -371,7 +389,7 @@ function addItem(params, callback) {
       crs: { type: 'name', properties: { name: 'EPSG:4326'} }
     };
 
-    var firstId = 0;
+    var id = 0;
     params.photopath = params.path.substr(params.path.indexOf(photodir) + photodir.length, params.path.length);
     
     model.photos.create({
@@ -401,13 +419,13 @@ function addItem(params, callback) {
         })
         .then((item) => {
                 itemCount = itemCount + 1;
-                firstId = item.dataValues.id; //get the first entry
+                id = item.dataValues.id; //get the first entry
             })
         .then(item => callback({
             error: false,
             message: itemCount + ' new items have been added to the DB. Import ID: ' + params.importid,
             importid: params.importid,
-            firstid: firstId - (itemCount -1)
+            firstid: id - (itemCount -1)
         }))
         .catch(error => callback({
             error: true,

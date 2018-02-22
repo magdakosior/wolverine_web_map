@@ -99,6 +99,18 @@ export class ItemService {
         })
   }
 
+  setInitialMap() {
+
+    var query = '?east=' + String(this.serviceMapDetails.ext_east) + 
+      '&west=' + String(this.serviceMapDetails.ext_west) + 
+      '&north=' + String(this.serviceMapDetails.ext_north) +  
+      '&south=' + String(this.serviceMapDetails.ext_south);
+
+    this.getItemsWithinBounds(query) 
+      .subscribe((items: Item[]) => {
+          this.allItemsSource.next(items); 
+        })
+  }
   /*
     Sets selected marker on map (red)
     Called in import.component->importPhotos and map.component->createCustomMarker
@@ -270,7 +282,6 @@ Called from item-detail.component->setNext
 
   /** DELETE: delete the item from the server */
   deleteItem (item: Item | number): Observable<Item> {
-    console.log('calling delete Item');    
     const id = typeof item === 'number' ? item : item.id;
     const url = `${this.itemsUrl}/${id}`;
 
@@ -318,7 +329,6 @@ Called from item-detail.component->setNext
   */
   getImportsId(term: string): Observable<any> {
     const url = `${this.importsUrl}/${term}`;
-    console.log(url);
     return this.http.get<String[]>(url).pipe(
       tap(_ => this.log(`getImportsId for "${term}"`)),
       catchError(this.handleError<String[]>('getImportsId', []))
@@ -376,6 +386,17 @@ Called from item-detail.component->setNext
   setImportType (value: boolean) {
     this.importType = value;
   }
+
+  /* Called from item-detail.component to check for marker set notification */
+  getMarkerSet(importId: string): Observable<number> {
+    const url = `${this.importsUrl}/markerSet/${importId}`;
+   
+    return this.http.get<number>(url).pipe(
+      tap(_ => this.log(`found markerSet`)),
+      catchError(this.handleError<number>('markerSet', 0))
+    );
+  }
+
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
     this.messageService.add('ItemService: ' + message);

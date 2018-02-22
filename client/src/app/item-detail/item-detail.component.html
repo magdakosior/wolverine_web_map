@@ -89,12 +89,11 @@
                 <input readonly class="form-control form-control input-xs" type="text" value="{{item.session}}">
             </div>
             <div class="col-md-2">
-                <label for="checkbox1">Set Marker on Map</label>
+                <label for="checkbox1">Set Marker</label>
                 <div id="checkbox">
-                    <input id="checkbox" type="checkbox" [(ngModel)]="item.marker" name="marker" ng-true-value="true" ng-false-value="false">
+                    <input id="marker" type="checkbox" [(ngModel)]="item.marker" name="marker" ng-true-value="true" ng-false-value="false">
                 </div>
             </div>
-             
             
             <div class="col-md-2">
                 <label class="control-label" >Other Species</label>
@@ -167,7 +166,7 @@
                     <input id="checkbox" type="checkbox" [(ngModel)]="item.datapreset" name="datasave" ng-true-value="true" ng-false-value="false">
                 </div>
             </div>
-            <div *ngIf="markerSet" class="alert alert-danger" role="alert">
+            <div *ngIf="markerNotSet" class="alert alert-danger" role="alert">
               <strong>Don't Forget!</strong> No markers have been set for this import
             </div>
         </div>

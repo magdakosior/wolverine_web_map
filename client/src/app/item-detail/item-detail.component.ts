@@ -24,12 +24,11 @@ export class ItemDetailComponent implements OnDestroy {
   dropdownSettings = {};
 
   importType: boolean = false;
-  markerSet = false;
+  markerNotSet = false;
   
   import = new Import(); //this is to set some import details to retrieve lastverified num
 
   savedData: any = {}
-
   startDate: any=new Date();
 
   //for enter button press
@@ -50,7 +49,14 @@ export class ItemDetailComponent implements OnDestroy {
         if (this.itemService.getImportType()) {
           this.importType = true;
           //determine if any markers have been set for this batch (chech with item.service)
-          this.markerSet = true;
+          this.itemService.getMarkerSet(this.item.importid)
+            .subscribe((result: any) => {
+              if (result[0].count > 0) {
+                this.markerNotSet = false;
+              }
+              else
+                this.markerNotSet = true;
+            })
 
           //if save settings option was checked off then load settings from previous itemv (overwrite if necessary).
           //load saved values to check if preset was checked to be true

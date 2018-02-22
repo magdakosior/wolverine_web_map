@@ -161,9 +161,8 @@ export class importModal implements OnInit{
             this.import.lastverified = result.firstid;
             this.itemService.updateImportsLastVerified(this.import)
               .subscribe((item: Import) => {
-                //console.log('updated import');
+                //console.log(item);
               })
-
             this.itemService.setSelectedItem(parseInt(result.firstid), true);
           }// end if we got a result
         })
